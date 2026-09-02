@@ -34,6 +34,8 @@ Task 017 migrated the prototype to native 1280x720 rendering and selected the 96
 
 Task 018 corrected the native migration audit findings: gravity now uses the correct `physics/2d/default_gravity` ProjectSettings section, all HUD labels use explicit 32-pixel font size, and the scale comparison scene shows the mathematically correct 56/80/96 native equivalents with 96 PX clearly selected.
 
+Task 019 aligned the native scale comparison geometry and labels. The three silhouettes now use exact 56/80/96-pixel native dimensions with proportional weapons, and each option has one non-overlapping label.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

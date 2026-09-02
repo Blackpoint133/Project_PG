@@ -1,9 +1,6 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://scripts/player_modules/placeholder_jetpack.gd" id="1_jetpack"]
+[gd_scene load_steps=1 format=3]
 
 [node name="PlaceholderJetpack" type="Node2D"]
-script = ExtResource("1_jetpack")
 
 [node name="Visual" type="ColorRect" parent="."]
 size = Vector2(5, 8)

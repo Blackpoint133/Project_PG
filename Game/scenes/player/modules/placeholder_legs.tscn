@@ -1,11 +1,8 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://scripts/player_modules/placeholder_legs.gd" id="1_legs"]
+[gd_scene load_steps=1 format=3]
 
 [node name="PlaceholderLegs" type="Node2D"]
-script = ExtResource("1_legs")
 
 [node name="Visual" type="ColorRect" parent="."]
-size = Vector2(12, 10)
+size = Vector2(12, 16)
 position = Vector2(-6, -16)
 color = Color(0.15, 0.55, 0.35, 1)

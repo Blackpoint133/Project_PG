@@ -30,7 +30,6 @@ Player (CharacterBody2D)
 ## Completed changes
 
 - Created six independent placeholder module scenes with clearly differentiated simple visuals.
-- Added matching placeholder module scripts under `Game/scripts/player_modules/`.
 - Rewired `Game/scenes/player.tscn` to instantiate every module under its required slot.
 - Removed the old combined `Body` ColorRect replaced by the modular visuals.
 - Kept `BodyRoot` and `AimPivot` paths stable.
@@ -47,12 +46,6 @@ Created:
 - `Game/scenes/player/modules/placeholder_right_arm.tscn`
 - `Game/scenes/player/modules/placeholder_weapon.tscn`
 - `Game/scenes/player/modules/placeholder_jetpack.tscn`
-- `Game/scripts/player_modules/placeholder_body.gd`
-- `Game/scripts/player_modules/placeholder_legs.gd`
-- `Game/scripts/player_modules/placeholder_left_arm.gd`
-- `Game/scripts/player_modules/placeholder_right_arm.gd`
-- `Game/scripts/player_modules/placeholder_weapon.gd`
-- `Game/scripts/player_modules/placeholder_jetpack.gd`
 - `DEV/reports/007_modular_player_visual_foundation/modular_player_visual_foundation_report.md`
 
 Changed:
@@ -69,6 +62,7 @@ Changed:
 - Confirmed `Game/scripts/player.gd` was not modified.
 - Confirmed `Game/project.godot` input mappings were not modified.
 - Confirmed all six player visual components are separate scene instances.
+- Confirmed the combined body and legs placeholder silhouette covers the intended 12x28 area from Y -28 through Y 0.
 - Reviewed the complete Git diff before commit.
 - Ran `git diff --check`: passed.
 - Scanned all tracked content outside `.git` for Cyrillic characters: zero matches.
@@ -89,7 +83,7 @@ The user completed the Task 006 Windows test and reported that normal jump, sust
 
 - Placeholder module positions may need visual tuning after the first Godot render.
 - The slots are visual-only and are not yet connected to an equipment system.
-- The current scripts exist as stable module roots for future replacement but contain no behavior.
+- The current placeholder scenes are visual-only; future behavior belongs in equipment controllers and definitions.
 
 ## Recommended next step
 

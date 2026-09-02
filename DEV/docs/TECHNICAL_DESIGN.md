@@ -52,7 +52,26 @@ Player (CharacterBody2D)
 `-- StateController (Node)
 ```
 
-The current movement foundation uses `Game/scenes/player.tscn` with `player.gd`, a `BodyRoot` placeholder, an `AimPivot`, and a `Camera2D`. This is deliberately simple but leaves room to add the separate equipment sockets and behavior controllers without changing the player-root contract.
+The current movement foundation uses `Game/scenes/player.tscn` with `player.gd`, a modular `BodyRoot`, an `AimPivot`, and a `Camera2D`.
+
+Implemented placeholder visual hierarchy:
+
+```text
+Player (CharacterBody2D)
+|-- CollisionShape2D
+|-- BodyRoot (Node2D)
+|   |-- BodySlot (Node2D) -> PlaceholderBody
+|   |-- LegsSlot (Node2D) -> PlaceholderLegs
+|   |-- JetpackSlot (Node2D) -> PlaceholderJetpack
+|   `-- AimPivot (Node2D)
+|       |-- LeftArmSlot (Node2D) -> PlaceholderLeftArm
+|       |-- RightArmSlot (Node2D) -> PlaceholderRightArm
+|       |-- WeaponSlot (Node2D) -> PlaceholderWeapon
+|       `-- AimLine
+`-- Camera2D
+```
+
+Each placeholder module is a separate scene instance and can later be replaced without changing player movement code. Legs and jetpack remain outside `AimPivot`; arms and weapon follow it.
 
 The current jetpack model authorizes flight only from a grounded jump, requires a held jump input while airborne, clears authorization on landing, and smoothly approaches a controlled negative rise velocity. The HUD and state reporting use the actual jetpack-active result rather than raw input.
 

@@ -66,6 +66,10 @@ Godot runtime validation was not performed on this machine. The following checks
 - The HUD shows `jetpack` during actual thrust and `airborne` after release.
 - A/D movement, crouching, mouse aim, camera follow, collision behavior, and the arena remain unchanged.
 
+## User-reported Windows validation result
+
+The user completed the local Windows test in Godot 4.7.2 Standard and reported that all tested movement behavior works correctly: normal jump, sustained jetpack flight, release falling, landing clearing flight, no thrust when walking off a platform with Space held, reachable elevated platforms, correct HUD state, and unchanged mouse aim. This result is recorded as user-reported validation only; Codex did not perform the runtime test.
+
 ## Risks or limitations
 
 - Flight feel must still be tuned on Windows if the rise target or acceleration does not feel right.

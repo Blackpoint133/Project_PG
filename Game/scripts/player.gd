@@ -82,6 +82,7 @@ func _spawn_projectile() -> void:
 	var projectile := spawned_node as RifleProjectile
 	if projectile == null:
 		push_error("Weapon projectile scene is not a RifleProjectile.")
+		spawned_node.free()
 		return
 	var aim_direction := get_global_mouse_position() - muzzle_marker.global_position
 	if aim_direction.length_squared() <= 0.0:

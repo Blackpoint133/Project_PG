@@ -25,7 +25,8 @@ func _process(_delta: float) -> void:
 func _on_ammo_changed(loaded: int, reserve: int) -> void:
 	_loaded_ammo = loaded
 	_reserve_ammo = reserve
-	_render_weapon_state()
+	if not _is_reloading:
+		_render_weapon_state()
 
 func _render_weapon_state() -> void:
 	weapon_label.text = "AUTOMATIC RIFLE %d / %d" % [_loaded_ammo, _reserve_ammo]

@@ -5,6 +5,7 @@ var direction := Vector2.RIGHT
 var speed := 900.0
 var damage := 10
 var lifetime := 1.5
+var _movement_velocity := Vector2.ZERO
 var _has_dealt_damage := false
 var _configured := false
 
@@ -14,7 +15,7 @@ func _ready() -> void:
 		set_physics_process(false)
 		return
 	rotation = direction.angle()
-	velocity = direction * speed
+	_movement_velocity = direction * speed
 	var timer := get_tree().create_timer(lifetime)
 	timer.timeout.connect(queue_free)
 
@@ -26,7 +27,7 @@ func configure(new_direction: Vector2, new_speed: float, new_damage: int, new_li
 	_configured = true
 
 func _physics_process(delta: float) -> void:
-	position += velocity * delta
+	position += _movement_velocity * delta
 
 func _on_body_entered(body: Node2D) -> void:
 	if _has_dealt_damage:

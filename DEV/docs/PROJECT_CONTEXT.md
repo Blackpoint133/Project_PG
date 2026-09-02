@@ -26,6 +26,8 @@ Task 013 repaired the audited rifle integration: attached the weapon controller 
 
 Task 014 corrected the projectile lifecycle so configuration completes before the projectile enters the scene tree, added a safe zero-direction fallback, removed duplicate ammunition state from the controller, and made the HUD cache ammunition through focused signal updates instead of per-frame reads. Local Windows combat validation is still required.
 
+Task 015 fixed the remaining rifle projectile parse blocker by declaring an explicit movement-velocity field, protected the RELOADING label from ammunition signals, and freed a failed projectile cast before returning. Local Windows combat validation is still required.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

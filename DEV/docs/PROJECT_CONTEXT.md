@@ -40,6 +40,8 @@ Task 020 corrected the modular placeholder crouch pose. The upper-body, aim, and
 
 Task 021 corrected the modular legs pose invocation to use Godot's safe dynamic `StringName` call interface. Crouch geometry and gameplay behavior remain unchanged.
 
+Task 022 fixed the warnings-as-errors parser issue by explicitly typing the crouch visual offset as `float`; crouch geometry and gameplay behavior remain unchanged.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

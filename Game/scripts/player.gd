@@ -100,7 +100,7 @@ func _spawn_projectile() -> void:
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT
-	var upper_body_offset := 0.0 if not crouching else CROUCH_VISUAL_OFFSET
+	var upper_body_offset: float = CROUCH_VISUAL_OFFSET if crouching else 0.0
 	_rectangle_shape.size = Vector2(_rectangle_shape.size.x, target_height)
 	collision_shape.position.y = -target_height * 0.5
 	body_slot.position.y = upper_body_offset

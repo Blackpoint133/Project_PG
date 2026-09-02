@@ -54,6 +54,8 @@ Player (CharacterBody2D)
 
 The current movement foundation uses `Game/scenes/player.tscn` with `player.gd`, a `BodyRoot` placeholder, an `AimPivot`, and a `Camera2D`. This is deliberately simple but leaves room to add the separate equipment sockets and behavior controllers without changing the player-root contract.
 
+The current jetpack model authorizes flight only from a grounded jump, requires a held jump input while airborne, clears authorization on landing, and smoothly approaches a controlled negative rise velocity. The HUD and state reporting use the actual jetpack-active result rather than raw input.
+
 Socket children represent the currently equipped visual module. Behavior controllers communicate with the player root through well-defined signals and explicit state requests.
 
 ## State Responsibility

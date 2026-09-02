@@ -22,7 +22,6 @@ var movement_state := "grounded"
 var _jetpack_authorized := false
 var facing_direction := 1
 
-@onready var body_root: Node2D = $BodyRoot
 @onready var body_slot: Node2D = $BodyRoot/BodySlot
 @onready var legs_slot: Node2D = $BodyRoot/LegsSlot
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
@@ -34,6 +33,7 @@ var _rectangle_shape: RectangleShape2D = RectangleShape2D.new()
 func _ready() -> void:
 	_rectangle_shape.size = Vector2(12, STAND_HEIGHT)
 	collision_shape.shape = _rectangle_shape
+	_update_crouch(false)
 
 func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
@@ -69,11 +69,12 @@ func _physics_process(delta: float) -> void:
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT
+	var upper_body_offset := STAND_HEIGHT - target_height
 	_rectangle_shape.size = Vector2(_rectangle_shape.size.x, target_height)
 	collision_shape.position.y = -target_height * 0.5
-	body_slot.position.y = target_height - STAND_HEIGHT
-	jetpack_slot.position.y = target_height - STAND_HEIGHT
-	aim_pivot.position.y = target_height - STAND_HEIGHT - 18.0
+	body_slot.position.y = upper_body_offset
+	jetpack_slot.position.y = upper_body_offset
+	aim_pivot.position.y = -18.0 + upper_body_offset
 
 func _update_visuals(_input_direction: float, _jetpack_active: bool) -> void:
 	var mouse_position := get_global_mouse_position()

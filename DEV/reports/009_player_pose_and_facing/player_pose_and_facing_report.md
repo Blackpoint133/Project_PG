@@ -33,6 +33,10 @@ The user completed the Task 008 Windows visual test and reported these defects: 
 - `BodyRoot` is not scaled.
 - Crouching silhouette covers local Y -18 through Y 0.
 
+### Post-audit correction
+
+A post-commit repository audit found that the initially documented downward offset was implemented as `target_height - STAND_HEIGHT`, which produced -10 in Godot and moved the modules upward. Task 010 corrected this to a clearly named `upper_body_offset = STAND_HEIGHT - target_height`; the formulas above describe the corrected behavior, not the original implementation.
+
 ### Facing
 
 - Added `facing_direction` and a 4-pixel horizontal dead zone.

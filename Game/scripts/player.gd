@@ -16,6 +16,7 @@ const JETPACK_ACCELERATION := 2400.0
 const MAX_FALL_SPEED := 420.0
 const STAND_HEIGHT := 28.0
 const CROUCH_HEIGHT := 18.0
+const CROUCH_VISUAL_OFFSET := 4.0
 const FACING_DEAD_ZONE := 4.0
 
 var movement_state := "grounded"
@@ -69,7 +70,7 @@ func _physics_process(delta: float) -> void:
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT
-	var upper_body_offset := STAND_HEIGHT - target_height
+	var upper_body_offset := 0.0 if not crouching else CROUCH_VISUAL_OFFSET
 	_rectangle_shape.size = Vector2(_rectangle_shape.size.x, target_height)
 	collision_shape.position.y = -target_height * 0.5
 	body_slot.position.y = upper_body_offset

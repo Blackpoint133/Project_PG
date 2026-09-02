@@ -18,6 +18,8 @@ Task 009 corrected the foot-anchored collision and crouch pose, added mouse-base
 
 Task 010 corrected the audited crouch offset sign and aim-guide origin. Crouching now moves the upper-body modules down by 10 pixels, `AimPivot` moves from Y -18 to Y -8, the standing pose is initialized before the first physics frame, and `AimLine` starts at the temporary weapon muzzle X 17. Local Windows visual verification is still required.
 
+Task 011 reduced the crouching visual offset from 10 to 4 pixels after Windows testing showed the torso sinking too far into the legs. The collision shape and ground anchoring are unchanged. Local Windows re-check of the crouch pose is still required.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

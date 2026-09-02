@@ -36,6 +36,8 @@ Task 018 corrected the native migration audit findings: gravity now uses the cor
 
 Task 019 aligned the native scale comparison geometry and labels. The three silhouettes now use exact 56/80/96-pixel native dimensions with proportional weapons, and each option has one non-overlapping label.
 
+Task 020 corrected the modular placeholder crouch pose. The upper-body, aim, and jetpack visuals now use a 32-pixel crouch offset, while the replaceable legs module switches between explicit integer-authored 40x56 standing geometry and 40x24 crouching geometry. Native 1280×720 configuration was statically verified; Windows runtime and visual validation remain pending because no Godot executable is available in the validation environment. No movement, collision, aiming, or combat behavior was changed.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.
@@ -80,4 +82,4 @@ The following features are explicitly deferred at this stage:
 
 ## Pixel viewport
 
-The internal game resolution is 640×360 pixels. The debug window uses 1280×720. Scaling uses `viewport` while preserving the aspect ratio (`keep`) and using integer scaling (`integer`) so pixel art remains crisp. The default CanvasItem texture filtering is nearest.
+The game renders natively at 1280×720 pixels. There is no 640×360 internal resolution or output stretching. The default CanvasItem texture filtering is nearest.

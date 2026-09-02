@@ -16,7 +16,7 @@ const JETPACK_ACCELERATION := 4800.0
 const MAX_FALL_SPEED := 840.0
 const STAND_HEIGHT := 96.0
 const CROUCH_HEIGHT := 64.0
-const CROUCH_VISUAL_OFFSET := 12.0
+const CROUCH_VISUAL_OFFSET := 32
 const FACING_DEAD_ZONE := 8.0
 
 var movement_state := "grounded"
@@ -25,6 +25,7 @@ var facing_direction := 1
 
 @onready var body_slot: Node2D = $BodyRoot/BodySlot
 @onready var legs_slot: Node2D = $BodyRoot/LegsSlot
+@onready var legs_module: Node = legs_slot.get_child(0)
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
 @onready var muzzle_marker: Marker2D = $BodyRoot/AimPivot/WeaponSlot/PlaceholderWeapon/Muzzle
@@ -103,6 +104,8 @@ func _update_crouch(crouching: bool) -> void:
 	_rectangle_shape.size = Vector2(_rectangle_shape.size.x, target_height)
 	collision_shape.position.y = -target_height * 0.5
 	body_slot.position.y = upper_body_offset
+	if legs_module.has_method("set_crouching"):
+		legs_module.set_crouching(crouching)
 	jetpack_slot.position.y = upper_body_offset
 	aim_pivot.position.y = -72.0 + upper_body_offset
 

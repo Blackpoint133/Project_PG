@@ -59,10 +59,13 @@ reload={
 ]
 }
 
+[physics]
+
+2d/default_gravity=1960.0
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-physics/2d/default_gravity=1960.0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.015, 0.02, 0.04, 1)

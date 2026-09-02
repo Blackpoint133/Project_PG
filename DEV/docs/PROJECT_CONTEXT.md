@@ -32,6 +32,8 @@ Task 016 added a standalone player-scale calibration scene comparing 28, 40, and
 
 Task 017 migrated the prototype to native 1280x720 rendering and selected the 96-pixel base player scale. Active gameplay geometry, positions, collision, camera limits, projectile dimensions, target scale, spatial movement constants, and effective gravity are doubled. Time-based tuning, rifle cadence, reload behavior, ammunition, and damage remain unchanged; projectile speed is 1800 at native scale. Final artwork has not been added.
 
+Task 018 corrected the native migration audit findings: gravity now uses the correct `physics/2d/default_gravity` ProjectSettings section, all HUD labels use explicit 32-pixel font size, and the scale comparison scene shows the mathematically correct 56/80/96 native equivalents with 96 PX clearly selected.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

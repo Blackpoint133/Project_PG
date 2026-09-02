@@ -10,6 +10,7 @@ offset_left = 24.0
 offset_top = 24.0
 offset_right = 440.0
 offset_bottom = 60.0
+theme_override_font_sizes/font_size = 32
 text = "MOVEMENT: grounded"
 
 [node name="WeaponLabel" type="Label" parent="."]
@@ -17,6 +18,7 @@ offset_left = 24.0
 offset_top = 64.0
 offset_right = 640.0
 offset_bottom = 100.0
+theme_override_font_sizes/font_size = 32
 text = "AUTOMATIC RIFLE 30 / 90"
 
 [node name="ControlsLabel" type="Label" parent="."]
@@ -24,4 +26,5 @@ offset_left = 24.0
 offset_top = 104.0
 offset_right = 1120.0
 offset_bottom = 140.0
+theme_override_font_sizes/font_size = 32
 text = "A/D: move    S: crouch    Space: jump    LMB: fire    R: reload"

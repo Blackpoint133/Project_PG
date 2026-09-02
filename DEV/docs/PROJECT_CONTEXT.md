@@ -1,5 +1,9 @@
 # Project Context
 
+## Current status
+
+The bootstrap project is complete. The approved vertical slice and modular gameplay architecture are documented in `DEV/docs/GAME_DESIGN.md` and `DEV/docs/TECHNICAL_DESIGN.md`. Gameplay implementation has not started.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.
@@ -45,4 +49,3 @@ The following features are explicitly deferred at this stage:
 ## Pixel viewport
 
 The internal game resolution is 640×360 pixels. The debug window uses 1280×720. Scaling uses `viewport` while preserving the aspect ratio (`keep`) and using integer scaling (`integer`) so pixel art remains crisp. The default CanvasItem texture filtering is nearest.
-

@@ -16,6 +16,7 @@ const STAND_HEIGHT := 28.0
 const CROUCH_HEIGHT := 18.0
 
 var movement_state := "grounded"
+var _jetpack_allowed := false
 
 @onready var body_root: Node2D = $BodyRoot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
@@ -31,7 +32,11 @@ func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
 	var input_direction := Input.get_axis("move_left", "move_right")
 	var crouching := Input.is_action_pressed("crouch") and was_on_floor
-	var jetpack_active := not was_on_floor and Input.is_action_pressed("jump")
+	if Input.is_action_just_pressed("jump") and was_on_floor:
+		_jetpack_allowed = true
+	elif was_on_floor and not Input.is_action_pressed("jump"):
+		_jetpack_allowed = false
+	var jetpack_active := _jetpack_allowed and not was_on_floor and Input.is_action_pressed("jump")
 
 	if not was_on_floor:
 		velocity.y = minf(velocity.y + get_gravity().y * delta, MAX_FALL_SPEED)
@@ -62,9 +67,6 @@ func _update_crouch(crouching: bool) -> void:
 
 func _update_visuals(_input_direction: float, _jetpack_active: bool) -> void:
 	aim_pivot.look_at(get_global_mouse_position())
-	var aim_angle := aim_pivot.rotation
-	if absf(aim_angle) > PI * 0.5:
-		aim_pivot.rotation = PI - aim_angle
 
 func _update_state() -> void:
 	var new_state := "grounded"

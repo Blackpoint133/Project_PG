@@ -13,6 +13,6 @@ script = ExtResource("1_main")
 [node name="Arena" parent="World" instance=ExtResource("2_arena")]
 
 [node name="Player" parent="World" instance=ExtResource("3_player")]
-position = Vector2(120, 300)
+position = Vector2(240, 600)
 
 [node name="HUD" parent="." instance=ExtResource("4_hud")]

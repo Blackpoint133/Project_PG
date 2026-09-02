@@ -4,102 +4,102 @@
 [ext_resource type="PackedScene" path="res://scenes/targets/target_dummy.tscn" id="2_target"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
-size = Vector2(1280, 48)
+size = Vector2(2560, 96)
 
 [sub_resource type="RectangleShape2D" id="platform_shape"]
-size = Vector2(96, 12)
+size = Vector2(192, 24)
 
 [sub_resource type="RectangleShape2D" id="wall_shape"]
-size = Vector2(24, 360)
+size = Vector2(48, 720)
 
 [node name="Arena" type="Node2D"]
 script = ExtResource("1_arena")
 
 [node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(640, 336)
+position = Vector2(1280, 672)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource("floor_shape")
 
 [node name="FloorVisual" type="ColorRect" parent="Floor"]
-offset_left = -640.0
-offset_top = -24.0
-offset_right = 640.0
-offset_bottom = 24.0
+offset_left = -1280.0
+offset_top = -48.0
+offset_right = 1280.0
+offset_bottom = 48.0
 color = Color(0.08, 0.13, 0.16, 1)
 
 [node name="LeftWall" type="StaticBody2D" parent="."]
-position = Vector2(-12, 168)
+position = Vector2(-24, 336)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
 shape = SubResource("wall_shape")
 
 [node name="RightWall" type="StaticBody2D" parent="."]
-position = Vector2(1292, 168)
+position = Vector2(2584, 336)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
 shape = SubResource("wall_shape")
 
 [node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(220, 240)
+position = Vector2(440, 480)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
 shape = SubResource("platform_shape")
 
 [node name="Platform1Visual" type="ColorRect" parent="Platform1"]
-offset_left = -48.0
-offset_top = -6.0
-offset_right = 48.0
-offset_bottom = 6.0
+offset_left = -96.0
+offset_top = -12.0
+offset_right = 96.0
+offset_bottom = 12.0
 color = Color(0.12, 0.2, 0.25, 1)
 
 [node name="Platform2" type="StaticBody2D" parent="."]
-position = Vector2(430, 180)
+position = Vector2(860, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
 shape = SubResource("platform_shape")
 
 [node name="Platform2Visual" type="ColorRect" parent="Platform2"]
-offset_left = -48.0
-offset_top = -6.0
-offset_right = 48.0
-offset_bottom = 6.0
+offset_left = -96.0
+offset_top = -12.0
+offset_right = 96.0
+offset_bottom = 12.0
 color = Color(0.12, 0.2, 0.25, 1)
 
 [node name="Platform3" type="StaticBody2D" parent="."]
-position = Vector2(650, 120)
+position = Vector2(1300, 240)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
 shape = SubResource("platform_shape")
 
 [node name="Platform3Visual" type="ColorRect" parent="Platform3"]
-offset_left = -48.0
-offset_top = -6.0
-offset_right = 48.0
-offset_bottom = 6.0
+offset_left = -96.0
+offset_top = -12.0
+offset_right = 96.0
+offset_bottom = 12.0
 color = Color(0.12, 0.2, 0.25, 1)
 
 [node name="Platform4" type="StaticBody2D" parent="."]
-position = Vector2(900, 200)
+position = Vector2(1800, 400)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
 shape = SubResource("platform_shape")
 
 [node name="Platform4Visual" type="ColorRect" parent="Platform4"]
-offset_left = -48.0
-offset_top = -6.0
-offset_right = 48.0
-offset_bottom = 6.0
+offset_left = -96.0
+offset_top = -12.0
+offset_right = 96.0
+offset_bottom = 12.0
 color = Color(0.12, 0.2, 0.25, 1)
 
 [node name="TargetRight" parent="." instance=ExtResource("2_target")]
-position = Vector2(420, 312)
+position = Vector2(840, 624)
 
 [node name="TargetUpHigh" parent="." instance=ExtResource("2_target")]
-position = Vector2(560, 220)
+position = Vector2(1120, 440)
 
 [node name="TargetDownLow" parent="." instance=ExtResource("2_target")]
-position = Vector2(300, 170)
+position = Vector2(600, 340)
 
 [node name="TargetLeftFacing" parent="." instance=ExtResource("2_target")]
-position = Vector2(80, 250)
+position = Vector2(160, 500)

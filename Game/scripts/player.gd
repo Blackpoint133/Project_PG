@@ -3,21 +3,21 @@ extends CharacterBody2D
 
 signal movement_state_changed(new_state: String)
 
-const RUN_SPEED := 180.0
-const CROUCH_SPEED := 90.0
-const GROUND_ACCELERATION := 1400.0
-const AIR_ACCELERATION := 900.0
-const GROUND_FRICTION := 1600.0
+const RUN_SPEED := 360.0
+const CROUCH_SPEED := 180.0
+const GROUND_ACCELERATION := 2800.0
+const AIR_ACCELERATION := 1800.0
+const GROUND_FRICTION := 3200.0
 
 # Vertical tuning
-const JUMP_VELOCITY := -420.0
-const JETPACK_TARGET_RISE_VELOCITY := -240.0
-const JETPACK_ACCELERATION := 2400.0
-const MAX_FALL_SPEED := 420.0
-const STAND_HEIGHT := 28.0
-const CROUCH_HEIGHT := 18.0
-const CROUCH_VISUAL_OFFSET := 4.0
-const FACING_DEAD_ZONE := 4.0
+const JUMP_VELOCITY := -840.0
+const JETPACK_TARGET_RISE_VELOCITY := -480.0
+const JETPACK_ACCELERATION := 4800.0
+const MAX_FALL_SPEED := 840.0
+const STAND_HEIGHT := 96.0
+const CROUCH_HEIGHT := 64.0
+const CROUCH_VISUAL_OFFSET := 12.0
+const FACING_DEAD_ZONE := 8.0
 
 var movement_state := "grounded"
 var _jetpack_authorized := false
@@ -36,7 +36,7 @@ var _rectangle_shape: RectangleShape2D = RectangleShape2D.new()
 func _ready() -> void:
 	weapon_controller.setup(load("res://resources/weapons/automatic_rifle.tres"))
 	weapon_controller.fired.connect(_spawn_projectile)
-	_rectangle_shape.size = Vector2(12, STAND_HEIGHT)
+	_rectangle_shape.size = Vector2(40, STAND_HEIGHT)
 	collision_shape.shape = _rectangle_shape
 	_update_crouch(false)
 
@@ -104,7 +104,7 @@ func _update_crouch(crouching: bool) -> void:
 	collision_shape.position.y = -target_height * 0.5
 	body_slot.position.y = upper_body_offset
 	jetpack_slot.position.y = upper_body_offset
-	aim_pivot.position.y = -18.0 + upper_body_offset
+	aim_pivot.position.y = -72.0 + upper_body_offset
 
 func _update_visuals(_input_direction: float, _jetpack_active: bool) -> void:
 	var mouse_position := get_global_mouse_position()

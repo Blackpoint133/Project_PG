@@ -2,6 +2,12 @@
 
 This document defines the architecture for the first Godot 4.7.2 Standard vertical slice. It is a planning contract, not an implementation task. Prefer composition over deep inheritance and avoid unnecessary abstraction.
 
+## Presentation and Scale
+
+The prototype renders natively at 1280x720; there is no 640x360 output stretching or camera zoom. The selected base player is 96 logical pixels tall with an approximately 40-pixel-wide standing collision. Gameplay geometry, positions, dimensions, and spatial movement constants are authored directly at this native scale using integer coordinates. When migrating old 640x360 values, spatial values are doubled, while time-based values remain unchanged and effective 2D gravity is doubled so jump and fall timing remain equivalent.
+
+Future high-detail modular sprites must support the existing slot architecture and must be authored at native resolution. The environment plan uses layered parallax backgrounds with independently collidable foreground gameplay objects in the approved cold industrial winter palette.
+
 ## Core Principles
 
 - The player root uses `CharacterBody2D`.

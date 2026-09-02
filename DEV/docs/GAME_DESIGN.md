@@ -6,6 +6,8 @@ OTG Pixel Game is a 2D pixel-art run-and-gun inspired by classic console games. 
 
 The first target is a continuous, linear vertical slice lasting approximately 80 to 100 seconds. Placeholder visuals are acceptable during mechanical prototyping. Final sprite artwork will replace placeholders later without changing gameplay architecture.
 
+The approved visual direction is original high-detail industrial science-fiction pixel art. The environment uses a cold blue and steel palette with snow, weathered industrial surfaces, layered mountains, industrial towers, bridges, pipes, antennas, and machinery. Warm hazard-yellow and restrained red accents provide readability. Characters and equipment must keep readable silhouettes with detailed modular armor, mechanical legs, weapons, jetpack, shield, and hook. The world uses layered parallax backgrounds and independently collidable foreground gameplay objects. The final player scale is 96 logical pixels tall at native 1280x720 rendering.
+
 ## Controls
 
 | Input | Action |

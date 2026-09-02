@@ -5,4 +5,5 @@
 
 [resource]
 script = ExtResource("1_definition")
+projectile_speed = 1800.0
 projectile_scene = ExtResource("2_projectile")

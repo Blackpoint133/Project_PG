@@ -3,6 +3,6 @@
 [node name="PlaceholderJetpack" type="Node2D"]
 
 [node name="Visual" type="ColorRect" parent="."]
-size = Vector2(5, 8)
-position = Vector2(-8, -24)
+size = Vector2(14, 24)
+position = Vector2(-26, -84)
 color = Color(0.75, 0.45, 0.1, 1)

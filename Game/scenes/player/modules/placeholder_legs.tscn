@@ -3,6 +3,6 @@
 [node name="PlaceholderLegs" type="Node2D"]
 
 [node name="Visual" type="ColorRect" parent="."]
-size = Vector2(12, 16)
-position = Vector2(-6, -16)
+size = Vector2(40, 56)
+position = Vector2(-20, -56)
 color = Color(0.15, 0.55, 0.35, 1)

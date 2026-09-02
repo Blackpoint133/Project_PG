@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/player/modules/placeholder_weapon.tscn" id="7_weapon"]
 
 [sub_resource type="RectangleShape2D" id="player_shape"]
+size = Vector2(40, 96)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_player")
@@ -34,7 +35,7 @@ shape = SubResource("player_shape")
 [node name="PlaceholderJetpack" parent="BodyRoot/JetpackSlot" instance=ExtResource("4_jetpack")]
 
 [node name="AimPivot" type="Node2D" parent="BodyRoot"]
-position = Vector2(0, -18)
+position = Vector2(0, -72)
 
 [node name="LeftArmSlot" type="Node2D" parent="BodyRoot/AimPivot"]
 
@@ -45,7 +46,7 @@ position = Vector2(0, -18)
 [node name="PlaceholderRightArm" parent="BodyRoot/AimPivot/RightArmSlot" instance=ExtResource("6_right_arm")]
 
 [node name="WeaponSlot" type="Node2D" parent="BodyRoot/AimPivot"]
-position = Vector2(7, 0)
+position = Vector2(14, 0)
 
 [node name="PlaceholderWeapon" parent="BodyRoot/AimPivot/WeaponSlot" instance=ExtResource("7_weapon")]
 
@@ -53,14 +54,14 @@ position = Vector2(7, 0)
 script = ExtResource("8_weapon_controller")
 
 [node name="AimLine" type="Line2D" parent="BodyRoot/AimPivot"]
-points = PackedVector2Array(17, 0, 33, 0)
-width = 3.0
+points = PackedVector2Array(48, 0, 76, 0)
+width = 6.0
 default_color = Color(1, 1, 1, 0.8)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 limit_left = 0
-limit_top = -200
-limit_right = 1280
-limit_bottom = 360
+limit_top = -400
+limit_right = 2560
+limit_bottom = 720
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0

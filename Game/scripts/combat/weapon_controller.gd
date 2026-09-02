@@ -13,12 +13,14 @@ var _fire_cooldown := 0.0
 var _reload_timer := 0.0
 var _is_reloading := false
 var _can_fire := false
+var loaded_ammo := 0
+var reserve_ammo := 0
 
 func setup(definition: WeaponDefinition) -> void:
 	weapon_definition = definition
-	_loaded_ammo = definition.magazine_size
-	_reserve_ammo = definition.reserve_ammo
-	weapon_ammo_changed.emit(_loaded_ammo, _reserve_ammo)
+	loaded_ammo = definition.magazine_size
+	reserve_ammo = definition.reserve_ammo
+	weapon_ammo_changed.emit(loaded_ammo, reserve_ammo)
 
 func set_firing_enabled(enabled: bool) -> void:
 	_can_fire = enabled
@@ -33,26 +35,26 @@ func _process(delta: float) -> void:
 			_finish_reload()
 
 func try_fire() -> void:
-	if not _can_fire or _is_reloading or _loaded_ammo <= 0 or _fire_cooldown > 0.0:
+	if not _can_fire or _is_reloading or loaded_ammo <= 0 or _fire_cooldown > 0.0:
 		return
-	_loaded_ammo -= 1
+	loaded_ammo -= 1
 	_fire_cooldown = 1.0 / weapon_definition.fire_rate
 	fired.emit()
-	weapon_ammo_changed.emit(_loaded_ammo, _reserve_ammo)
+	weapon_ammo_changed.emit(loaded_ammo, reserve_ammo)
 
 func try_reload() -> void:
-	if _is_reloading or _loaded_ammo >= weapon_definition.magazine_size or _reserve_ammo <= 0:
+	if _is_reloading or loaded_ammo >= weapon_definition.magazine_size or reserve_ammo <= 0:
 		return
 	_is_reloading = true
 	_reload_timer = weapon_definition.reload_time
 	reload_started.emit()
 
 func _finish_reload() -> void:
-	var needed := weapon_definition.magazine_size - _loaded_ammo
-	var transfer := mini(needed, _reserve_ammo)
-	_loaded_ammo += transfer
-	_reserve_ammo -= transfer
-	weapon_ammo_changed.emit(_loaded_ammo, _reserve_ammo)
+	var needed := weapon_definition.magazine_size - loaded_ammo
+	var transfer := mini(needed, reserve_ammo)
+	loaded_ammo += transfer
+	reserve_ammo -= transfer
+	weapon_ammo_changed.emit(loaded_ammo, reserve_ammo)
 	reload_completed.emit()
 
 func is_reloading() -> bool:

@@ -139,7 +139,7 @@ The current combat foundation adds:
 - `Game/resources/weapons/automatic_rifle.tres` — automatic rifle definition.
 - `Muzzle` Marker2D under the weapon module defines the projectile spawn point.
 
-Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Projectiles use collision layer 4 with mask 9 and detect world (1) plus targets (3). Target dummies use layer 3 and do not block player movement.
+Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
 
 ## Signals
 

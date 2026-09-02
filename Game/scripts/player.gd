@@ -78,10 +78,16 @@ func _physics_process(delta: float) -> void:
 		weapon_controller.try_reload()
 
 func _spawn_projectile() -> void:
-	var projectile: Area2D = weapon_controller.weapon_definition.projectile_scene.instantiate()
+	var projectile: RifleProjectile = weapon_controller.weapon_definition.projectile_scene.instantiate()
 	get_parent().add_child(projectile)
 	projectile.global_position = muzzle_marker.global_position
-	projectile.direction = (get_global_mouse_position() - muzzle_marker.global_position).normalized()
+	var aim_direction := (get_global_mouse_position() - muzzle_marker.global_position).normalized()
+	projectile.configure(
+		aim_direction,
+		weapon_controller.weapon_definition.projectile_speed,
+		weapon_controller.weapon_definition.damage,
+		weapon_controller.weapon_definition.projectile_lifetime
+	)
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT

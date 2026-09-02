@@ -22,6 +22,8 @@ Task 011 reduced the crouching visual offset from 10 to 4 pixels after Windows t
 
 Task 012 added the automatic rifle combat foundation: data-driven weapon definition, weapon controller, visible projectiles, ammunition, manual reloading, damage, stationary target dummies, and a weapon/ammo HUD. Movement, crouch pose, jetpack physics, facing, aiming, and modular visual structure are preserved. Local Windows combat validation is still required.
 
+Task 013 repaired the audited rifle integration: attached the weapon controller script, corrected logical collision bits, moved projectile tuning into `WeaponDefinition`, aligned target collision with visuals, and exposed public read-only ammunition to the HUD. Local Windows combat validation is still required.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

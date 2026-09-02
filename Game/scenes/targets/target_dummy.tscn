@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/targets/target_dummy.gd" id="1_target"]
+
+[sub_resource type="RectangleShape2D" id="target_shape"]
+size = Vector2(16, 28)
+
+[node name="TargetDummy" type="StaticBody2D"]
+collision_layer = 4
+script = ExtResource("1_target")
+
+[node name="Visual" type="ColorRect" parent="."]
+size = Vector2(16, 28)
+position = Vector2(-8, -28)
+color = Color(0.8, 0.5, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("target_shape")

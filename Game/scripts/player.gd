@@ -27,11 +27,15 @@ var facing_direction := 1
 @onready var legs_slot: Node2D = $BodyRoot/LegsSlot
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
+@onready var muzzle_marker: Marker2D = $BodyRoot/AimPivot/WeaponSlot/PlaceholderWeapon/Muzzle
+@onready var weapon_controller: WeaponController = $WeaponController
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var _rectangle_shape: RectangleShape2D = RectangleShape2D.new()
 
 func _ready() -> void:
+	weapon_controller.setup(load("res://resources/weapons/automatic_rifle.tres"))
+	weapon_controller.fired.connect(_spawn_projectile)
 	_rectangle_shape.size = Vector2(12, STAND_HEIGHT)
 	collision_shape.shape = _rectangle_shape
 	_update_crouch(false)
@@ -67,6 +71,17 @@ func _physics_process(delta: float) -> void:
 	_update_crouch(crouching)
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
+	weapon_controller.set_firing_enabled(true)
+	if Input.is_action_pressed("fire"):
+		weapon_controller.try_fire()
+	if Input.is_action_just_pressed("reload"):
+		weapon_controller.try_reload()
+
+func _spawn_projectile() -> void:
+	var projectile: Area2D = weapon_controller.weapon_definition.projectile_scene.instantiate()
+	get_parent().add_child(projectile)
+	projectile.global_position = muzzle_marker.global_position
+	projectile.direction = (get_global_mouse_position() - muzzle_marker.global_position).normalized()
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT

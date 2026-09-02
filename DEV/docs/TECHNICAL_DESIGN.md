@@ -75,7 +75,7 @@ Each placeholder module is a separate scene instance and can later be replaced w
 
 The current jetpack model authorizes flight only from a grounded jump, requires a held jump input while airborne, clears authorization on landing, and smoothly approaches a controlled negative rise velocity. The HUD and state reporting use the actual jetpack-active result rather than raw input.
 
-The player local origin represents the feet. Collision height uses `collision_shape.position.y = -target_height * 0.5`, so standing and crouching bottoms both remain at local Y 0. The upper-body offset is `STAND_HEIGHT - target_height`; crouching moves `BodySlot` and `JetpackSlot` down to Y 10 and `AimPivot` from Y -18 to Y -8, while `LegsSlot` remains fixed at Y 0.
+The player local origin represents the feet. Collision height uses `collision_shape.position.y = -target_height * 0.5`, so standing and crouching bottoms both remain at local Y 0. The crouch visual offset is `CROUCH_VISUAL_OFFSET = 4`; crouching moves `BodySlot` and `JetpackSlot` down to Y 4 and `AimPivot` from Y -18 to Y -14, while `LegsSlot` remains fixed at Y 0. This keeps the torso visibly above the legs while communicating the pose.
 
 Facing is derived from the mouse horizontal offset with a small dead zone and preserved inside that zone. `BodySlot`, `LegsSlot`, and `JetpackSlot` flip horizontally without flipping `BodyRoot`. `AimPivot` independently aims at the global mouse and mirrors its local Y axis when facing left so arm and weapon artwork remain upright while local +X continues to point toward the cursor.
 
@@ -127,6 +127,19 @@ Likely scripts, kept focused:
 - `mission_hud.gd` — read-only presentation of player, weapon, jetpack, ability, mission, and target state.
 
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
+
+The current combat foundation adds:
+
+- `Game/scripts/combat/weapon_definition.gd` — data-driven rifle tuning.
+- `Game/scripts/combat/weapon_controller.gd` — fire cadence, ammunition, reloading, and focused signals.
+- `Game/scripts/combat/rifle_projectile.gd` — transform-safe projectile movement, lifetime, and single-hit damage.
+- `Game/scripts/targets/target_dummy.gd` — stationary 50-health target with visible feedback.
+- `Game/scenes/projectiles/rifle_projectile.tscn` — placeholder rifle projectile.
+- `Game/scenes/targets/target_dummy.tscn` — reusable target dummy.
+- `Game/resources/weapons/automatic_rifle.tres` — automatic rifle definition.
+- `Muzzle` Marker2D under the weapon module defines the projectile spawn point.
+
+Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Projectiles use collision layer 4 with mask 9 and detect world (1) plus targets (3). Target dummies use layer 3 and do not block player movement.
 
 ## Signals
 

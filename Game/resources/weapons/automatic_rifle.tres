@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/weapon_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/rifle_projectile.tscn" id="2_projectile"]
+
+[resource]
+script = ExtResource("1_definition")
+projectile_scene = ExtResource("2_projectile")

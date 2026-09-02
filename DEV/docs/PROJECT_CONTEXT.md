@@ -20,6 +20,8 @@ Task 010 corrected the audited crouch offset sign and aim-guide origin. Crouchin
 
 Task 011 reduced the crouching visual offset from 10 to 4 pixels after Windows testing showed the torso sinking too far into the legs. The collision shape and ground anchoring are unchanged. Local Windows re-check of the crouch pose is still required.
 
+Task 012 added the automatic rifle combat foundation: data-driven weapon definition, weapon controller, visible projectiles, ammunition, manual reloading, damage, stationary target dummies, and a weapon/ammo HUD. Movement, crouch pose, jetpack physics, facing, aiming, and modular visual structure are preserved. Local Windows combat validation is still required.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

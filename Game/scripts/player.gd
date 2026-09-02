@@ -104,8 +104,8 @@ func _update_crouch(crouching: bool) -> void:
 	_rectangle_shape.size = Vector2(_rectangle_shape.size.x, target_height)
 	collision_shape.position.y = -target_height * 0.5
 	body_slot.position.y = upper_body_offset
-	if legs_module.has_method("set_crouching"):
-		legs_module.set_crouching(crouching)
+	if legs_module.has_method(&"set_crouching"):
+		legs_module.call(&"set_crouching", crouching)
 	jetpack_slot.position.y = upper_body_offset
 	aim_pivot.position.y = -72.0 + upper_body_offset
 

@@ -38,6 +38,8 @@ Task 019 aligned the native scale comparison geometry and labels. The three silh
 
 Task 020 corrected the modular placeholder crouch pose. The upper-body, aim, and jetpack visuals now use a 32-pixel crouch offset, while the replaceable legs module switches between explicit integer-authored 40x56 standing geometry and 40x24 crouching geometry. Native 1280×720 configuration was statically verified; Windows runtime and visual validation remain pending because no Godot executable is available in the validation environment. No movement, collision, aiming, or combat behavior was changed.
 
+Task 021 corrected the modular legs pose invocation to use Godot's safe dynamic `StringName` call interface. Crouch geometry and gameplay behavior remain unchanged.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

@@ -21,8 +21,10 @@ This document defines the architecture for the first Godot 4.7.2 Standard vertic
 
 Likely top-level scenes:
 
-- `Game/scenes/level/vertical_slice.tscn` — playable level, spawns, interactions, and extraction trigger.
+- `Game/scenes/level/vertical_slice.tscn` — planned final vertical-slice level.
+- `Game/scenes/arena.tscn` — current movement test arena.
 - `Game/scenes/player/player.tscn` — player root and equipment sockets.
+- `Game/scenes/player.tscn` — current movement-foundation player scene.
 - `Game/scenes/enemies/basic_mercenary.tscn`, `heavy_mercenary.tscn`, and `mission_helicopter.tscn`.
 - `Game/scenes/projectiles/` — rifle rounds, shotgun pellet bundle, and hook.
 - `Game/scenes/equipment/world_pickup.tscn` — reusable pickup for every dropped or case-emitted item.
@@ -49,6 +51,8 @@ Player (CharacterBody2D)
 |-- InteractionSensor (Area2D)
 `-- StateController (Node)
 ```
+
+The current movement foundation uses `Game/scenes/player.tscn` with `player.gd`, a `BodyRoot` placeholder, an `AimPivot`, and a `Camera2D`. This is deliberately simple but leaves room to add the separate equipment sockets and behavior controllers without changing the player-root contract.
 
 Socket children represent the currently equipped visual module. Behavior controllers communicate with the player root through well-defined signals and explicit state requests.
 

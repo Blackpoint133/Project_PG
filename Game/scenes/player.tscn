@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+
+[sub_resource type="RectangleShape2D" id="player_shape"]
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+script = ExtResource("1_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("player_shape")
+
+[node name="BodyRoot" type="Node2D" parent="."]
+
+[node name="Body" type="ColorRect" parent="BodyRoot"]
+size = Vector2(12, 28)
+position = Vector2(-6, -28)
+color = Color(0.2, 0.4, 0.9, 1)
+
+[node name="AimPivot" type="Node2D" parent="BodyRoot"]
+position = Vector2(0, -18)
+
+[node name="AimLine" type="Line2D" parent="BodyRoot/AimPivot"]
+points = PackedVector2Array(0, 0, 16, 0)
+width = 3.0
+default_color = Color(1, 1, 1, 0.8)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_left = 0
+limit_top = -200
+limit_right = 1280
+limit_bottom = 360
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

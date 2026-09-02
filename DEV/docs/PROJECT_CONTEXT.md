@@ -14,6 +14,8 @@ Task 007 replaced the combined placeholder character visual with a modular visua
 
 Task 008 cleaned the modular placeholder foundation after a repository audit. The placeholder module scenes no longer reference unnecessary no-op scripts, and the body-plus-legs silhouette now covers the intended 12x28 area without a gap. Local visual verification remains pending.
 
+Task 009 corrected the foot-anchored collision and crouch pose, added mouse-based horizontal facing with a dead zone, flipped body, legs, and jetpack without flipping `BodyRoot`, and moved arm and weapon pivots to the shoulder origin. The user-reported Task 008 visual defects were used as the validation basis. Local Windows visual verification is still required.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

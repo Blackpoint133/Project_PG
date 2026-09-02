@@ -75,6 +75,10 @@ Each placeholder module is a separate scene instance and can later be replaced w
 
 The current jetpack model authorizes flight only from a grounded jump, requires a held jump input while airborne, clears authorization on landing, and smoothly approaches a controlled negative rise velocity. The HUD and state reporting use the actual jetpack-active result rather than raw input.
 
+The player local origin represents the feet. Collision and visual pose height use `collision_shape.position.y = -target_height * 0.5`, so standing and crouching bottoms both remain at local Y 0. Crouching lowers `BodySlot`, `JetpackSlot`, and `AimPivot` by 10 pixels while `LegsSlot` remains fixed at Y 0.
+
+Facing is derived from the mouse horizontal offset with a small dead zone and preserved inside that zone. `BodySlot`, `LegsSlot`, and `JetpackSlot` flip horizontally without flipping `BodyRoot`. `AimPivot` independently aims at the global mouse and mirrors its local Y axis when facing left so arm and weapon artwork remain upright while local +X continues to point toward the cursor.
+
 Socket children represent the currently equipped visual module. Behavior controllers communicate with the player root through well-defined signals and explicit state requests.
 
 ## State Responsibility

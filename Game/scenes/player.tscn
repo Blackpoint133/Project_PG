@@ -42,11 +42,12 @@ position = Vector2(0, -18)
 [node name="PlaceholderRightArm" parent="BodyRoot/AimPivot/RightArmSlot" instance=ExtResource("6_right_arm")]
 
 [node name="WeaponSlot" type="Node2D" parent="BodyRoot/AimPivot"]
+position = Vector2(7, 0)
 
 [node name="PlaceholderWeapon" parent="BodyRoot/AimPivot/WeaponSlot" instance=ExtResource("7_weapon")]
 
 [node name="AimLine" type="Line2D" parent="BodyRoot/AimPivot"]
-points = PackedVector2Array(0, 0, 16, 0)
+points = PackedVector2Array(7, 0, 23, 0)
 width = 3.0
 default_color = Color(1, 1, 1, 0.8)
 

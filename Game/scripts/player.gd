@@ -78,16 +78,23 @@ func _physics_process(delta: float) -> void:
 		weapon_controller.try_reload()
 
 func _spawn_projectile() -> void:
-	var projectile: RifleProjectile = weapon_controller.weapon_definition.projectile_scene.instantiate()
-	get_parent().add_child(projectile)
-	projectile.global_position = muzzle_marker.global_position
-	var aim_direction := (get_global_mouse_position() - muzzle_marker.global_position).normalized()
+	var spawned_node = weapon_controller.weapon_definition.projectile_scene.instantiate()
+	var projectile := spawned_node as RifleProjectile
+	if projectile == null:
+		push_error("Weapon projectile scene is not a RifleProjectile.")
+		return
+	var aim_direction := get_global_mouse_position() - muzzle_marker.global_position
+	if aim_direction.length_squared() <= 0.0:
+		aim_direction = muzzle_marker.global_transform.x
+	aim_direction = aim_direction.normalized()
 	projectile.configure(
 		aim_direction,
 		weapon_controller.weapon_definition.projectile_speed,
 		weapon_controller.weapon_definition.damage,
 		weapon_controller.weapon_definition.projectile_lifetime
 	)
+	get_parent().add_child(projectile)
+	projectile.global_position = muzzle_marker.global_position
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT

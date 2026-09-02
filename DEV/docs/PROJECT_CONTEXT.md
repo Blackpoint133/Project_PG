@@ -24,6 +24,8 @@ Task 012 added the automatic rifle combat foundation: data-driven weapon definit
 
 Task 013 repaired the audited rifle integration: attached the weapon controller script, corrected logical collision bits, moved projectile tuning into `WeaponDefinition`, aligned target collision with visuals, and exposed public read-only ammunition to the HUD. Local Windows combat validation is still required.
 
+Task 014 corrected the projectile lifecycle so configuration completes before the projectile enters the scene tree, added a safe zero-direction fallback, removed duplicate ammunition state from the controller, and made the HUD cache ammunition through focused signal updates instead of per-frame reads. Local Windows combat validation is still required.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

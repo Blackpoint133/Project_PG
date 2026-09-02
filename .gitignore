@@ -1,0 +1,20 @@
+/Game/.godot/
+/Game/.import/
+/Tools/Godot/*
+.vscode/
+.idea/
+.env
+.env.*
+*.tmp
+*.key
+*.pem
+
+# Common Windows system files
+Thumbs.db
+Desktop.ini
+
+# Common macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+

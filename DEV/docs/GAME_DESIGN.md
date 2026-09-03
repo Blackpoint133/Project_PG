@@ -59,7 +59,7 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 
 - Activated with C.
 - Launch toward the mouse cursor, including left, right, and diagonal directions.
-- Clamp the dash angle to no more than 60 degrees from the horizontal ground line.
+- Clamp the dash angle to no more than 45 degrees from the horizontal ground line.
 - Damage valid enemies on contact once per dash activation.
 - Knock contacted enemies backward.
 - Reserve an extension point for a future bleeding status effect; bleeding is not implemented in the first vertical slice.

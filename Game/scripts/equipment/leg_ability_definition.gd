@@ -8,4 +8,4 @@ extends Resource
 @export var cooldown: float = 1.5
 @export var contact_damage: int = 25
 @export var knockback_strength: float = 640.0
-@export var max_aim_angle_degrees: float = 60.0
+@export var max_aim_angle_degrees: float = 45.0

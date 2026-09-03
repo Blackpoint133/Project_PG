@@ -1,5 +1,5 @@
 class_name KneeDashController
-extends Node
+extends Node2D
 
 signal dash_started(direction: Vector2)
 signal target_hit(target: Node, damage: int)

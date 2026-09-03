@@ -197,7 +197,7 @@ func _get_knee_dash_direction(ability_definition: LegAbilityDefinition) -> Vecto
 	var desired_angle: float = 0.0
 	if mouse_offset.length_squared() > 1.0:
 		desired_angle = atan2(mouse_offset.y, absf(mouse_offset.x))
-	var max_angle_degrees: float = clampf(ability_definition.max_aim_angle_degrees, 0.0, 60.0)
+	var max_angle_degrees: float = clampf(ability_definition.max_aim_angle_degrees, 0.0, 45.0)
 	var max_angle_radians: float = deg_to_rad(max_angle_degrees)
 	desired_angle = clampf(desired_angle, -max_angle_radians, max_angle_radians)
 	var dash_direction: Vector2 = Vector2(

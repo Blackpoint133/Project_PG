@@ -59,7 +59,7 @@ script = ExtResource("8_weapon_controller")
 [node name="LegEquipmentController" type="Node" parent="."]
 script = ExtResource("10_leg_controller")
 
-[node name="KneeDashController" type="Node" parent="."]
+[node name="KneeDashController" type="Node2D" parent="."]
 script = ExtResource("11_knee_dash_controller")
 
 [node name="Hitbox" type="Area2D" parent="KneeDashController"]

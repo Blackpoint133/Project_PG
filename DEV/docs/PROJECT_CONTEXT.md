@@ -58,9 +58,9 @@ Task 029 implements the two physical weapon slots. Slot 1 starts with the automa
 
 Task 031 adds the interchangeable leg equipment foundation. Standard Legs remain the starting visual with no ability; a physical Knee-Dash Legs pickup can be equipped with F and swaps exact `LegInstance` ownership through the dedicated controller. The C request is safe for Standard Legs and only emits Knee Dash metadata for future execution. Windows runtime validation is pending; Task 032 will implement dash behavior.
 
-Task 032 implements directional Knee Dash activation for Knee-Dash Legs. Mouse aim is clamped to a 60-degree sector from the selected horizontal side, with movement-priority dash physics, target-only once-per-dash contact damage, capped knockback, and per-instance cooldown preservation. Standard Legs remain passive; final dash presentation and additional effects are deferred. Windows runtime validation is pending.
+Task 032 implements directional Knee Dash activation for Knee-Dash Legs. Mouse aim is clamped to a 45-degree sector from the selected horizontal side, with movement-priority dash physics, target-only once-per-dash contact damage, capped knockback, and per-instance cooldown preservation. Standard Legs remain passive; final dash presentation and additional effects are deferred. Windows runtime validation is pending.
 
-Task 033 corrected the left-side Knee Dash direction reconstruction so horizontal mirroring preserves the mouse vertical sign while retaining the 60-degree clamp. The dash debug visual is now centered on the 64x28 hitbox. Windows runtime validation is pending.
+Task 033 corrected the left-side Knee Dash direction reconstruction so horizontal mirroring preserves the mouse vertical sign while retaining the 45-degree clamp. The dash debug visual is now centered on the 64x28 hitbox. Windows runtime validation is pending.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

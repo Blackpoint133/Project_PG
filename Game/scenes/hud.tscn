@@ -39,19 +39,28 @@ theme_override_font_sizes/font_size = 24
 horizontal_alignment = 2
 text = "LEGS: STANDARD\nC: NONE"
 
+[node name="LeftArmStatusLabel" type="Label" parent="."]
+offset_left = 680.0
+offset_top = 184.0
+offset_right = 1240.0
+offset_bottom = 260.0
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+text = "LEFT ARM: STANDARD\nQ: NONE"
+
 [node name="ControlsLabel" type="Label" parent="."]
 offset_left = 24.0
 offset_top = 104.0
 offset_right = 640.0
-offset_bottom = 180.0
+offset_bottom = 212.0
 theme_override_font_sizes/font_size = 24
-text = "A/D: move  S: crouch  Space: jump\n1/2: switch  LMB: fire  R: reload  F: equip  C: ability"
+text = "A/D: move  S: crouch  Space: jump\n1/2: switch  LMB: fire  R: reload\nF: equip  C: legs  Q: left arm"
 
 [node name="InteractionLabel" type="Label" parent="."]
 visible = false
 offset_left = 24.0
-offset_top = 184.0
+offset_top = 220.0
 offset_right = 900.0
-offset_bottom = 220.0
+offset_bottom = 256.0
 theme_override_font_sizes/font_size = 28
 text = ""

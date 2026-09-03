@@ -64,6 +64,8 @@ Task 033 corrected the left-side Knee Dash direction reconstruction so horizonta
 
 Task 035 makes living targets physically block the Player through collision mask 5, while defeated targets remain passable after clearing their enemy layer. Knee-Dash placeholder knockback now permits the authored 640.0 horizontal impulse cap; other dash behavior remains unchanged. Windows runtime validation is pending.
 
+Task 036 adds interchangeable left-arm equipment. Standard Left Arm is installed dynamically at startup, while a physical Shield Left Arm pickup transfers exact instances through F and updates the held visual and HUD. Q is a held-input metadata boundary only; shield protection and energy behavior are deferred to Task 037. Windows runtime validation is pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

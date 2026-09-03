@@ -66,6 +66,12 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 
 The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary, directional dash, contact damage, capped knockback, and cooldown metadata. Final dash presentation and additional effects remain deferred.
 
+### Left-Arm Equipment
+
+- Standard Left Arm is the passive starting equipment.
+- Shield Left Arm is a physical replacement equipped with F.
+- Holding Q is the Shield ability input boundary; protection, energy, projectile blocking, and firing lock will be implemented next.
+
 ### Shield Left Arm
 
 - Activated by holding Q.

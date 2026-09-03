@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LeftArmDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/equipment/left_arm_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/player/modules/placeholder_left_arm.tscn" id="2_visual"]
+
+[resource]
+script = ExtResource("1_definition")
+equipment_id = "standard_left_arm"
+display_name = "STANDARD"
+held_visual_scene = ExtResource("2_visual")

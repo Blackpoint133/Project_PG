@@ -4,11 +4,11 @@
 [ext_resource type="Script" path="res://scripts/combat/weapon_controller.gd" id="8_weapon_controller"]
 [ext_resource type="PackedScene" path="res://scenes/player/modules/placeholder_body.tscn" id="2_body"]
 [ext_resource type="PackedScene" path="res://scenes/player/modules/placeholder_jetpack.tscn" id="4_jetpack"]
-[ext_resource type="PackedScene" path="res://scenes/player/modules/placeholder_left_arm.tscn" id="5_left_arm"]
 [ext_resource type="PackedScene" path="res://scenes/player/modules/placeholder_right_arm.tscn" id="6_right_arm"]
 [ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="9_interaction"]
 [ext_resource type="Script" path="res://scripts/equipment/leg_equipment_controller.gd" id="10_leg_controller"]
 [ext_resource type="Script" path="res://scripts/abilities/knee_dash_controller.gd" id="11_knee_dash_controller"]
+[ext_resource type="Script" path="res://scripts/equipment/left_arm_equipment_controller.gd" id="12_left_arm_controller"]
 
 [sub_resource type="RectangleShape2D" id="player_shape"]
 size = Vector2(40, 96)
@@ -44,8 +44,6 @@ position = Vector2(0, -72)
 
 [node name="LeftArmSlot" type="Node2D" parent="BodyRoot/AimPivot"]
 
-[node name="PlaceholderLeftArm" parent="BodyRoot/AimPivot/LeftArmSlot" instance=ExtResource("5_left_arm")]
-
 [node name="RightArmSlot" type="Node2D" parent="BodyRoot/AimPivot"]
 
 [node name="PlaceholderRightArm" parent="BodyRoot/AimPivot/RightArmSlot" instance=ExtResource("6_right_arm")]
@@ -58,6 +56,9 @@ script = ExtResource("8_weapon_controller")
 
 [node name="LegEquipmentController" type="Node" parent="."]
 script = ExtResource("10_leg_controller")
+
+[node name="LeftArmEquipmentController" type="Node" parent="."]
+script = ExtResource("12_left_arm_controller")
 
 [node name="KneeDashController" type="Node2D" parent="."]
 script = ExtResource("11_knee_dash_controller")

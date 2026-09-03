@@ -21,6 +21,7 @@ const CROUCH_VISUAL_OFFSET := 32
 const FACING_DEAD_ZONE := 8.0
 const AUTOMATIC_RIFLE: WeaponDefinition = preload("res://resources/weapons/automatic_rifle.tres")
 const STANDARD_LEGS: LegDefinition = preload("res://resources/equipment/standard_legs.tres")
+const STANDARD_LEFT_ARM: LeftArmDefinition = preload("res://resources/equipment/standard_left_arm.tres")
 
 var movement_state := "grounded"
 var _jetpack_authorized := false
@@ -30,9 +31,11 @@ var facing_direction := 1
 @onready var legs_slot: Node2D = $BodyRoot/LegsSlot
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
+@onready var left_arm_slot: Node2D = $BodyRoot/AimPivot/LeftArmSlot
 @onready var weapon_slot: Node2D = $BodyRoot/AimPivot/WeaponSlot
 @onready var weapon_controller: WeaponController = $WeaponController
 @onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
+@onready var left_arm_equipment_controller: LeftArmEquipmentController = $LeftArmEquipmentController
 @onready var knee_dash_controller: KneeDashController = $KneeDashController
 @onready var interaction_controller: InteractionController = $InteractionSensor
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -44,10 +47,12 @@ var legs_module: Node = null
 func _ready() -> void:
 	leg_equipment_controller.legs_changed.connect(_on_legs_changed)
 	leg_equipment_controller.leg_ability_requested.connect(_on_leg_ability_requested)
+	left_arm_equipment_controller.left_arm_changed.connect(_on_left_arm_changed)
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
 	leg_equipment_controller.setup(STANDARD_LEGS)
+	left_arm_equipment_controller.setup(STANDARD_LEFT_ARM)
 	weapon_controller.setup(AUTOMATIC_RIFLE)
 	_rectangle_shape.size = Vector2(40, STAND_HEIGHT)
 	collision_shape.shape = _rectangle_shape
@@ -108,6 +113,7 @@ func _physics_process(delta: float) -> void:
 		weapon_controller.try_fire()
 	if Input.is_action_just_pressed("reload"):
 		weapon_controller.try_reload()
+	left_arm_equipment_controller.set_ability_input(Input.is_action_pressed("left_arm_ability"))
 
 func _spawn_projectile() -> void:
 	if muzzle_marker == null:
@@ -164,6 +170,18 @@ func _on_weapon_changed(definition: WeaponDefinition) -> void:
 func _on_interaction_prompt_changed(prompt_text: String) -> void:
 	interaction_prompt_changed.emit(prompt_text)
 
+func _on_left_arm_changed(definition: LeftArmDefinition) -> void:
+	for child: Node in left_arm_slot.get_children():
+		child.free()
+	if definition == null or definition.held_visual_scene == null:
+		return
+	var visual_node: Node = definition.held_visual_scene.instantiate()
+	var visual_transform: Node2D = visual_node as Node2D
+	if visual_transform == null:
+		visual_node.free()
+		return
+	left_arm_slot.add_child(visual_transform)
+
 func _on_legs_changed(definition: LegDefinition) -> void:
 	if definition == null or definition.ability_definition == null or definition.ability_definition.ability_id != "knee_dash":
 		knee_dash_controller.cancel_dash()
@@ -216,6 +234,9 @@ func get_equipped_weapon_definition() -> WeaponDefinition:
 func get_equipped_leg_definition() -> LegDefinition:
 	return leg_equipment_controller.current_definition
 
+func get_equipped_left_arm_definition() -> LeftArmDefinition:
+	return left_arm_equipment_controller.current_definition
+
 func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
 	if pickup == null:
 		return
@@ -250,6 +271,23 @@ func swap_legs_with_pickup(pickup: WorldLegPickup) -> void:
 		interaction_controller.refresh_prompt()
 		return
 	pickup.set_leg_instance(outgoing_instance)
+	pickup.global_position = global_position + Vector2(0, -32)
+	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
+	interaction_controller.refresh_prompt()
+
+func swap_left_arm_with_pickup(pickup: WorldLeftArmPickup) -> void:
+	if pickup == null:
+		return
+	var incoming_instance: LeftArmInstance = pickup.take_left_arm_instance()
+	if incoming_instance == null:
+		interaction_controller.refresh_prompt()
+		return
+	var outgoing_instance: LeftArmInstance = left_arm_equipment_controller.replace_left_arm_instance(incoming_instance)
+	if outgoing_instance == null:
+		pickup.set_left_arm_instance(incoming_instance)
+		interaction_controller.refresh_prompt()
+		return
+	pickup.set_left_arm_instance(outgoing_instance)
 	pickup.global_position = global_position + Vector2(0, -32)
 	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
 	interaction_controller.refresh_prompt()

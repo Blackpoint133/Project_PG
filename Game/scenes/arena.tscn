@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/arena.gd" id="1_arena"]
 [ext_resource type="PackedScene" path="res://scenes/targets/target_dummy.tscn" id="2_target"]
@@ -6,6 +6,8 @@
 [ext_resource type="Resource" path="res://resources/weapons/shotgun.tres" id="4_shotgun"]
 [ext_resource type="PackedScene" path="res://scenes/equipment/world_leg_pickup.tscn" id="5_leg_pickup"]
 [ext_resource type="Resource" path="res://resources/equipment/knee_dash_legs.tres" id="6_knee_dash_legs"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_left_arm_pickup.tscn" id="7_left_arm_pickup"]
+[ext_resource type="Resource" path="res://resources/equipment/shield_left_arm.tres" id="8_shield_left_arm"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
 size = Vector2(2560, 96)
@@ -116,6 +118,10 @@ weapon_definition = ExtResource("4_shotgun")
 [node name="KneeDashLegsPickup" parent="." instance=ExtResource("5_leg_pickup")]
 position = Vector2(1000, 624)
 leg_definition = ExtResource("6_knee_dash_legs")
+
+[node name="ShieldLeftArmPickup" parent="." instance=ExtResource("7_left_arm_pickup")]
+position = Vector2(320, 624)
+left_arm_definition = ExtResource("8_shield_left_arm")
 
 [node name="TargetLeftFacing" parent="." instance=ExtResource("2_target")]
 position = Vector2(160, 500)

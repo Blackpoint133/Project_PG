@@ -58,12 +58,13 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 ### Knee-Dash Legs
 
 - Activated with C.
-- Dash forward in the character's facing direction.
-- Damage enemies on contact.
-- Knock enemies backward.
+- Launch toward the mouse cursor, including left, right, and diagonal directions.
+- Clamp the dash angle to no more than 60 degrees from the horizontal ground line.
+- Damage valid enemies on contact once per dash activation.
+- Knock contacted enemies backward.
 - Reserve an extension point for a future bleeding status effect; bleeding is not implemented in the first vertical slice.
 
-The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary and ability metadata. Knee-dash movement, damage, hitboxes, cooldown execution, and knockback are deferred to Task 032.
+The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary, directional dash, contact damage, capped knockback, and cooldown metadata. Final dash presentation and additional effects remain deferred.
 
 ### Shield Left Arm
 

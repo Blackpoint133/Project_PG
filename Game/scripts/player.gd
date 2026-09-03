@@ -33,6 +33,7 @@ var facing_direction := 1
 @onready var weapon_slot: Node2D = $BodyRoot/AimPivot/WeaponSlot
 @onready var weapon_controller: WeaponController = $WeaponController
 @onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
+@onready var knee_dash_controller: KneeDashController = $KneeDashController
 @onready var interaction_controller: InteractionController = $InteractionSensor
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
@@ -42,6 +43,7 @@ var legs_module: Node = null
 
 func _ready() -> void:
 	leg_equipment_controller.legs_changed.connect(_on_legs_changed)
+	leg_equipment_controller.leg_ability_requested.connect(_on_leg_ability_requested)
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
@@ -53,38 +55,48 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
+	if Input.is_action_just_pressed("leg_ability"):
+		leg_equipment_controller.activate_ability()
+	var dash_active: bool = knee_dash_controller.is_active()
 	var input_direction := Input.get_axis("move_left", "move_right")
-	var crouching := Input.is_action_pressed("crouch") and was_on_floor
+	var crouching := Input.is_action_pressed("crouch") and was_on_floor and not dash_active
 
-	if Input.is_action_just_pressed("jump") and was_on_floor:
-		_jetpack_authorized = true
-		velocity.y = JUMP_VELOCITY
-	elif was_on_floor:
-		# Landing always clears the previous authorization, even if Space is held.
-		_jetpack_authorized = false
-
-	var jetpack_active := _jetpack_authorized and not was_on_floor and Input.is_action_pressed("jump")
-	if jetpack_active:
-		# Smoothly approach the rise target without fighting gravity in the same frame.
-		velocity.y = move_toward(velocity.y, JETPACK_TARGET_RISE_VELOCITY, JETPACK_ACCELERATION * delta)
-	elif not was_on_floor:
-		velocity.y = minf(velocity.y + get_gravity().y * delta, MAX_FALL_SPEED)
-
-	var target_speed := CROUCH_SPEED if crouching else RUN_SPEED
-	var horizontal_velocity := input_direction * target_speed
-	var acceleration := GROUND_ACCELERATION if was_on_floor else AIR_ACCELERATION
-	if absf(horizontal_velocity) > 0.0:
-		velocity.x = move_toward(velocity.x, horizontal_velocity, acceleration * delta)
+	var jetpack_active: bool = false
+	if dash_active:
+		_update_crouch(false)
+		velocity = knee_dash_controller.get_dash_velocity()
+		move_and_slide()
+		knee_dash_controller.process_contacts()
+		knee_dash_controller.advance(delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, GROUND_FRICTION * delta)
+		if Input.is_action_just_pressed("jump") and was_on_floor:
+			_jetpack_authorized = true
+			velocity.y = JUMP_VELOCITY
+		elif was_on_floor:
+			# Landing always clears the previous authorization, even if Space is held.
+			_jetpack_authorized = false
 
-	move_and_slide()
+		jetpack_active = _jetpack_authorized and not was_on_floor and Input.is_action_pressed("jump")
+		if jetpack_active:
+			# Smoothly approach the rise target without fighting gravity in the same frame.
+			velocity.y = move_toward(velocity.y, JETPACK_TARGET_RISE_VELOCITY, JETPACK_ACCELERATION * delta)
+		elif not was_on_floor:
+			velocity.y = minf(velocity.y + get_gravity().y * delta, MAX_FALL_SPEED)
+
+		var target_speed := CROUCH_SPEED if crouching else RUN_SPEED
+		var horizontal_velocity := input_direction * target_speed
+		var acceleration := GROUND_ACCELERATION if was_on_floor else AIR_ACCELERATION
+		if absf(horizontal_velocity) > 0.0:
+			velocity.x = move_toward(velocity.x, horizontal_velocity, acceleration * delta)
+		else:
+			velocity.x = move_toward(velocity.x, 0.0, GROUND_FRICTION * delta)
+
+		move_and_slide()
+
 	_update_crouch(crouching)
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
 	weapon_controller.set_firing_enabled(true)
-	if Input.is_action_just_pressed("leg_ability"):
-		leg_equipment_controller.activate_ability()
 	if Input.is_action_just_pressed("weapon_1"):
 		weapon_controller.select_slot(0)
 	if Input.is_action_just_pressed("weapon_2"):
@@ -153,6 +165,8 @@ func _on_interaction_prompt_changed(prompt_text: String) -> void:
 	interaction_prompt_changed.emit(prompt_text)
 
 func _on_legs_changed(definition: LegDefinition) -> void:
+	if definition == null or definition.ability_definition == null or definition.ability_definition.ability_id != "knee_dash":
+		knee_dash_controller.cancel_dash()
 	for child: Node in legs_slot.get_children():
 		child.free()
 	legs_module = null
@@ -168,6 +182,27 @@ func _on_legs_changed(definition: LegDefinition) -> void:
 	var crouching: bool = Input.is_action_pressed("crouch") and is_on_floor()
 	if legs_module.has_method(&"set_crouching"):
 		legs_module.call(&"set_crouching", crouching)
+
+func _on_leg_ability_requested(ability_definition: LegAbilityDefinition) -> void:
+	if ability_definition == null or ability_definition.ability_id != "knee_dash":
+		return
+	var dash_direction: Vector2 = _get_knee_dash_direction(ability_definition)
+	knee_dash_controller.start_dash(ability_definition, dash_direction)
+
+func _get_knee_dash_direction(ability_definition: LegAbilityDefinition) -> Vector2:
+	var mouse_offset: Vector2 = get_global_mouse_position() - global_position
+	var horizontal_side: int = facing_direction
+	if absf(mouse_offset.x) > FACING_DEAD_ZONE:
+		horizontal_side = 1 if mouse_offset.x > 0.0 else -1
+	var desired_angle: float = 0.0
+	if mouse_offset.length_squared() > 1.0:
+		desired_angle = atan2(mouse_offset.y, absf(mouse_offset.x))
+	var max_angle_degrees: float = clampf(ability_definition.max_aim_angle_degrees, 0.0, 60.0)
+	var max_angle_radians: float = deg_to_rad(max_angle_degrees)
+	desired_angle = clampf(desired_angle, -max_angle_radians, max_angle_radians)
+	var dash_direction: Vector2 = Vector2(float(horizontal_side), 0.0).rotated(desired_angle)
+	facing_direction = horizontal_side
+	return dash_direction.normalized()
 
 func get_interaction_prompt() -> String:
 	return interaction_controller.get_current_prompt()
@@ -237,9 +272,12 @@ func _update_crouch(crouching: bool) -> void:
 func _update_visuals(_input_direction: float, _jetpack_active: bool) -> void:
 	var mouse_position := get_global_mouse_position()
 	aim_pivot.look_at(mouse_position)
-	var horizontal_offset := mouse_position.x - global_position.x
-	if absf(horizontal_offset) > FACING_DEAD_ZONE:
-		facing_direction = 1 if horizontal_offset > 0.0 else -1
+	if knee_dash_controller.is_active():
+		facing_direction = 1 if knee_dash_controller.get_dash_direction().x >= 0.0 else -1
+	else:
+		var horizontal_offset := mouse_position.x - global_position.x
+		if absf(horizontal_offset) > FACING_DEAD_ZONE:
+			facing_direction = 1 if horizontal_offset > 0.0 else -1
 	body_slot.scale.x = facing_direction
 	legs_slot.scale.x = facing_direction
 	jetpack_slot.scale.x = facing_direction
@@ -250,9 +288,11 @@ func _update_visuals(_input_direction: float, _jetpack_active: bool) -> void:
 
 func _update_state(jetpack_active: bool) -> void:
 	var new_state := "grounded"
-	if not is_on_floor():
+	if knee_dash_controller.is_active():
+		new_state = "knee_dash"
+	elif not is_on_floor():
 		new_state = "jetpack" if jetpack_active else "airborne"
-	if is_on_floor() and Input.is_action_pressed("crouch"):
+	elif is_on_floor() and Input.is_action_pressed("crouch"):
 		new_state = "crouching"
 	if new_state != movement_state:
 		movement_state = new_state

@@ -9,6 +9,8 @@ var _is_reloading := false
 var _loaded_ammo := 0
 var _reserve_ammo := 0
 var _weapon_name: String = ""
+var _leg_dash_active: bool = false
+var _leg_cooldown_remaining: float = 0.0
 
 func _ready() -> void:
 	set_process(true)
@@ -29,6 +31,9 @@ func _ready() -> void:
 		player.weapon_controller.weapon_slots_changed.connect(_on_weapon_slots_changed)
 		player.leg_equipment_controller.legs_changed.connect(_on_legs_changed)
 		player.leg_equipment_controller.leg_ability_changed.connect(_on_leg_ability_changed)
+		player.leg_equipment_controller.leg_ability_state_changed.connect(_on_leg_ability_state_changed)
+		player.knee_dash_controller.dash_started.connect(_on_dash_started)
+		player.knee_dash_controller.dash_ended.connect(_on_dash_ended)
 		player.interaction_prompt_changed.connect(_on_interaction_prompt_changed)
 
 func _process(_delta: float) -> void:
@@ -58,8 +63,10 @@ func _render_leg_status(player: Player) -> void:
 	var ability_name: String = "NONE"
 	if definition != null:
 		leg_name = definition.display_name
-	if ability_definition != null:
-		ability_name = ability_definition.display_name
+	if _leg_dash_active:
+		ability_name = "KNEE DASH ACTIVE"
+	elif ability_definition != null:
+		ability_name = "%s %.1fs" % [ability_definition.display_name, _leg_cooldown_remaining] if _leg_cooldown_remaining > 0.0 else "%s READY" % ability_definition.display_name
 	leg_status_label.text = "LEGS: %s\nC: %s" % [leg_name, ability_name]
 
 func _on_reload_started() -> void:
@@ -89,6 +96,24 @@ func _on_legs_changed(_definition: LegDefinition) -> void:
 		_render_leg_status(player)
 
 func _on_leg_ability_changed(_ability_definition: LegAbilityDefinition) -> void:
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_leg_status(player)
+
+func _on_leg_ability_state_changed(_ability_definition: LegAbilityDefinition, cooldown_remaining: float) -> void:
+	_leg_cooldown_remaining = cooldown_remaining
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_leg_status(player)
+
+func _on_dash_started(_direction: Vector2) -> void:
+	_leg_dash_active = true
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_leg_status(player)
+
+func _on_dash_ended() -> void:
+	_leg_dash_active = false
 	var player: Player = get_tree().get_first_node_in_group("player")
 	if player != null:
 		_render_leg_status(player)

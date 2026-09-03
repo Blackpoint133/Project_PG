@@ -68,6 +68,8 @@ Task 036 adds interchangeable left-arm equipment. Standard Left Arm is installed
 
 Task 037 adds the plasma Shield runtime. Holding Q projects a translucent cyan panel, drains the exact equipped LeftArmInstance over four seconds, waits one second, and recharges it over five seconds. Shield activity alone locks weapon firing; hostile projectile absorption remains pending. Windows runtime validation is pending.
 
+Task 038 corrected the stale Technical Design collision sentence to match the Task 035 solid-enemy contract. No gameplay behavior changed; Task 037 Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

@@ -165,7 +165,7 @@ Task 036 adds the independent left-arm equipment boundary: `LeftArmDefinition` i
 
 Task 037 adds `ShieldController` under `AimPivot`. The inactive Shield Arm remains a compact emitter, while held Q projects a translucent cyan panel and enables a defensive Area2D on logical layer 7 watching future enemy attack layer 5. Full energy lasts four seconds, recharge waits one second, and a full recharge takes five seconds. Shield energy, recharge delay, and depletion release state belong to the exact `LeftArmInstance`; Player applies the firing lock before processing LMB. Hostile projectile absorption and incoming damage remain pending.
 
-Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
+Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical enemy layer 3 (integer collision layer 4) with collision mask 0; living targets block Player CharacterBody2D movement, while defeated targets may become passable after clearing enemy layer 3.
 
 ## Signals
 

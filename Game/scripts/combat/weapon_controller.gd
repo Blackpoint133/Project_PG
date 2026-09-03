@@ -38,7 +38,7 @@ func select_slot(slot_index: int) -> bool:
 	_active_slot_index = slot_index
 	weapon_changed.emit(weapon_definition)
 	weapon_ammo_changed.emit(get_loaded_ammo(), get_reserve_ammo())
-	_start_reload()
+	_start_reload_if_empty()
 	_emit_slot_state()
 	return true
 
@@ -53,7 +53,7 @@ func replace_slot_instance(slot_index: int, instance: WeaponInstance) -> WeaponI
 	if slot_index == _active_slot_index:
 		weapon_changed.emit(weapon_definition)
 		weapon_ammo_changed.emit(get_loaded_ammo(), get_reserve_ammo())
-		_start_reload()
+		_start_reload_if_empty()
 	_emit_slot_state()
 	return outgoing
 
@@ -104,6 +104,12 @@ func try_fire() -> void:
 		_start_reload()
 
 func try_reload() -> void:
+	_start_reload()
+
+func _start_reload_if_empty() -> void:
+	var active_instance: WeaponInstance = _weapon_slots[_active_slot_index]
+	if active_instance == null or active_instance.loaded_ammo != 0:
+		return
 	_start_reload()
 
 func _start_reload() -> void:

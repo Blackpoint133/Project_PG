@@ -56,6 +56,8 @@ Task 028 corrected the automatic reload regression: WeaponController now starts 
 
 Task 029 implements the two physical weapon slots. Slot 1 starts with the automatic rifle and slot 2 is empty; occupied-slot selection uses keys 1 and 2, while F pickups fill empty slots or replace the active slot by transferring exact `WeaponInstance` objects. Per-instance ammunition remains independent for duplicate weapons, including two shotguns. Windows runtime validation is pending.
 
+Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

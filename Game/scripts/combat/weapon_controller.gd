@@ -84,7 +84,8 @@ func try_fire() -> void:
 	_fire_cooldown = 1.0 / weapon_definition.fire_rate
 	fired.emit()
 	weapon_ammo_changed.emit(_loaded_ammo, _reserve_ammo)
-	_start_reload()
+	if _loaded_ammo == 0:
+		_start_reload()
 
 func try_reload() -> void:
 	_start_reload()

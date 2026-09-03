@@ -52,6 +52,8 @@ Task 026 attached the existing interaction controller script to the Player Inter
 
 Task 027 enforced physical single-weapon ownership by removing temporary 1/2 debug switching and adding automatic reload for empty magazines with reserve ammunition. F pickup swapping and per-weapon ammunition preservation remain active; Windows runtime validation is pending.
 
+Task 028 corrected the automatic reload regression: WeaponController now starts automatic reload after firing only when loaded ammunition reaches zero, while empty-fire, empty-weapon equip, manual R reload, reload cancellation, and zero-reserve guards remain active. The approved two-slot physical weapon ownership design is documented for Task 029; implementation is not included here.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

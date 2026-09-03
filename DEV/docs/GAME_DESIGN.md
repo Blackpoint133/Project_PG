@@ -24,7 +24,7 @@ The approved visual direction is original high-detail industrial science-fiction
 | E | Activate the equipped right-arm ability |
 | F | Interact, accept missions, open cases, and equip nearby items |
 
-Weapon ownership is physical: the player has exactly one equipped weapon, and new weapons are obtained through nearby F interactions. Equipping a replacement drops the previous weapon so it can be collected again.
+Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the automatic rifle and slot 2 starts empty; keys 1 and 2 switch only between occupied slots. Picking up a weapon fills an empty slot first. When both slots are occupied, a pickup replaces the active slot and drops that exact weapon instance. Duplicate definitions are allowed, including two shotguns, and each weapon instance keeps independent loaded and reserve ammunition. This two-slot implementation is pending Task 029.
 
 ## Initial Equipment
 
@@ -89,7 +89,7 @@ Weapon ownership is physical: the player has exactly one equipped weapon, and ne
 
 - Automatic rifle with sustained fire.
 - Shotgun with multiple pellets and strong close-range damage.
-- Weapons automatically reload after a shot empties the magazine when reserve ammunition is available; pressing R remains supported for manual reloads.
+- Weapons automatically reload only after a shot empties the magazine when reserve ammunition is available. Firing an already empty weapon or equipping a stored empty weapon also starts reload when reserve ammunition exists; pressing R remains supported for manual reloads of partially empty magazines.
 
 ## Leg Replacement Presentation
 

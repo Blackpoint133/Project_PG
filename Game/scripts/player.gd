@@ -20,7 +20,6 @@ const CROUCH_HEIGHT := 64.0
 const CROUCH_VISUAL_OFFSET := 32
 const FACING_DEAD_ZONE := 8.0
 const AUTOMATIC_RIFLE: WeaponDefinition = preload("res://resources/weapons/automatic_rifle.tres")
-const SHOTGUN: WeaponDefinition = preload("res://resources/weapons/shotgun.tres")
 
 var movement_state := "grounded"
 var _jetpack_authorized := false
@@ -80,10 +79,6 @@ func _physics_process(delta: float) -> void:
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
 	weapon_controller.set_firing_enabled(true)
-	if Input.is_action_just_pressed("weapon_1"):
-		weapon_controller.equip_weapon(AUTOMATIC_RIFLE)
-	if Input.is_action_just_pressed("weapon_2"):
-		weapon_controller.equip_weapon(SHOTGUN)
 	if Input.is_action_just_pressed("interact"):
 		interaction_controller.try_interact(self)
 	var fire_requested: bool = Input.is_action_pressed("fire") if weapon_controller.uses_automatic_fire() else Input.is_action_just_pressed("fire")

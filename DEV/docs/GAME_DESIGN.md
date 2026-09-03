@@ -24,6 +24,8 @@ The approved visual direction is original high-detail industrial science-fiction
 | E | Activate the equipped right-arm ability |
 | F | Interact, accept missions, open cases, and equip nearby items |
 
+Weapon ownership is physical: the player has exactly one equipped weapon, and new weapons are obtained through nearby F interactions. Equipping a replacement drops the previous weapon so it can be collected again.
+
 ## Initial Equipment
 
 - Automatic rifle
@@ -87,6 +89,7 @@ The approved visual direction is original high-detail industrial science-fiction
 
 - Automatic rifle with sustained fire.
 - Shotgun with multiple pellets and strong close-range damage.
+- Weapons automatically reload after a shot empties the magazine when reserve ammunition is available; pressing R remains supported for manual reloads.
 
 ## Leg Replacement Presentation
 

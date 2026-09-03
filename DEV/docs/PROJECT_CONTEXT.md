@@ -50,6 +50,8 @@ Task 025 synchronized dropped weapon visuals with `WeaponDefinition.held_visual_
 
 Task 026 attached the existing interaction controller script to the Player InteractionSensor Area2D. The typed player interaction boundary and all interaction behavior remain unchanged.
 
+Task 027 enforced physical single-weapon ownership by removing temporary 1/2 debug switching and adding automatic reload for empty magazines with reserve ammunition. F pickup swapping and per-weapon ammunition preservation remain active; Windows runtime validation is pending.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

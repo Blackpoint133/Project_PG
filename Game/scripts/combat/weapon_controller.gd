@@ -49,6 +49,7 @@ func equip_weapon(definition: WeaponDefinition) -> void:
 	_reserve_ammo = ammo_state.reserve_ammo
 	weapon_changed.emit(weapon_definition)
 	weapon_ammo_changed.emit(_loaded_ammo, _reserve_ammo)
+	_start_reload()
 
 func _store_current_ammo() -> void:
 	var ammo_state: AmmoState = _ammo_states[weapon_definition] as AmmoState
@@ -72,15 +73,24 @@ func _process(delta: float) -> void:
 			_finish_reload()
 
 func try_fire() -> void:
-	if weapon_definition == null or not _can_fire or _is_reloading or _loaded_ammo <= 0 or _fire_cooldown > 0.0:
+	if weapon_definition == null or not _can_fire or _is_reloading:
+		return
+	if _loaded_ammo <= 0:
+		_start_reload()
+		return
+	if _fire_cooldown > 0.0:
 		return
 	_loaded_ammo -= 1
 	_fire_cooldown = 1.0 / weapon_definition.fire_rate
 	fired.emit()
 	weapon_ammo_changed.emit(_loaded_ammo, _reserve_ammo)
+	_start_reload()
 
 func try_reload() -> void:
-	if _is_reloading or _loaded_ammo >= weapon_definition.magazine_size or _reserve_ammo <= 0:
+	_start_reload()
+
+func _start_reload() -> void:
+	if weapon_definition == null or _is_reloading or _loaded_ammo >= weapon_definition.magazine_size or _reserve_ammo <= 0:
 		return
 	_is_reloading = true
 	_reload_timer = weapon_definition.reload_time

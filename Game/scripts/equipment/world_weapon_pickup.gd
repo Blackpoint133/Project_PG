@@ -6,12 +6,14 @@ const FLOOR_FRICTION: float = 1200.0
 
 @export var weapon_definition: WeaponDefinition
 
+@onready var world_visual_slot: Node2D = $WorldVisualSlot
 @onready var weapon_label: Label = $WeaponLabel
 
 var _interaction_cooldown: float = 0.0
 
 func _ready() -> void:
 	_update_display()
+	_rebuild_world_visual()
 
 func _physics_process(delta: float) -> void:
 	if _interaction_cooldown > 0.0:
@@ -30,9 +32,23 @@ func _update_display() -> void:
 		display_name = weapon_definition.display_name
 	weapon_label.text = display_name
 
+func _rebuild_world_visual() -> void:
+	for child: Node in world_visual_slot.get_children():
+		child.free()
+	if weapon_definition == null or weapon_definition.held_visual_scene == null:
+		return
+	var visual_node: Node = weapon_definition.held_visual_scene.instantiate()
+	var visual_transform: Node2D = visual_node as Node2D
+	if visual_transform == null:
+		visual_node.free()
+		return
+	world_visual_slot.add_child(visual_transform)
+	visual_transform.position = Vector2(-12, -10)
+
 func set_weapon_definition(definition: WeaponDefinition) -> void:
 	weapon_definition = definition
 	_update_display()
+	_rebuild_world_visual()
 
 func get_weapon_definition() -> WeaponDefinition:
 	return weapon_definition

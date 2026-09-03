@@ -46,6 +46,8 @@ Task 023 added the data-driven shotgun weapon foundation. The automatic rifle re
 
 Task 024 added the reusable interaction sensor and physical weapon pickup foundation. F equips the arena shotgun, drops the previously equipped weapon with deterministic motion, and preserves ammunition through the modular weapon controller. Held weapon visuals now install from each weapon definition; radio, loot case, and non-weapon equipment pickups remain pending.
 
+Task 025 synchronized dropped weapon visuals with `WeaponDefinition.held_visual_scene`. The world pickup now rebuilds its visual slot when created or reassigned, so dropped rifles and shotguns retain their distinct placeholder visuals while all swap and physics behavior remains unchanged.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

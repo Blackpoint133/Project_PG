@@ -14,10 +14,7 @@ collision_mask = 1
 position = Vector2(0, -4)
 shape = SubResource("pickup_shape")
 
-[node name="WeaponVisual" type="Line2D" parent="."]
-points = PackedVector2Array(-12, -10, 12, -10)
-width = 8.0
-default_color = Color(0.85, 0.25, 0.18, 1)
+[node name="WorldVisualSlot" type="Node2D" parent="."]
 
 [node name="WeaponLabel" type="Label" parent="."]
 offset_left = -100.0

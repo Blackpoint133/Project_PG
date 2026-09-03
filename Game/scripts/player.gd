@@ -18,6 +18,8 @@ const STAND_HEIGHT := 96.0
 const CROUCH_HEIGHT := 64.0
 const CROUCH_VISUAL_OFFSET := 32
 const FACING_DEAD_ZONE := 8.0
+const AUTOMATIC_RIFLE: WeaponDefinition = preload("res://resources/weapons/automatic_rifle.tres")
+const SHOTGUN: WeaponDefinition = preload("res://resources/weapons/shotgun.tres")
 
 var movement_state := "grounded"
 var _jetpack_authorized := false
@@ -35,7 +37,7 @@ var facing_direction := 1
 var _rectangle_shape: RectangleShape2D = RectangleShape2D.new()
 
 func _ready() -> void:
-	weapon_controller.setup(load("res://resources/weapons/automatic_rifle.tres"))
+	weapon_controller.setup(AUTOMATIC_RIFLE)
 	weapon_controller.fired.connect(_spawn_projectile)
 	_rectangle_shape.size = Vector2(40, STAND_HEIGHT)
 	collision_shape.shape = _rectangle_shape
@@ -73,30 +75,46 @@ func _physics_process(delta: float) -> void:
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
 	weapon_controller.set_firing_enabled(true)
-	if Input.is_action_pressed("fire"):
+	if Input.is_action_just_pressed("weapon_1"):
+		weapon_controller.equip_weapon(AUTOMATIC_RIFLE)
+	if Input.is_action_just_pressed("weapon_2"):
+		weapon_controller.equip_weapon(SHOTGUN)
+	var fire_requested: bool = Input.is_action_pressed("fire") if weapon_controller.uses_automatic_fire() else Input.is_action_just_pressed("fire")
+	if fire_requested:
 		weapon_controller.try_fire()
 	if Input.is_action_just_pressed("reload"):
 		weapon_controller.try_reload()
 
 func _spawn_projectile() -> void:
-	var spawned_node = weapon_controller.weapon_definition.projectile_scene.instantiate()
-	var projectile := spawned_node as RifleProjectile
-	if projectile == null:
-		push_error("Weapon projectile scene is not a RifleProjectile.")
-		spawned_node.free()
-		return
-	var aim_direction := get_global_mouse_position() - muzzle_marker.global_position
+	var projectile_scene: PackedScene = weapon_controller.weapon_definition.projectile_scene
+	var projectile_count: int = maxi(weapon_controller.weapon_definition.projectiles_per_shot, 1)
+	var spread_degrees: float = weapon_controller.weapon_definition.spread_degrees
+	var spread_step_degrees: float = 0.0
+	if projectile_count > 1:
+		spread_step_degrees = spread_degrees / float(projectile_count - 1)
+	var aim_direction: Vector2 = get_global_mouse_position() - muzzle_marker.global_position
 	if aim_direction.length_squared() <= 0.0:
 		aim_direction = muzzle_marker.global_transform.x
 	aim_direction = aim_direction.normalized()
-	projectile.configure(
-		aim_direction,
-		weapon_controller.weapon_definition.projectile_speed,
-		weapon_controller.weapon_definition.damage,
-		weapon_controller.weapon_definition.projectile_lifetime
-	)
-	get_parent().add_child(projectile)
-	projectile.global_position = muzzle_marker.global_position
+	for pellet_index: int in range(projectile_count):
+		var spread_offset_degrees: float = 0.0
+		if projectile_count > 1:
+			spread_offset_degrees = -spread_degrees * 0.5 + spread_step_degrees * float(pellet_index)
+		var projectile_direction: Vector2 = aim_direction.rotated(deg_to_rad(spread_offset_degrees))
+		var spawned_node: Node = projectile_scene.instantiate()
+		var projectile: RifleProjectile = spawned_node as RifleProjectile
+		if projectile == null:
+			push_error("Weapon projectile scene is not a RifleProjectile.")
+			spawned_node.free()
+			continue
+		projectile.configure(
+			projectile_direction,
+			weapon_controller.weapon_definition.projectile_speed,
+			weapon_controller.weapon_definition.damage,
+			weapon_controller.weapon_definition.projectile_lifetime
+		)
+		get_parent().add_child(projectile)
+		projectile.global_position = muzzle_marker.global_position
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT

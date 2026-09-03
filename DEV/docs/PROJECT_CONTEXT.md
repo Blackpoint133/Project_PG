@@ -42,6 +42,8 @@ Task 021 corrected the modular legs pose invocation to use Godot's safe dynamic 
 
 Task 022 fixed the warnings-as-errors parser issue by explicitly typing the crouch visual offset as `float`; crouch geometry and gameplay behavior remain unchanged.
 
+Task 023 added the data-driven shotgun weapon foundation. The automatic rifle remains the default, while temporary 1/2 selection switches between independently preserved ammunition states. Shotgun multi-projectile firing reuses the existing rifle projectile scene; final world pickup and equipment replacement remain pending.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

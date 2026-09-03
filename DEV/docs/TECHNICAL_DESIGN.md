@@ -145,6 +145,8 @@ The current combat foundation adds:
 - `Game/resources/weapons/automatic_rifle.tres` — automatic rifle definition.
 - `Muzzle` Marker2D under the weapon module defines the projectile spawn point.
 
+The current combat foundation also includes `Game/resources/weapons/shotgun.tres`, a data-driven eight-projectile weapon that reuses the rifle projectile scene. `WeaponDefinition` controls automatic-fire mode, projectile count, and complete-cone spread. Temporary `weapon_1` and `weapon_2` inputs select the rifle and shotgun; `WeaponController` preserves each weapon's ammunition independently and exposes focused equip/switch signals. Final world pickup and equipment replacement remain pending.
+
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
 
 ## Signals

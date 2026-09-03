@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var movement_label: Label = $MovementLabel
 @onready var weapon_label: Label = $WeaponLabel
 @onready var weapon_slots_label: Label = $WeaponSlotsLabel
+@onready var leg_status_label: Label = $LegStatusLabel
 @onready var interaction_label: Label = $InteractionLabel
 var _is_reloading := false
 var _loaded_ammo := 0
@@ -18,6 +19,7 @@ func _ready() -> void:
 		_weapon_name = player.weapon_controller.get_display_name()
 		_render_weapon_state()
 		_render_weapon_slots(player)
+		_render_leg_status(player)
 		interaction_label.text = player.get_interaction_prompt()
 		interaction_label.visible = not interaction_label.text.is_empty()
 		player.weapon_controller.reload_started.connect(_on_reload_started)
@@ -25,6 +27,8 @@ func _ready() -> void:
 		player.weapon_controller.weapon_ammo_changed.connect(_on_ammo_changed)
 		player.weapon_controller.weapon_changed.connect(_on_weapon_changed)
 		player.weapon_controller.weapon_slots_changed.connect(_on_weapon_slots_changed)
+		player.leg_equipment_controller.legs_changed.connect(_on_legs_changed)
+		player.leg_equipment_controller.leg_ability_changed.connect(_on_leg_ability_changed)
 		player.interaction_prompt_changed.connect(_on_interaction_prompt_changed)
 
 func _process(_delta: float) -> void:
@@ -47,6 +51,17 @@ func _render_weapon_state() -> void:
 func _render_weapon_slots(player: Player) -> void:
 	weapon_slots_label.text = "%s\n%s" % [player.get_weapon_slot_summary(0), player.get_weapon_slot_summary(1)]
 
+func _render_leg_status(player: Player) -> void:
+	var definition: LegDefinition = player.leg_equipment_controller.current_definition
+	var ability_definition: LegAbilityDefinition = player.leg_equipment_controller.current_ability_definition
+	var leg_name: String = "UNKNOWN"
+	var ability_name: String = "NONE"
+	if definition != null:
+		leg_name = definition.display_name
+	if ability_definition != null:
+		ability_name = ability_definition.display_name
+	leg_status_label.text = "LEGS: %s\nC: %s" % [leg_name, ability_name]
+
 func _on_reload_started() -> void:
 	_is_reloading = true
 	weapon_label.text = "RELOADING %s" % _weapon_name
@@ -67,6 +82,16 @@ func _on_weapon_slots_changed(_slot_1: WeaponInstance, _slot_2: WeaponInstance, 
 	var player: Player = get_tree().get_first_node_in_group("player")
 	if player != null:
 		_render_weapon_slots(player)
+
+func _on_legs_changed(_definition: LegDefinition) -> void:
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_leg_status(player)
+
+func _on_leg_ability_changed(_ability_definition: LegAbilityDefinition) -> void:
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_leg_status(player)
 
 func _on_interaction_prompt_changed(prompt_text: String) -> void:
 	interaction_label.text = prompt_text

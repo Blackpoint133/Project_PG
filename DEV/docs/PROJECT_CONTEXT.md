@@ -56,6 +56,8 @@ Task 028 corrected the automatic reload regression: WeaponController now starts 
 
 Task 029 implements the two physical weapon slots. Slot 1 starts with the automatic rifle and slot 2 is empty; occupied-slot selection uses keys 1 and 2, while F pickups fill empty slots or replace the active slot by transferring exact `WeaponInstance` objects. Per-instance ammunition remains independent for duplicate weapons, including two shotguns. Windows runtime validation is pending.
 
+Task 031 adds the interchangeable leg equipment foundation. Standard Legs remain the starting visual with no ability; a physical Knee-Dash Legs pickup can be equipped with F and swaps exact `LegInstance` ownership through the dedicated controller. The C request is safe for Standard Legs and only emits Knee Dash metadata for future execution. Windows runtime validation is pending; Task 032 will implement dash behavior.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

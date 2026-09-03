@@ -58,7 +58,7 @@ Player (CharacterBody2D)
 `-- StateController (Node)
 ```
 
-The current movement foundation uses `Game/scenes/player.tscn` with `player.gd`, a modular `BodyRoot`, an `AimPivot`, and a `Camera2D`.
+The current movement foundation uses `Game/scenes/player.tscn` with `player.gd`, a modular `BodyRoot`, an `AimPivot`, a runtime `LegEquipmentController`, and a `Camera2D`.
 
 Implemented placeholder visual hierarchy:
 
@@ -67,7 +67,7 @@ Player (CharacterBody2D)
 |-- CollisionShape2D
 |-- BodyRoot (Node2D)
 |   |-- BodySlot (Node2D) -> PlaceholderBody
-|   |-- LegsSlot (Node2D) -> PlaceholderLegs
+|   |-- LegsSlot (Node2D) -> active held legs visual
 |   |-- JetpackSlot (Node2D) -> PlaceholderJetpack
 |   `-- AimPivot (Node2D)
 |       |-- LeftArmSlot (Node2D) -> PlaceholderLeftArm
@@ -110,9 +110,11 @@ Use custom `Resource` classes for data-driven definitions. Keep tuning values in
 
 - `EquipmentDefinition` — id, display name, slot, scene or component reference.
 - `WeaponDefinition` — fire timing, projectile behavior, magazine, reload, damage, and spread data.
-- `LegAbilityDefinition` — dash speed, duration, cooldown, contact damage, and knockback values.
+- `LegAbilityDefinition` — stable ability id and display name; future dash speed, duration, cooldown, contact damage, and knockback values remain deferred.
 - `ArmAbilityDefinition` — shield energy/durability, recharge, and hook pull/stun values.
 - `JetpackDefinition` — thrust, heat drain, and cooling values.
+
+Task 031 adds `LegDefinition`, `LegAbilityDefinition`, and `LegInstance` resources/runtime ownership, plus `LegEquipmentController` and `WorldLegPickup`. The player owns one leg slot that starts with Standard Legs; physical F interaction transfers exact leg instances and preserves the existing LegsSlot crouch contract. Standard Legs have no ability, while Knee-Dash Legs expose only ability metadata until Task 032.
 
 Future bleeding is an effect or damage-extension point on `DamageReceiver` or contact attacks. Future reflected damage is an optional response hook on the shield handler. Neither is implemented in the first slice.
 
@@ -154,6 +156,8 @@ Task 027 temporarily enforces single-active-weapon ownership by removing the deb
 Task 028 corrects automatic reload so a partially empty magazine never reloads as a side effect of firing.
 
 Task 029 implements two physical weapon slots. Slot 1 starts with the rifle and slot 2 is empty; keys 1 and 2 select occupied slots only. F pickups fill the first empty slot and otherwise replace the active slot while transferring the exact outgoing instance back into the same pickup. Duplicate definitions are allowed, and each `WeaponInstance` retains independent ammunition while moving between a slot and the world.
+
+Task 031 keeps leg equipment in a separate controller and ownership boundary from both weapon slots. `leg_ability` is the physical C request; it safely returns without effect for Standard Legs and emits only a typed request for Knee-Dash Legs. The one-second swap presentation and all knee-dash execution behavior remain pending.
 
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
 

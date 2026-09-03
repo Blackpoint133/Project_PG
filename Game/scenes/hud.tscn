@@ -30,13 +30,22 @@ theme_override_font_sizes/font_size = 24
 horizontal_alignment = 2
 text = "1: AUTOMATIC RIFLE 30/90 *\n2: EMPTY"
 
+[node name="LegStatusLabel" type="Label" parent="."]
+offset_left = 680.0
+offset_top = 104.0
+offset_right = 1240.0
+offset_bottom = 180.0
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+text = "LEGS: STANDARD\nC: NONE"
+
 [node name="ControlsLabel" type="Label" parent="."]
 offset_left = 24.0
 offset_top = 104.0
-offset_right = 1120.0
+offset_right = 640.0
 offset_bottom = 180.0
-theme_override_font_sizes/font_size = 32
-text = "A/D: move    S: crouch    Space: jump\n1/2: switch    LMB: fire    R: reload    F: equip"
+theme_override_font_sizes/font_size = 24
+text = "A/D: move  S: crouch  Space: jump\n1/2: switch  LMB: fire  R: reload  F: equip  C: ability"
 
 [node name="InteractionLabel" type="Label" parent="."]
 visible = false

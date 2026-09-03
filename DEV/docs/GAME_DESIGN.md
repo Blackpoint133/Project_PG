@@ -63,6 +63,8 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 - Knock enemies backward.
 - Reserve an extension point for a future bleeding status effect; bleeding is not implemented in the first vertical slice.
 
+The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary and ability metadata. Knee-dash movement, damage, hitboxes, cooldown execution, and knockback are deferred to Task 032.
+
 ### Shield Left Arm
 
 - Activated by holding Q.

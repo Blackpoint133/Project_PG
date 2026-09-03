@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/arena.gd" id="1_arena"]
 [ext_resource type="PackedScene" path="res://scenes/targets/target_dummy.tscn" id="2_target"]
 [ext_resource type="PackedScene" path="res://scenes/equipment/world_weapon_pickup.tscn" id="3_weapon_pickup"]
 [ext_resource type="Resource" path="res://resources/weapons/shotgun.tres" id="4_shotgun"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_leg_pickup.tscn" id="5_leg_pickup"]
+[ext_resource type="Resource" path="res://resources/equipment/knee_dash_legs.tres" id="6_knee_dash_legs"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
 size = Vector2(2560, 96)
@@ -110,6 +112,10 @@ weapon_definition = ExtResource("4_shotgun")
 [node name="ShotgunPickup2" parent="." instance=ExtResource("3_weapon_pickup")]
 position = Vector2(680, 624)
 weapon_definition = ExtResource("4_shotgun")
+
+[node name="KneeDashLegsPickup" parent="." instance=ExtResource("5_leg_pickup")]
+position = Vector2(1000, 624)
+leg_definition = ExtResource("6_knee_dash_legs")
 
 [node name="TargetLeftFacing" parent="." instance=ExtResource("2_target")]
 position = Vector2(160, 500)

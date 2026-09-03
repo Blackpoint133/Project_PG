@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/equipment/world_leg_pickup.gd" id="1_pickup"]
+
+[sub_resource type="RectangleShape2D" id="pickup_shape"]
+size = Vector2(24, 8)
+
+[node name="WorldLegPickup" type="CharacterBody2D"]
+script = ExtResource("1_pickup")
+collision_layer = 32
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("pickup_shape")
+
+[node name="WorldVisualSlot" type="Node2D" parent="."]
+
+[node name="LegLabel" type="Label" parent="."]
+offset_left = -100.0
+offset_top = -70.0
+offset_right = 100.0
+offset_bottom = -38.0
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+text = "UNKNOWN LEGS"

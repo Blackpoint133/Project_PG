@@ -20,6 +20,7 @@ const CROUCH_HEIGHT := 64.0
 const CROUCH_VISUAL_OFFSET := 32
 const FACING_DEAD_ZONE := 8.0
 const AUTOMATIC_RIFLE: WeaponDefinition = preload("res://resources/weapons/automatic_rifle.tres")
+const STANDARD_LEGS: LegDefinition = preload("res://resources/equipment/standard_legs.tres")
 
 var movement_state := "grounded"
 var _jetpack_authorized := false
@@ -27,21 +28,24 @@ var facing_direction := 1
 
 @onready var body_slot: Node2D = $BodyRoot/BodySlot
 @onready var legs_slot: Node2D = $BodyRoot/LegsSlot
-@onready var legs_module: Node = legs_slot.get_child(0)
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
 @onready var weapon_slot: Node2D = $BodyRoot/AimPivot/WeaponSlot
 @onready var weapon_controller: WeaponController = $WeaponController
+@onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
 @onready var interaction_controller: InteractionController = $InteractionSensor
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var _rectangle_shape: RectangleShape2D = RectangleShape2D.new()
 var muzzle_marker: Marker2D = null
+var legs_module: Node = null
 
 func _ready() -> void:
+	leg_equipment_controller.legs_changed.connect(_on_legs_changed)
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
+	leg_equipment_controller.setup(STANDARD_LEGS)
 	weapon_controller.setup(AUTOMATIC_RIFLE)
 	_rectangle_shape.size = Vector2(40, STAND_HEIGHT)
 	collision_shape.shape = _rectangle_shape
@@ -79,6 +83,8 @@ func _physics_process(delta: float) -> void:
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
 	weapon_controller.set_firing_enabled(true)
+	if Input.is_action_just_pressed("leg_ability"):
+		leg_equipment_controller.activate_ability()
 	if Input.is_action_just_pressed("weapon_1"):
 		weapon_controller.select_slot(0)
 	if Input.is_action_just_pressed("weapon_2"):
@@ -146,11 +152,31 @@ func _on_weapon_changed(definition: WeaponDefinition) -> void:
 func _on_interaction_prompt_changed(prompt_text: String) -> void:
 	interaction_prompt_changed.emit(prompt_text)
 
+func _on_legs_changed(definition: LegDefinition) -> void:
+	for child: Node in legs_slot.get_children():
+		child.free()
+	legs_module = null
+	if definition == null or definition.held_visual_scene == null:
+		return
+	var visual_node: Node = definition.held_visual_scene.instantiate()
+	var visual_transform: Node2D = visual_node as Node2D
+	if visual_transform == null:
+		visual_node.free()
+		return
+	legs_slot.add_child(visual_transform)
+	legs_module = visual_transform
+	var crouching: bool = Input.is_action_pressed("crouch") and is_on_floor()
+	if legs_module.has_method(&"set_crouching"):
+		legs_module.call(&"set_crouching", crouching)
+
 func get_interaction_prompt() -> String:
 	return interaction_controller.get_current_prompt()
 
 func get_equipped_weapon_definition() -> WeaponDefinition:
 	return weapon_controller.weapon_definition
+
+func get_equipped_leg_definition() -> LegDefinition:
+	return leg_equipment_controller.current_definition
 
 func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
 	if pickup == null:
@@ -173,6 +199,23 @@ func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
 		pickup.queue_free()
 	interaction_controller.refresh_prompt()
 
+func swap_legs_with_pickup(pickup: WorldLegPickup) -> void:
+	if pickup == null:
+		return
+	var incoming_instance: LegInstance = pickup.take_leg_instance()
+	if incoming_instance == null:
+		interaction_controller.refresh_prompt()
+		return
+	var outgoing_instance: LegInstance = leg_equipment_controller.replace_leg_instance(incoming_instance)
+	if outgoing_instance == null:
+		pickup.set_leg_instance(incoming_instance)
+		interaction_controller.refresh_prompt()
+		return
+	pickup.set_leg_instance(outgoing_instance)
+	pickup.global_position = global_position + Vector2(0, -32)
+	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
+	interaction_controller.refresh_prompt()
+
 func get_weapon_slot_summary(slot_index: int) -> String:
 	var instance: WeaponInstance = weapon_controller.get_slot_instance(slot_index)
 	if instance == null or instance.definition == null:
@@ -186,7 +229,7 @@ func _update_crouch(crouching: bool) -> void:
 	_rectangle_shape.size = Vector2(_rectangle_shape.size.x, target_height)
 	collision_shape.position.y = -target_height * 0.5
 	body_slot.position.y = upper_body_offset
-	if legs_module.has_method(&"set_crouching"):
+	if legs_module != null and legs_module.has_method(&"set_crouching"):
 		legs_module.call(&"set_crouching", crouching)
 	jetpack_slot.position.y = upper_body_offset
 	aim_pivot.position.y = -72.0 + upper_body_offset

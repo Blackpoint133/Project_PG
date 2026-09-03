@@ -44,6 +44,8 @@ Task 022 fixed the warnings-as-errors parser issue by explicitly typing the crou
 
 Task 023 added the data-driven shotgun weapon foundation. The automatic rifle remains the default, while temporary 1/2 selection switches between independently preserved ammunition states. Shotgun multi-projectile firing reuses the existing rifle projectile scene; final world pickup and equipment replacement remain pending.
 
+Task 024 added the reusable interaction sensor and physical weapon pickup foundation. F equips the arena shotgun, drops the previously equipped weapon with deterministic motion, and preserves ammunition through the modular weapon controller. Held weapon visuals now install from each weapon definition; radio, loot case, and non-weapon equipment pickups remain pending.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

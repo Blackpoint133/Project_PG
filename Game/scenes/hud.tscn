@@ -27,4 +27,13 @@ offset_top = 104.0
 offset_right = 1120.0
 offset_bottom = 180.0
 theme_override_font_sizes/font_size = 32
-text = "A/D: move    S: crouch    Space: jump\n1: rifle    2: shotgun    LMB: fire    R: reload"
+text = "A/D: move    S: crouch    Space: jump\n1: rifle    2: shotgun    LMB: fire    R: reload    F: equip"
+
+[node name="InteractionLabel" type="Label" parent="."]
+visible = false
+offset_left = 24.0
+offset_top = 184.0
+offset_right = 900.0
+offset_bottom = 220.0
+theme_override_font_sizes/font_size = 28
+text = ""

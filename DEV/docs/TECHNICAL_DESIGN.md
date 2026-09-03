@@ -147,6 +147,8 @@ The current combat foundation adds:
 
 The current combat foundation also includes `Game/resources/weapons/shotgun.tres`, a data-driven eight-projectile weapon that reuses the rifle projectile scene. `WeaponDefinition` controls automatic-fire mode, projectile count, and complete-cone spread. Temporary `weapon_1` and `weapon_2` inputs select the rifle and shotgun; `WeaponController` preserves each weapon's ammunition independently and exposes focused equip/switch signals. Final world pickup and equipment replacement remain pending.
 
+Task 024 adds a reusable `InteractionSensor` Area2D under Player with collision mask layer 6 (integer 32), plus a `WorldWeaponPickup` CharacterBody2D using layer 6 and world mask 1. The sensor owns candidate selection and prompt signaling while Player reads F and requests interaction. Weapon pickups support deterministic fall/drop motion, modular held weapon visuals, and physical weapon replacement while WeaponController remains the sole owner of per-weapon ammunition. The current pickup implementation supports weapons only; radio, loot case, and other equipment pickups remain pending.
+
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
 
 ## Signals

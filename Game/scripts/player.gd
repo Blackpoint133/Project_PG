@@ -200,7 +200,10 @@ func _get_knee_dash_direction(ability_definition: LegAbilityDefinition) -> Vecto
 	var max_angle_degrees: float = clampf(ability_definition.max_aim_angle_degrees, 0.0, 60.0)
 	var max_angle_radians: float = deg_to_rad(max_angle_degrees)
 	desired_angle = clampf(desired_angle, -max_angle_radians, max_angle_radians)
-	var dash_direction: Vector2 = Vector2(float(horizontal_side), 0.0).rotated(desired_angle)
+	var dash_direction: Vector2 = Vector2(
+		cos(desired_angle) * float(horizontal_side),
+		sin(desired_angle)
+	)
 	facing_direction = horizontal_side
 	return dash_direction.normalized()
 

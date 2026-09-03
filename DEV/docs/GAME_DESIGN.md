@@ -24,7 +24,7 @@ The approved visual direction is original high-detail industrial science-fiction
 | E | Activate the equipped right-arm ability |
 | F | Interact, accept missions, open cases, and equip nearby items |
 
-Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the automatic rifle and slot 2 starts empty; keys 1 and 2 switch only between occupied slots. Picking up a weapon fills an empty slot first. When both slots are occupied, a pickup replaces the active slot and drops that exact weapon instance. Duplicate definitions are allowed, including two shotguns, and each weapon instance keeps independent loaded and reserve ammunition. This two-slot implementation is pending Task 029.
+Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the automatic rifle and slot 2 starts empty; keys 1 and 2 switch only between occupied slots. Picking up a weapon fills an empty slot first. When both slots are occupied, a pickup replaces the active slot and drops that exact weapon instance. Duplicate definitions are allowed, including two shotguns, and each weapon instance keeps independent loaded and reserve ammunition.
 
 ## Initial Equipment
 

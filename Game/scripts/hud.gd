@@ -2,6 +2,7 @@ extends CanvasLayer
 
 @onready var movement_label: Label = $MovementLabel
 @onready var weapon_label: Label = $WeaponLabel
+@onready var weapon_slots_label: Label = $WeaponSlotsLabel
 @onready var interaction_label: Label = $InteractionLabel
 var _is_reloading := false
 var _loaded_ammo := 0
@@ -16,12 +17,14 @@ func _ready() -> void:
 		_reserve_ammo = player.weapon_controller.get_reserve_ammo()
 		_weapon_name = player.weapon_controller.get_display_name()
 		_render_weapon_state()
+		_render_weapon_slots(player)
 		interaction_label.text = player.get_interaction_prompt()
 		interaction_label.visible = not interaction_label.text.is_empty()
 		player.weapon_controller.reload_started.connect(_on_reload_started)
 		player.weapon_controller.reload_completed.connect(_on_reload_completed)
 		player.weapon_controller.weapon_ammo_changed.connect(_on_ammo_changed)
 		player.weapon_controller.weapon_changed.connect(_on_weapon_changed)
+		player.weapon_controller.weapon_slots_changed.connect(_on_weapon_slots_changed)
 		player.interaction_prompt_changed.connect(_on_interaction_prompt_changed)
 
 func _process(_delta: float) -> void:
@@ -34,9 +37,15 @@ func _on_ammo_changed(loaded: int, reserve: int) -> void:
 	_reserve_ammo = reserve
 	if not _is_reloading:
 		_render_weapon_state()
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_weapon_slots(player)
 
 func _render_weapon_state() -> void:
 	weapon_label.text = "%s %d / %d" % [_weapon_name, _loaded_ammo, _reserve_ammo]
+
+func _render_weapon_slots(player: Player) -> void:
+	weapon_slots_label.text = "%s\n%s" % [player.get_weapon_slot_summary(0), player.get_weapon_slot_summary(1)]
 
 func _on_reload_started() -> void:
 	_is_reloading = true
@@ -50,6 +59,14 @@ func _on_weapon_changed(definition: WeaponDefinition) -> void:
 	_weapon_name = definition.display_name
 	_is_reloading = false
 	_render_weapon_state()
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_weapon_slots(player)
+
+func _on_weapon_slots_changed(_slot_1: WeaponInstance, _slot_2: WeaponInstance, _active_slot_index: int) -> void:
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_weapon_slots(player)
 
 func _on_interaction_prompt_changed(prompt_text: String) -> void:
 	interaction_label.text = prompt_text

@@ -54,6 +54,8 @@ Task 027 enforced physical single-weapon ownership by removing temporary 1/2 deb
 
 Task 028 corrected the automatic reload regression: WeaponController now starts automatic reload after firing only when loaded ammunition reaches zero, while empty-fire, empty-weapon equip, manual R reload, reload cancellation, and zero-reserve guards remain active. The approved two-slot physical weapon ownership design is documented for Task 029; implementation is not included here.
 
+Task 029 implements the two physical weapon slots. Slot 1 starts with the automatic rifle and slot 2 is empty; occupied-slot selection uses keys 1 and 2, while F pickups fill empty slots or replace the active slot by transferring exact `WeaponInstance` objects. Per-instance ammunition remains independent for duplicate weapons, including two shotguns. Windows runtime validation is pending.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

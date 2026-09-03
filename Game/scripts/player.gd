@@ -79,6 +79,10 @@ func _physics_process(delta: float) -> void:
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
 	weapon_controller.set_firing_enabled(true)
+	if Input.is_action_just_pressed("weapon_1"):
+		weapon_controller.select_slot(0)
+	if Input.is_action_just_pressed("weapon_2"):
+		weapon_controller.select_slot(1)
 	if Input.is_action_just_pressed("interact"):
 		interaction_controller.try_interact(self)
 	var fire_requested: bool = Input.is_action_pressed("fire") if weapon_controller.uses_automatic_fire() else Input.is_action_just_pressed("fire")
@@ -90,9 +94,12 @@ func _physics_process(delta: float) -> void:
 func _spawn_projectile() -> void:
 	if muzzle_marker == null:
 		return
-	var projectile_scene: PackedScene = weapon_controller.weapon_definition.projectile_scene
-	var projectile_count: int = maxi(weapon_controller.weapon_definition.projectiles_per_shot, 1)
-	var spread_degrees: float = weapon_controller.weapon_definition.spread_degrees
+	var active_definition: WeaponDefinition = weapon_controller.weapon_definition
+	if active_definition == null:
+		return
+	var projectile_scene: PackedScene = active_definition.projectile_scene
+	var projectile_count: int = maxi(active_definition.projectiles_per_shot, 1)
+	var spread_degrees: float = active_definition.spread_degrees
 	var spread_step_degrees: float = 0.0
 	if projectile_count > 1:
 		spread_step_degrees = spread_degrees / float(projectile_count - 1)
@@ -113,9 +120,9 @@ func _spawn_projectile() -> void:
 			continue
 		projectile.configure(
 			projectile_direction,
-			weapon_controller.weapon_definition.projectile_speed,
-			weapon_controller.weapon_definition.damage,
-			weapon_controller.weapon_definition.projectile_lifetime
+			active_definition.projectile_speed,
+			active_definition.damage,
+			active_definition.projectile_lifetime
 		)
 		get_parent().add_child(projectile)
 		projectile.global_position = muzzle_marker.global_position
@@ -148,18 +155,30 @@ func get_equipped_weapon_definition() -> WeaponDefinition:
 func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
 	if pickup == null:
 		return
-	var incoming_definition: WeaponDefinition = pickup.get_weapon_definition()
-	var current_definition: WeaponDefinition = weapon_controller.weapon_definition
-	if incoming_definition == null or incoming_definition == current_definition:
+	var incoming_instance: WeaponInstance = pickup.take_weapon_instance()
+	if incoming_instance == null:
 		interaction_controller.refresh_prompt()
 		return
-	weapon_controller.equip_weapon(incoming_definition)
-	if weapon_controller.weapon_definition != incoming_definition:
-		return
-	pickup.set_weapon_definition(current_definition)
-	pickup.global_position = global_position + Vector2(0, -32)
-	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
+	var target_slot: int = weapon_controller.get_first_empty_slot()
+	if target_slot == -1:
+		target_slot = weapon_controller.get_active_slot_index()
+	var outgoing_instance: WeaponInstance = weapon_controller.replace_slot_instance(target_slot, incoming_instance)
+	if target_slot != weapon_controller.get_active_slot_index():
+		weapon_controller.select_slot(target_slot)
+	if outgoing_instance != null:
+		pickup.set_weapon_instance(outgoing_instance)
+		pickup.global_position = global_position + Vector2(0, -32)
+		pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
+	else:
+		pickup.queue_free()
 	interaction_controller.refresh_prompt()
+
+func get_weapon_slot_summary(slot_index: int) -> String:
+	var instance: WeaponInstance = weapon_controller.get_slot_instance(slot_index)
+	if instance == null or instance.definition == null:
+		return "%d: EMPTY" % (slot_index + 1)
+	var marker: String = " *" if weapon_controller.get_active_slot_index() == slot_index else ""
+	return "%d: %s %d/%d%s" % [slot_index + 1, instance.definition.display_name, instance.loaded_ammo, instance.reserve_ammo, marker]
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT

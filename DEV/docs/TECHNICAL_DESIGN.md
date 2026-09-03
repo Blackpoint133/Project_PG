@@ -72,7 +72,7 @@ Player (CharacterBody2D)
 |   `-- AimPivot (Node2D)
 |       |-- LeftArmSlot (Node2D) -> PlaceholderLeftArm
 |       |-- RightArmSlot (Node2D) -> PlaceholderRightArm
-|       |-- WeaponSlot (Node2D) -> PlaceholderWeapon
+|       |-- WeaponSlot (Node2D) -> active held weapon visual
 |       `-- AimLine
 `-- Camera2D
 ```
@@ -145,13 +145,15 @@ The current combat foundation adds:
 - `Game/resources/weapons/automatic_rifle.tres` — automatic rifle definition.
 - `Muzzle` Marker2D under the weapon module defines the projectile spawn point.
 
-The current combat foundation also includes `Game/resources/weapons/shotgun.tres`, a data-driven eight-projectile weapon that reuses the rifle projectile scene. `WeaponDefinition` controls automatic-fire mode, projectile count, and complete-cone spread. `WeaponController` preserves each weapon's ammunition independently and exposes focused equip/switch signals; empty magazines automatically reload when reserve ammunition is available. The current single-active-weapon implementation and physical F replacement flow are temporary; the approved final boundary is a two-slot physical inventory planned for Task 029.
+The current combat foundation also includes `Game/resources/weapons/shotgun.tres`, a data-driven eight-projectile weapon that reuses the rifle projectile scene. `WeaponDefinition` controls automatic-fire mode, projectile count, and complete-cone spread. `WeaponInstance` owns one immutable definition reference plus loaded and reserve ammunition. `WeaponController` owns exactly two nullable instances, one active slot index, independent slot selection, and focused weapon/ammo/slot signals. Empty magazines automatically reload when reserve ammunition is available.
 
 Task 024 adds a reusable `InteractionSensor` Area2D under Player with collision mask layer 6 (integer 32), plus a `WorldWeaponPickup` CharacterBody2D using layer 6 and world mask 1. The sensor owns candidate selection and prompt signaling while Player reads F and requests interaction. Weapon pickups support deterministic fall/drop motion, modular held weapon visuals, and physical weapon replacement while WeaponController remains the sole owner of per-weapon ammunition. The current pickup implementation supports weapons only; radio, loot case, and other equipment pickups remain pending.
 
 Task 027 temporarily enforces single-active-weapon ownership by removing the debug selection inputs and gameplay paths. The automatic rifle remains equipped at startup, and physical F pickup swaps preserve each weapon's stored ammunition. WeaponController starts reload automatically after an emptying shot or when an equipped weapon has zero loaded ammunition with reserve remaining; no reload starts when reserve ammunition is zero.
 
-Task 028 corrects automatic reload so a partially empty magazine never reloads as a side effect of firing. The approved Task 029 inventory boundary will provide two physical weapon instances: slot 1 starts with the rifle, slot 2 starts empty, keys 1 and 2 select occupied slots, pickups fill empty slots first, and full inventories replace the active instance while dropping that exact instance. Duplicate definitions and independent per-instance ammunition are supported by the planned ownership model.
+Task 028 corrects automatic reload so a partially empty magazine never reloads as a side effect of firing.
+
+Task 029 implements two physical weapon slots. Slot 1 starts with the rifle and slot 2 is empty; keys 1 and 2 select occupied slots only. F pickups fill the first empty slot and otherwise replace the active slot while transferring the exact outgoing instance back into the same pickup. Duplicate definitions are allowed, and each `WeaponInstance` retains independent ammunition while moving between a slot and the world.
 
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
 
@@ -184,12 +186,12 @@ Player gameplay collision remains active during the leg swap. Only the leg visua
 
 ## Data Flow
 
-Definitions configure behavior; controllers own runtime state. Pickup and case flows both construct or reference the same equipment definition and world pickup scene. When equipment changes, the equipment controller:
+Definitions configure behavior; `WeaponInstance` objects own runtime ammunition. Pickup and case flows reference definitions and transfer distinct instances through the reusable world pickup scene. For weapons, the current data flow is:
 
-1. Removes the current definition and instance from the slot.
-2. Spawns a reusable pickup containing the old definition.
-3. Instantiates or configures the replacement component.
-4. Emits `equipment_changed`.
+1. Take the incoming instance from a physical pickup.
+2. Fill the first empty slot, or replace the active slot and return its exact instance to that pickup.
+3. Activate the filled/replaced slot and rebuild the held visual from its definition.
+4. Emit weapon, ammo, and slot-state signals.
 
 The leg swap uses the same ownership boundary but wraps it in the mandatory hover, detach, attract, attach, and landing sequence.
 

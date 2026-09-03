@@ -107,5 +107,9 @@ position = Vector2(600, 340)
 position = Vector2(500, 624)
 weapon_definition = ExtResource("4_shotgun")
 
+[node name="ShotgunPickup2" parent="." instance=ExtResource("3_weapon_pickup")]
+position = Vector2(680, 624)
+weapon_definition = ExtResource("4_shotgun")
+
 [node name="TargetLeftFacing" parent="." instance=ExtResource("2_target")]
 position = Vector2(160, 500)

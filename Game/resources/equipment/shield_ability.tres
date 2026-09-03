@@ -6,3 +6,7 @@
 script = ExtResource("1_ability")
 ability_id = "shield"
 display_name = "SHIELD"
+max_energy = 100.0
+active_drain_per_second = 25.0
+recharge_per_second = 20.0
+recharge_delay = 1.0

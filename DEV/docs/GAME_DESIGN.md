@@ -70,15 +70,17 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 
 - Standard Left Arm is the passive starting equipment.
 - Shield Left Arm is a physical replacement equipped with F.
-- Holding Q is the Shield ability input boundary; protection, energy, projectile blocking, and firing lock will be implemented next.
+- Holding Q projects a translucent cyan plasma panel from Shield Left Arm and locks firing only while active.
+- Shield energy lasts four seconds from full, waits one second before recharge, and takes five seconds to fully recharge.
+- Actual hostile projectile absorption remains deferred to the hostile projectile and damage system.
 
 ### Shield Left Arm
 
 - Activated by holding Q.
 - The shield remains active while Q is held.
 - The player cannot fire while holding the shield.
-- It absorbs frontal incoming damage.
-- It has limited energy or durability and a recharge period.
+- A defensive boundary is prepared for future frontal incoming damage.
+- It has limited energy and a delayed recharge period.
 - Reserve an extension point for a future reflected damage wave; the wave is not implemented in the first vertical slice.
 
 ### Hook Right Arm

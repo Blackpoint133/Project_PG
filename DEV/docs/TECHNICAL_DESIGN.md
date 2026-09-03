@@ -163,6 +163,8 @@ Task 032 adds a `KneeDashController` that owns active dash timing, dash directio
 
 Task 036 adds the independent left-arm equipment boundary: `LeftArmDefinition` is shared configuration, `LeftArmInstance` owns one exact runtime item, and `LeftArmEquipmentController` owns the single equipped instance. `LeftArmSlot` is populated dynamically from the definition's held visual scene. `WorldLeftArmPickup` transfers exact instances through F while remaining separate from leg and weapon ownership. Standard Left Arm has no ability; Shield Left Arm exposes only typed shield metadata and held-Q input state until Task 037.
 
+Task 037 adds `ShieldController` under `AimPivot`. The inactive Shield Arm remains a compact emitter, while held Q projects a translucent cyan panel and enables a defensive Area2D on logical layer 7 watching future enemy attack layer 5. Full energy lasts four seconds, recharge waits one second, and a full recharge takes five seconds. Shield energy, recharge delay, and depletion release state belong to the exact `LeftArmInstance`; Player applies the firing lock before processing LMB. Hostile projectile absorption and incoming damage remain pending.
+
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical layer 3 with zero mask and do not block player movement.
 
 ## Signals

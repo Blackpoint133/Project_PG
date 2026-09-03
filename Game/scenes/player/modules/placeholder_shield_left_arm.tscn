@@ -7,6 +7,6 @@ points = PackedVector2Array(0, 0, 16, 2)
 width = 6.0
 default_color = Color(0.2, 0.55, 0.8, 1)
 
-[node name="ShieldPlate" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(10, -20, 30, -16, 36, 0, 30, 16, 10, 20)
-color = Color(0.1, 0.75, 0.95, 0.85)
+[node name="EnergyEmitter" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(12, -4, 22, -3, 25, 0, 22, 3, 12, 4)
+color = Color(0.1, 0.75, 0.95, 0.9)

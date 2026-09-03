@@ -32,6 +32,7 @@ var facing_direction := 1
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
 @onready var left_arm_slot: Node2D = $BodyRoot/AimPivot/LeftArmSlot
+@onready var shield_controller: ShieldController = $BodyRoot/AimPivot/ShieldController
 @onready var weapon_slot: Node2D = $BodyRoot/AimPivot/WeaponSlot
 @onready var weapon_controller: WeaponController = $WeaponController
 @onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
@@ -48,6 +49,7 @@ func _ready() -> void:
 	leg_equipment_controller.legs_changed.connect(_on_legs_changed)
 	leg_equipment_controller.leg_ability_requested.connect(_on_leg_ability_requested)
 	left_arm_equipment_controller.left_arm_changed.connect(_on_left_arm_changed)
+	left_arm_equipment_controller.left_arm_ability_input_changed.connect(_on_left_arm_ability_input_changed)
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
@@ -60,6 +62,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
+	left_arm_equipment_controller.set_ability_input(Input.is_action_pressed("left_arm_ability"))
+	shield_controller.advance(delta)
 	if Input.is_action_just_pressed("leg_ability"):
 		leg_equipment_controller.activate_ability()
 	var dash_active: bool = knee_dash_controller.is_active()
@@ -101,7 +105,7 @@ func _physics_process(delta: float) -> void:
 	_update_crouch(crouching)
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
-	weapon_controller.set_firing_enabled(true)
+	weapon_controller.set_firing_enabled(not shield_controller.is_active())
 	if Input.is_action_just_pressed("weapon_1"):
 		weapon_controller.select_slot(0)
 	if Input.is_action_just_pressed("weapon_2"):
@@ -113,7 +117,6 @@ func _physics_process(delta: float) -> void:
 		weapon_controller.try_fire()
 	if Input.is_action_just_pressed("reload"):
 		weapon_controller.try_reload()
-	left_arm_equipment_controller.set_ability_input(Input.is_action_pressed("left_arm_ability"))
 
 func _spawn_projectile() -> void:
 	if muzzle_marker == null:
@@ -173,6 +176,7 @@ func _on_interaction_prompt_changed(prompt_text: String) -> void:
 func _on_left_arm_changed(definition: LeftArmDefinition) -> void:
 	for child: Node in left_arm_slot.get_children():
 		child.free()
+	shield_controller.set_left_arm_instance(left_arm_equipment_controller.current_instance)
 	if definition == null or definition.held_visual_scene == null:
 		return
 	var visual_node: Node = definition.held_visual_scene.instantiate()
@@ -181,6 +185,9 @@ func _on_left_arm_changed(definition: LeftArmDefinition) -> void:
 		visual_node.free()
 		return
 	left_arm_slot.add_child(visual_transform)
+
+func _on_left_arm_ability_input_changed(_ability_definition: LeftArmAbilityDefinition, is_pressed: bool) -> void:
+	shield_controller.set_input_pressed(is_pressed)
 
 func _on_legs_changed(definition: LegDefinition) -> void:
 	if definition == null or definition.ability_definition == null or definition.ability_definition.ability_id != "knee_dash":

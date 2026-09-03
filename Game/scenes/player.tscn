@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/combat/weapon_controller.gd" id="8_weapon_controller"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/equipment/leg_equipment_controller.gd" id="10_leg_controller"]
 [ext_resource type="Script" path="res://scripts/abilities/knee_dash_controller.gd" id="11_knee_dash_controller"]
 [ext_resource type="Script" path="res://scripts/equipment/left_arm_equipment_controller.gd" id="12_left_arm_controller"]
+[ext_resource type="Script" path="res://scripts/abilities/shield_controller.gd" id="13_shield_controller"]
 
 [sub_resource type="RectangleShape2D" id="player_shape"]
 size = Vector2(40, 96)
@@ -18,6 +19,9 @@ radius = 100.0
 
 [sub_resource type="RectangleShape2D" id="knee_dash_hitbox_shape"]
 size = Vector2(64, 28)
+
+[sub_resource type="RectangleShape2D" id="shield_shape"]
+size = Vector2(16, 96)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_player")
@@ -43,6 +47,29 @@ shape = SubResource("player_shape")
 position = Vector2(0, -72)
 
 [node name="LeftArmSlot" type="Node2D" parent="BodyRoot/AimPivot"]
+
+[node name="ShieldController" type="Node2D" parent="BodyRoot/AimPivot"]
+script = ExtResource("13_shield_controller")
+
+[node name="ShieldArea" type="Area2D" parent="BodyRoot/AimPivot/ShieldController"]
+collision_layer = 0
+collision_mask = 16
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodyRoot/AimPivot/ShieldController/ShieldArea"]
+position = Vector2(52, 0)
+shape = SubResource("shield_shape")
+
+[node name="ShieldFill" type="Polygon2D" parent="BodyRoot/AimPivot/ShieldController"]
+polygon = PackedVector2Array(44, -52, 52, -48, 60, -36, 64, 0, 60, 36, 52, 48, 44, 52)
+color = Color(0.1, 0.75, 0.95, 0.28)
+visible = false
+
+[node name="ShieldOutline" type="Line2D" parent="BodyRoot/AimPivot/ShieldController"]
+points = PackedVector2Array(44, -52, 52, -48, 60, -36, 64, 0, 60, 36, 52, 48, 44, 52, 44, -52)
+width = 3.0
+default_color = Color(0.35, 0.9, 1, 0.9)
+visible = false
 
 [node name="RightArmSlot" type="Node2D" parent="BodyRoot/AimPivot"]
 

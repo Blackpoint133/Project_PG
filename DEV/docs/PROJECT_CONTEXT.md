@@ -48,6 +48,8 @@ Task 024 added the reusable interaction sensor and physical weapon pickup founda
 
 Task 025 synchronized dropped weapon visuals with `WeaponDefinition.held_visual_scene`. The world pickup now rebuilds its visual slot when created or reassigned, so dropped rifles and shotguns retain their distinct placeholder visuals while all swap and physics behavior remains unchanged.
 
+Task 026 attached the existing interaction controller script to the Player InteractionSensor Area2D. The typed player interaction boundary and all interaction behavior remain unchanged.
+
 ## Game concept
 
 This is a retro 2D pixel-art run-and-gun game inspired by 16-bit console games. The player runs through a side-scrolling level, jumps onto platforms, uses a weapon, destroys enemies, and can briefly fly with a jetpack.

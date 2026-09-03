@@ -55,6 +55,7 @@ position = Vector2(14, 0)
 script = ExtResource("8_weapon_controller")
 
 [node name="InteractionSensor" type="Area2D" parent="."]
+script = ExtResource("9_interaction")
 collision_layer = 0
 collision_mask = 32
 

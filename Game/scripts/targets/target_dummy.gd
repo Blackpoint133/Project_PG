@@ -2,6 +2,7 @@ class_name TargetDummy
 extends AnimatableBody2D
 
 @export var max_health: int = 50
+const KNOCKBACK_MAX_SPEED: float = 640.0
 var current_health: int
 var _knockback_velocity_x: float = 0.0
 var _knockback_remaining: float = 0.0
@@ -25,7 +26,7 @@ func take_damage(amount: int) -> void:
 		_disable_target()
 
 func apply_knockback(impulse: Vector2) -> void:
-	_knockback_velocity_x = clampf(impulse.x, -320.0, 320.0)
+	_knockback_velocity_x = clampf(impulse.x, -KNOCKBACK_MAX_SPEED, KNOCKBACK_MAX_SPEED)
 	_knockback_remaining = 0.18
 
 func _update_visual_feedback() -> void:

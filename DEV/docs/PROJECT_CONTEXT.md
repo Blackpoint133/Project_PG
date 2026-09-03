@@ -62,6 +62,8 @@ Task 032 implements directional Knee Dash activation for Knee-Dash Legs. Mouse a
 
 Task 033 corrected the left-side Knee Dash direction reconstruction so horizontal mirroring preserves the mouse vertical sign while retaining the 45-degree clamp. The dash debug visual is now centered on the 64x28 hitbox. Windows runtime validation is pending.
 
+Task 035 makes living targets physically block the Player through collision mask 5, while defeated targets remain passable after clearing their enemy layer. Knee-Dash placeholder knockback now permits the authored 640.0 horizontal impulse cap; other dash behavior remains unchanged. Windows runtime validation is pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

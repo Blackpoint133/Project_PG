@@ -114,6 +114,8 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - Heavy mercenary, used to test the hook, knee knockback, and shotgun.
 - Mission helicopter.
 
+Living enemies physically block the Player during ordinary movement, jumping, falling, jetpack movement, and Knee Dash. Defeated enemies may become non-solid when their gameplay collision is disabled.
+
 ## Prototype UI
 
 - Health.

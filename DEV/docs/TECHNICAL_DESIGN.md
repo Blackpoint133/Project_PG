@@ -188,7 +188,7 @@ Suggested layer allocation:
 6. Interactables — radio, loot case, and equipment pickups.
 7. Equipment visuals / sensor-only shapes — detached legs, sockets, and presentation effects.
 
-Player gameplay collision remains active during the leg swap. Only the leg visual module detaches. Use masks sparingly and document any exception if layer allocation changes.
+Player gameplay collision remains active during the leg swap. The Player uses collision mask 5 to detect world layer 1 and enemy layer 4, while living enemies block CharacterBody2D movement through standard `move_and_slide` resolution. Defeated targets may clear their enemy layer and become passable. Only the leg visual module detaches. Use masks sparingly and document any exception if layer allocation changes.
 
 ## Data Flow
 

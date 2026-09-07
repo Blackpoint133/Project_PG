@@ -59,6 +59,14 @@ value = 100.0
 show_percentage = false
 visible = false
 
+[node name="HealthLabel" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 220.0
+offset_right = 640.0
+offset_bottom = 256.0
+theme_override_font_sizes/font_size = 28
+text = "HEALTH: 100 / 100"
+
 [node name="ControlsLabel" type="Label" parent="."]
 offset_left = 24.0
 offset_top = 104.0
@@ -70,8 +78,8 @@ text = "A/D: move  S: crouch  Space: jump\n1/2: switch  LMB: fire  R: reload\nF:
 [node name="InteractionLabel" type="Label" parent="."]
 visible = false
 offset_left = 24.0
-offset_top = 220.0
+offset_top = 264.0
 offset_right = 900.0
-offset_bottom = 256.0
+offset_bottom = 300.0
 theme_override_font_sizes/font_size = 28
 text = ""

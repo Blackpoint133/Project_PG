@@ -66,9 +66,11 @@ Task 035 makes living targets physically block the Player through collision mask
 
 Task 036 adds interchangeable left-arm equipment. Standard Left Arm is installed dynamically at startup, while a physical Shield Left Arm pickup transfers exact instances through F and updates the held visual and HUD. Q is a held-input metadata boundary only; shield protection and energy behavior are deferred to Task 037. Windows runtime validation is pending.
 
-Task 037 adds the plasma Shield runtime. Holding Q projects a translucent cyan panel, drains the exact equipped LeftArmInstance over four seconds, waits one second, and recharges it over five seconds. Shield activity alone locks weapon firing; hostile projectile absorption remains pending. Windows runtime validation is pending.
+Task 037 added the initial plasma Shield runtime; its temporary time-energy model was superseded by Task 039.
 
 Task 038 corrected the stale Technical Design collision sentence to match the Task 035 solid-enemy contract. No gameplay behavior changed; Task 037 Windows runtime validation remains pending.
+
+Task 039 reworks Shield Left Arm as an indefinite kinetic absorber. Held Q projects a stable vertical full-height panel on the mouse-selected side, incoming enemy attacks build per-instance charge with overflow passing through, and Q plus LMB releases stored charge as a cyan counter-blast while weapon firing is locked. A focused enemy projectile and 100-health Player damage foundation were added; final hostile damage behavior and effects remain deferred. Windows runtime validation is pending.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

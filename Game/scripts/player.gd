@@ -32,7 +32,7 @@ var facing_direction := 1
 @onready var jetpack_slot: Node2D = $BodyRoot/JetpackSlot
 @onready var aim_pivot: Node2D = $BodyRoot/AimPivot
 @onready var left_arm_slot: Node2D = $BodyRoot/AimPivot/LeftArmSlot
-@onready var shield_controller: ShieldController = $BodyRoot/AimPivot/ShieldController
+@onready var shield_controller: ShieldController = $BodyRoot/ShieldController
 @onready var weapon_slot: Node2D = $BodyRoot/AimPivot/WeaponSlot
 @onready var weapon_controller: WeaponController = $WeaponController
 @onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
@@ -40,6 +40,7 @@ var facing_direction := 1
 @onready var knee_dash_controller: KneeDashController = $KneeDashController
 @onready var interaction_controller: InteractionController = $InteractionSensor
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var player_damage_receiver: PlayerDamageReceiver = $PlayerDamageReceiver
 
 var _rectangle_shape: RectangleShape2D = RectangleShape2D.new()
 var muzzle_marker: Marker2D = null
@@ -63,12 +64,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
 	left_arm_equipment_controller.set_ability_input(Input.is_action_pressed("left_arm_ability"))
-	shield_controller.advance(delta)
+	shield_controller.set_protected_side(_get_shield_side())
 	if Input.is_action_just_pressed("leg_ability"):
 		leg_equipment_controller.activate_ability()
 	var dash_active: bool = knee_dash_controller.is_active()
 	var input_direction := Input.get_axis("move_left", "move_right")
 	var crouching := Input.is_action_pressed("crouch") and was_on_floor and not dash_active
+	shield_controller.set_crouching(crouching and not dash_active)
 
 	var jetpack_active: bool = false
 	if dash_active:
@@ -112,9 +114,14 @@ func _physics_process(delta: float) -> void:
 		weapon_controller.select_slot(1)
 	if Input.is_action_just_pressed("interact"):
 		interaction_controller.try_interact(self)
-	var fire_requested: bool = Input.is_action_pressed("fire") if weapon_controller.uses_automatic_fire() else Input.is_action_just_pressed("fire")
-	if fire_requested:
-		weapon_controller.try_fire()
+	var fire_pressed: bool = Input.is_action_pressed("fire")
+	if shield_controller.is_active():
+		if Input.is_action_just_pressed("fire"):
+			shield_controller.try_counter_blast()
+	else:
+		var fire_requested: bool = fire_pressed if weapon_controller.uses_automatic_fire() else Input.is_action_just_pressed("fire")
+		if fire_requested:
+			weapon_controller.try_fire()
 	if Input.is_action_just_pressed("reload"):
 		weapon_controller.try_reload()
 
@@ -244,6 +251,15 @@ func get_equipped_leg_definition() -> LegDefinition:
 func get_equipped_left_arm_definition() -> LeftArmDefinition:
 	return left_arm_equipment_controller.current_definition
 
+func receive_damage(amount: float) -> float:
+	return player_damage_receiver.apply_damage(amount)
+
+func get_current_health() -> float:
+	return player_damage_receiver.get_current_health()
+
+func get_maximum_health() -> float:
+	return player_damage_receiver.get_maximum_health()
+
 func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
 	if pickup == null:
 		return
@@ -305,6 +321,12 @@ func get_weapon_slot_summary(slot_index: int) -> String:
 		return "%d: EMPTY" % (slot_index + 1)
 	var marker: String = " *" if weapon_controller.get_active_slot_index() == slot_index else ""
 	return "%d: %s %d/%d%s" % [slot_index + 1, instance.definition.display_name, instance.loaded_ammo, instance.reserve_ammo, marker]
+
+func _get_shield_side() -> int:
+	var horizontal_offset: float = get_global_mouse_position().x - global_position.x
+	if absf(horizontal_offset) > FACING_DEAD_ZONE:
+		return 1 if horizontal_offset > 0.0 else -1
+	return facing_direction
 
 func _update_crouch(crouching: bool) -> void:
 	var target_height := CROUCH_HEIGHT if crouching else STAND_HEIGHT

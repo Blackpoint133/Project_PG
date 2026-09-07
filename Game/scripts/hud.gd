@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var leg_status_label: Label = $LegStatusLabel
 @onready var left_arm_status_label: Label = $LeftArmStatusLabel
 @onready var shield_energy_bar: ProgressBar = $ShieldEnergyBar
+@onready var health_label: Label = $HealthLabel
 @onready var interaction_label: Label = $InteractionLabel
 var _is_reloading := false
 var _loaded_ammo := 0
@@ -17,10 +18,11 @@ var _left_arm_name: String = "UNKNOWN"
 var _left_arm_ability_name: String = "NONE"
 var _shield_available: bool = false
 var _shield_active: bool = false
-var _shield_energy: float = 0.0
-var _shield_max_energy: float = 0.0
-var _shield_waiting_for_recharge: bool = false
-var _shield_release_required: bool = false
+var _shield_charge: float = 0.0
+var _shield_max_charge: float = 0.0
+var _shield_saturated: bool = false
+var _current_health: float = 100.0
+var _maximum_health: float = 100.0
 
 func _ready() -> void:
 	set_process(true)
@@ -33,16 +35,18 @@ func _ready() -> void:
 		var left_arm_ability: LeftArmAbilityDefinition = player.left_arm_equipment_controller.current_ability_definition
 		_left_arm_name = "UNKNOWN" if left_arm_definition == null else left_arm_definition.display_name
 		_left_arm_ability_name = "" if left_arm_ability == null else left_arm_ability.display_name
-		_shield_available = player.shield_controller.get_maximum_energy() > 0.0
+		_shield_available = player.shield_controller.get_maximum_charge() > 0.0
 		_shield_active = player.shield_controller.is_active()
-		_shield_energy = player.shield_controller.get_current_energy()
-		_shield_max_energy = player.shield_controller.get_maximum_energy()
-		_shield_waiting_for_recharge = player.shield_controller.is_waiting_for_recharge()
-		_shield_release_required = player.shield_controller.requires_release()
+		_shield_charge = player.shield_controller.get_current_charge()
+		_shield_max_charge = player.shield_controller.get_maximum_charge()
+		_shield_saturated = player.shield_controller.is_saturated()
+		_current_health = player.get_current_health()
+		_maximum_health = player.get_maximum_health()
 		_render_weapon_state()
 		_render_weapon_slots(player)
 		_render_leg_status(player)
 		_render_left_arm_status()
+		_render_health()
 		interaction_label.text = player.get_interaction_prompt()
 		interaction_label.visible = not interaction_label.text.is_empty()
 		player.weapon_controller.reload_started.connect(_on_reload_started)
@@ -56,6 +60,7 @@ func _ready() -> void:
 		player.left_arm_equipment_controller.left_arm_changed.connect(_on_left_arm_changed)
 		player.left_arm_equipment_controller.left_arm_ability_changed.connect(_on_left_arm_ability_changed)
 		player.shield_controller.shield_state_changed.connect(_on_shield_state_changed)
+		player.player_damage_receiver.health_changed.connect(_on_health_changed)
 		player.knee_dash_controller.dash_started.connect(_on_dash_started)
 		player.knee_dash_controller.dash_ended.connect(_on_dash_ended)
 		player.interaction_prompt_changed.connect(_on_interaction_prompt_changed)
@@ -97,22 +102,23 @@ func _render_left_arm_status() -> void:
 	var ability_name: String = "NONE"
 	shield_energy_bar.visible = _shield_available
 	var percentage: float = 0.0
-	if _shield_max_energy > 0.0:
-		percentage = clampf(_shield_energy / _shield_max_energy * 100.0, 0.0, 100.0)
+	if _shield_max_charge > 0.0:
+		percentage = clampf(_shield_charge / _shield_max_charge * 100.0, 0.0, 100.0)
 	shield_energy_bar.value = percentage
 	if not _shield_available or _left_arm_ability_name.is_empty():
 		ability_name = "NONE"
-	elif _shield_release_required:
-		ability_name = "RELEASE Q %.0f%%" % percentage
 	elif _shield_active:
-		ability_name = "SHIELD ACTIVE %.0f%%" % percentage
-	elif _shield_waiting_for_recharge:
-		ability_name = "SHIELD COOLDOWN %.0f%%" % percentage
-	elif percentage < 100.0:
-		ability_name = "SHIELD RECHARGING %.0f%%" % percentage
+		ability_name = "SHIELD ABSORBING %.0f%%" % percentage
+	elif _shield_saturated:
+		ability_name = "SHIELD SATURATED 100%"
+	elif percentage > 0.0:
+		ability_name = "SHIELD STORED %.0f%%" % percentage
 	else:
-		ability_name = "SHIELD READY 100%"
+		ability_name = "SHIELD READY 0%"
 	left_arm_status_label.text = "LEFT ARM: %s\nQ: %s" % [_left_arm_name, ability_name]
+
+func _render_health() -> void:
+	health_label.text = "HEALTH: %.0f / %.0f" % [_current_health, _maximum_health]
 
 func _on_reload_started() -> void:
 	_is_reloading = true
@@ -159,14 +165,18 @@ func _on_left_arm_ability_changed(ability_definition: LeftArmAbilityDefinition) 
 	_left_arm_ability_name = "" if ability_definition == null else ability_definition.display_name
 	_render_left_arm_status()
 
-func _on_shield_state_changed(available: bool, active: bool, current_energy: float, maximum_energy: float, waiting_for_recharge: bool, release_required: bool) -> void:
+func _on_shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool) -> void:
 	_shield_available = available
 	_shield_active = active
-	_shield_energy = current_energy
-	_shield_max_energy = maximum_energy
-	_shield_waiting_for_recharge = waiting_for_recharge
-	_shield_release_required = release_required
+	_shield_charge = current_charge
+	_shield_max_charge = maximum_charge
+	_shield_saturated = saturated
 	_render_left_arm_status()
+
+func _on_health_changed(current_health: float, maximum_health: float) -> void:
+	_current_health = current_health
+	_maximum_health = maximum_health
+	_render_health()
 
 func _on_dash_started(_direction: Vector2) -> void:
 	_leg_dash_active = true

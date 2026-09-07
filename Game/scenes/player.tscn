@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/combat/weapon_controller.gd" id="8_weapon_controller"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/abilities/knee_dash_controller.gd" id="11_knee_dash_controller"]
 [ext_resource type="Script" path="res://scripts/equipment/left_arm_equipment_controller.gd" id="12_left_arm_controller"]
 [ext_resource type="Script" path="res://scripts/abilities/shield_controller.gd" id="13_shield_controller"]
+[ext_resource type="Script" path="res://scripts/player_damage_receiver.gd" id="14_damage_receiver"]
 
 [sub_resource type="RectangleShape2D" id="player_shape"]
 size = Vector2(40, 96)
@@ -48,25 +49,25 @@ position = Vector2(0, -72)
 
 [node name="LeftArmSlot" type="Node2D" parent="BodyRoot/AimPivot"]
 
-[node name="ShieldController" type="Node2D" parent="BodyRoot/AimPivot"]
+[node name="ShieldController" type="Node2D" parent="BodyRoot"]
 script = ExtResource("13_shield_controller")
 
-[node name="ShieldArea" type="Area2D" parent="BodyRoot/AimPivot/ShieldController"]
+[node name="ShieldArea" type="Area2D" parent="BodyRoot/ShieldController"]
 collision_layer = 0
 collision_mask = 16
 monitoring = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BodyRoot/AimPivot/ShieldController/ShieldArea"]
-position = Vector2(52, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodyRoot/ShieldController/ShieldArea"]
+position = Vector2(52, -48)
 shape = SubResource("shield_shape")
 
-[node name="ShieldFill" type="Polygon2D" parent="BodyRoot/AimPivot/ShieldController"]
-polygon = PackedVector2Array(44, -52, 52, -48, 60, -36, 64, 0, 60, 36, 52, 48, 44, 52)
+[node name="ShieldFill" type="Polygon2D" parent="BodyRoot/ShieldController"]
+polygon = PackedVector2Array(44, -96, 60, -92, 60, -4, 44, 0)
 color = Color(0.1, 0.75, 0.95, 0.28)
 visible = false
 
-[node name="ShieldOutline" type="Line2D" parent="BodyRoot/AimPivot/ShieldController"]
-points = PackedVector2Array(44, -52, 52, -48, 60, -36, 64, 0, 60, 36, 52, 48, 44, 52, 44, -52)
+[node name="ShieldOutline" type="Line2D" parent="BodyRoot/ShieldController"]
+points = PackedVector2Array(44, -96, 60, -92, 60, -4, 44, 0, 44, -96)
 width = 3.0
 default_color = Color(0.35, 0.9, 1, 0.9)
 visible = false
@@ -86,6 +87,9 @@ script = ExtResource("10_leg_controller")
 
 [node name="LeftArmEquipmentController" type="Node" parent="."]
 script = ExtResource("12_left_arm_controller")
+
+[node name="PlayerDamageReceiver" type="Node" parent="."]
+script = ExtResource("14_damage_receiver")
 
 [node name="KneeDashController" type="Node2D" parent="."]
 script = ExtResource("11_knee_dash_controller")

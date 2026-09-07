@@ -1,0 +1,65 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_left_arm_pickup.tscn" id="3_pickup"]
+[ext_resource type="Resource" path="res://resources/equipment/shield_left_arm.tres" id="4_shield"]
+[ext_resource type="PackedScene" path="res://scenes/targets/target_dummy.tscn" id="5_target"]
+[ext_resource type="Script" path="res://scripts/abilities/hostile_projectile_emitter.gd" id="6_emitter"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/enemy_projectile.tscn" id="7_projectile"]
+
+[sub_resource type="RectangleShape2D" id="floor_shape"]
+size = Vector2(2560, 96)
+
+[node name="KineticShieldTest" type="Node2D"]
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(1280, 672)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("floor_shape")
+
+[node name="FloorVisual" type="ColorRect" parent="Floor"]
+offset_left = -1280.0
+offset_top = -48.0
+offset_right = 1280.0
+offset_bottom = 48.0
+color = Color(0.08, 0.13, 0.16, 1)
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(640, 624)
+
+[node name="ShieldLeftArmPickup" parent="." instance=ExtResource("3_pickup")]
+position = Vector2(760, 624)
+left_arm_definition = ExtResource("4_shield")
+
+[node name="CounterBlastTarget" parent="." instance=ExtResource("5_target")]
+position = Vector2(920, 624)
+
+[node name="HostileProjectileEmitter" type="Node2D" parent="."]
+position = Vector2(1160, 576)
+script = ExtResource("6_emitter")
+projectile_scene = ExtResource("7_projectile")
+interval = 1.0
+projectile_speed = 720.0
+projectile_damage = 20.0
+projectile_lifetime = 3.0
+
+[node name="EmitterLabel" type="Label" parent="HostileProjectileEmitter"]
+offset_left = -130.0
+offset_top = -80.0
+offset_right = 130.0
+offset_bottom = -48.0
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+text = "HOSTILE TEST EMITTER\n20 DAMAGE / 1.0s"
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 360.0
+offset_right = 580.0
+offset_bottom = 468.0
+theme_override_font_sizes/font_size = 24
+text = "KINETIC SHIELD TEST\nF: equip SHIELD   Q: hold to absorb\nAim toward the emitter or away from it.\nLMB while active: counter-blast stored charge."
+
+[node name="HUD" parent="." instance=ExtResource("2_hud")]

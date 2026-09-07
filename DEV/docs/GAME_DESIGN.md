@@ -70,17 +70,20 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 
 - Standard Left Arm is the passive starting equipment.
 - Shield Left Arm is a physical replacement equipped with F.
-- Holding Q projects a translucent cyan plasma panel from Shield Left Arm and locks firing only while active.
-- Shield energy lasts four seconds from full, waits one second before recharge, and takes five seconds to fully recharge.
-- Actual hostile projectile absorption remains deferred to the hostile projectile and damage system.
+- Holding Q indefinitely projects a vertical translucent cyan plasma panel from Shield Left Arm and locks firing only while active.
+- The panel protects the full standing or crouching body height on only the horizontal side selected by mouse X; mouse Y never tilts it.
+- Incoming enemy attacks build stored charge on the exact Shield Left Arm instance. Charge saturates at its maximum and overflow passes through.
+- While active, Q plus LMB releases the stored charge as a horizontal counter-blast instead of firing the equipped weapon.
+- Hostile projectile absorption and the Player damage foundation are implemented as a focused prototype; final damage, effects, and reflected-wave behavior remain deferred.
 
 ### Shield Left Arm
 
 - Activated by holding Q.
 - The shield remains active while Q is held.
 - The player cannot fire while holding the shield.
-- A defensive boundary is prepared for future frontal incoming damage.
-- It has limited energy and a delayed recharge period.
+- It is a vertical full-height barrier on the selected left or right side.
+- Incoming attacks charge the barrier, and damage beyond remaining capacity reaches the Player.
+- Stored charge remains on the exact left-arm instance when it is dropped and equipped again.
 - Reserve an extension point for a future reflected damage wave; the wave is not implemented in the first vertical slice.
 
 ### Hook Right Arm

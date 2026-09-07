@@ -72,6 +72,8 @@ Task 038 corrected the stale Technical Design collision sentence to match the Ta
 
 Task 039 reworks Shield Left Arm as an indefinite kinetic absorber. Held Q projects a stable vertical full-height panel on the mouse-selected side, incoming enemy attacks build per-instance charge with overflow passing through, and Q plus LMB releases stored charge as a cyan counter-blast while weapon firing is locked. A focused enemy projectile and 100-health Player damage foundation were added; final hostile damage behavior and effects remain deferred. Windows runtime validation is pending.
 
+Task 040 corrected the kinetic Shield audit defects: new Shield instances start empty, empty shields can activate, ShieldArea routes hits to its parent ShieldController, and saturated HUD state has priority over active-state text. No scenes, resources, tuning, or unrelated gameplay systems changed. Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

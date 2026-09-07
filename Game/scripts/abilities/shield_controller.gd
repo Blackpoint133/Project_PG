@@ -114,7 +114,7 @@ func _is_shield_available() -> bool:
 	return ability_definition != null and ability_definition.ability_id == SHIELD_ABILITY_ID
 
 func _can_activate() -> bool:
-	return _is_shield_available() and get_current_charge() > 0.0
+	return _is_shield_available()
 
 func _deactivate() -> void:
 	if not _is_active:

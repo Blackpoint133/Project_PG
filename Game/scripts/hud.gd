@@ -107,10 +107,10 @@ func _render_left_arm_status() -> void:
 	shield_energy_bar.value = percentage
 	if not _shield_available or _left_arm_ability_name.is_empty():
 		ability_name = "NONE"
-	elif _shield_active:
-		ability_name = "SHIELD ABSORBING %.0f%%" % percentage
 	elif _shield_saturated:
 		ability_name = "SHIELD SATURATED 100%"
+	elif _shield_active:
+		ability_name = "SHIELD ABSORBING %.0f%%" % percentage
 	elif percentage > 0.0:
 		ability_name = "SHIELD STORED %.0f%%" % percentage
 	else:

@@ -46,7 +46,7 @@ Replace the temporary time-draining Shield runtime with an indefinite kinetic ab
 
 ## Shield state and absorption
 
-Q activates the Shield while charge is above zero and keeps it active indefinitely while held. `absorb_damage(incoming_damage: float) -> float` clamps negative input to zero, returns all damage when inactive, fills only available capacity when active, and returns overflow. Full storage is represented by the typed saturated state signal. Each enemy projectile marks its shield interaction as processed once.
+Q activates a valid Shield regardless of stored charge and keeps it active indefinitely while held. New Shield instances start with zero charge. `absorb_damage(incoming_damage: float) -> float` clamps negative input to zero, returns all damage when inactive, fills only available capacity when active, and returns overflow. Full storage is represented by the typed saturated state signal. Each enemy projectile resolves its overlapping ShieldArea to the parent ShieldController and marks its shield interaction as processed once.
 
 ## Geometry and orientation
 

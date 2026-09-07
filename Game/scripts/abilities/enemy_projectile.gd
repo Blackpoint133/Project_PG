@@ -33,11 +33,11 @@ func _physics_process(delta: float) -> void:
 	position += _movement_velocity * delta
 	if not _shield_processed:
 		for area: Area2D in get_overlapping_areas():
-			if not area.has_method(&"absorb_damage"):
+			var shield_controller: ShieldController = area.get_parent() as ShieldController
+			if shield_controller == null:
 				continue
 			_shield_processed = true
-			var remainder_variant: Variant = area.call(&"absorb_damage", damage)
-			var remainder: float = float(remainder_variant)
+			var remainder: float = shield_controller.absorb_damage(damage)
 			if remainder <= 0.0:
 				_damage_resolved = true
 				queue_free()

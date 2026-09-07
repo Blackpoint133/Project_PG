@@ -74,6 +74,7 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - The panel protects the full standing or crouching body height on only the horizontal side selected by mouse X; mouse Y never tilts it.
 - Incoming enemy attacks build stored charge on the exact Shield Left Arm instance. Charge saturates at its maximum and overflow passes through.
 - While active, Q plus LMB releases the stored charge as a horizontal counter-blast instead of firing the equipped weapon.
+- A successful counter-blast starts a two-second vulnerable recovery on that exact Shield Left Arm instance. Q retains LMB ownership during recovery, and holding Q reactivates the Shield automatically when recovery ends.
 - Hostile projectile absorption and the Player damage foundation are implemented as a focused prototype; final damage, effects, and reflected-wave behavior remain deferred.
 
 ### Shield Left Arm
@@ -84,6 +85,7 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - It is a vertical full-height barrier on the selected left or right side.
 - Incoming attacks charge the barrier, and damage beyond remaining capacity reaches the Player.
 - Stored charge remains on the exact left-arm instance when it is dropped and equipped again.
+- Counter-blast cooldown also remains on the exact left-arm instance when it is dropped and equipped again.
 - Reserve an extension point for a future reflected damage wave; the wave is not implemented in the first vertical slice.
 
 ### Hook Right Arm

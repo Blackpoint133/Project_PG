@@ -21,6 +21,7 @@ var _shield_active: bool = false
 var _shield_charge: float = 0.0
 var _shield_max_charge: float = 0.0
 var _shield_saturated: bool = false
+var _shield_cooldown_remaining: float = 0.0
 var _current_health: float = 100.0
 var _maximum_health: float = 100.0
 
@@ -40,6 +41,7 @@ func _ready() -> void:
 		_shield_charge = player.shield_controller.get_current_charge()
 		_shield_max_charge = player.shield_controller.get_maximum_charge()
 		_shield_saturated = player.shield_controller.is_saturated()
+		_shield_cooldown_remaining = player.shield_controller.get_cooldown_remaining()
 		_current_health = player.get_current_health()
 		_maximum_health = player.get_maximum_health()
 		_render_weapon_state()
@@ -107,6 +109,8 @@ func _render_left_arm_status() -> void:
 	shield_energy_bar.value = percentage
 	if not _shield_available or _left_arm_ability_name.is_empty():
 		ability_name = "NONE"
+	elif _shield_cooldown_remaining > 0.0:
+		ability_name = "SHIELD COOLDOWN %.1fs" % _shield_cooldown_remaining
 	elif _shield_saturated:
 		ability_name = "SHIELD SATURATED 100%"
 	elif _shield_active:
@@ -165,12 +169,13 @@ func _on_left_arm_ability_changed(ability_definition: LeftArmAbilityDefinition) 
 	_left_arm_ability_name = "" if ability_definition == null else ability_definition.display_name
 	_render_left_arm_status()
 
-func _on_shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool) -> void:
+func _on_shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool, cooldown_remaining: float) -> void:
 	_shield_available = available
 	_shield_active = active
 	_shield_charge = current_charge
 	_shield_max_charge = maximum_charge
 	_shield_saturated = saturated
+	_shield_cooldown_remaining = cooldown_remaining
 	_render_left_arm_status()
 
 func _on_health_changed(current_health: float, maximum_health: float) -> void:

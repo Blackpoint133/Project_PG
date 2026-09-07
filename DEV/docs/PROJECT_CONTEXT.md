@@ -74,6 +74,8 @@ Task 039 reworks Shield Left Arm as an indefinite kinetic absorber. Held Q proje
 
 Task 040 corrected the kinetic Shield audit defects: new Shield instances start empty, empty shields can activate, ShieldArea routes hits to its parent ShieldController, and saturated HUD state has priority over active-state text. No scenes, resources, tuning, or unrelated gameplay systems changed. Windows runtime validation remains pending.
 
+Task 041 adds a two-second per-instance kinetic Shield counter-blast cooldown. Q retains LMB ownership during the vulnerable cooldown, held Q reactivates the Shield when recovery ends, and exact-instance cooldown state persists through equipment swaps. Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

@@ -1,7 +1,7 @@
 class_name ShieldController
 extends Node2D
 
-signal shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool)
+signal shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool, cooldown_remaining: float)
 
 const SHIELD_ABILITY_ID: String = "shield"
 const COUNTER_PROJECTILE_SCENE: PackedScene = preload("res://scenes/projectiles/kinetic_counter_projectile.tscn")
@@ -23,6 +23,9 @@ func set_left_arm_instance(instance: LeftArmInstance) -> void:
 	_input_pressed = false
 	if _left_arm_instance != null:
 		_left_arm_instance.ability_charge = clampf(_left_arm_instance.ability_charge, 0.0, get_maximum_charge())
+		var ability_definition: LeftArmAbilityDefinition = _get_ability_definition()
+		var maximum_cooldown: float = 0.0 if ability_definition == null else maxf(ability_definition.counter_blast_cooldown, 0.0)
+		_left_arm_instance.ability_cooldown_remaining = clampf(_left_arm_instance.ability_cooldown_remaining, 0.0, maximum_cooldown)
 	_apply_geometry()
 	_emit_state()
 
@@ -36,6 +39,24 @@ func set_input_pressed(is_pressed: bool) -> void:
 	if _can_activate():
 		_is_active = true
 		_apply_presentation(true)
+		_emit_state()
+
+func advance(delta: float) -> void:
+	if _left_arm_instance == null or not _is_shield_available():
+		return
+	var previous_cooldown: float = _left_arm_instance.ability_cooldown_remaining
+	_left_arm_instance.ability_cooldown_remaining = maxf(previous_cooldown - maxf(delta, 0.0), 0.0)
+	if _left_arm_instance.ability_cooldown_remaining > 0.0:
+		if _is_active:
+			_is_active = false
+			_apply_presentation(false)
+		_emit_state()
+		return
+	if previous_cooldown > 0.0 and _input_pressed and not _is_active:
+		_is_active = true
+		_apply_presentation(true)
+		_emit_state()
+	elif previous_cooldown > 0.0:
 		_emit_state()
 
 func set_protected_side(horizontal_side: int) -> void:
@@ -53,7 +74,7 @@ func set_crouching(crouching: bool) -> void:
 
 func absorb_damage(incoming_damage: float) -> float:
 	var safe_damage: float = maxf(incoming_damage, 0.0)
-	if not _is_active or not _is_shield_available() or _left_arm_instance == null:
+	if not _is_active or not _is_shield_available() or _left_arm_instance == null or is_cooling_down():
 		return safe_damage
 	var maximum_charge: float = get_maximum_charge()
 	var available_capacity: float = maxf(maximum_charge - _left_arm_instance.ability_charge, 0.0)
@@ -64,6 +85,8 @@ func absorb_damage(incoming_damage: float) -> float:
 
 func try_counter_blast() -> bool:
 	if not _is_active or _left_arm_instance == null:
+		return false
+	if is_cooling_down():
 		return false
 	var charge: float = get_current_charge()
 	if charge <= 0.0:
@@ -85,8 +108,14 @@ func try_counter_blast() -> bool:
 	player_node.get_parent().add_child(projectile)
 	projectile.global_position = player_node.global_position + Vector2(0.0, -48.0)
 	_left_arm_instance.ability_charge = 0.0
+	_left_arm_instance.ability_cooldown_remaining = maxf(ability_definition.counter_blast_cooldown, 0.0)
+	_is_active = false
+	_apply_presentation(false)
 	_emit_state()
 	return true
+
+func captures_fire_input() -> bool:
+	return _input_pressed and _is_shield_available()
 
 func is_active() -> bool:
 	return _is_active
@@ -104,6 +133,12 @@ func is_saturated() -> bool:
 	var maximum_charge: float = get_maximum_charge()
 	return maximum_charge > 0.0 and get_current_charge() >= maximum_charge
 
+func is_cooling_down() -> bool:
+	return _left_arm_instance != null and _left_arm_instance.ability_cooldown_remaining > 0.0
+
+func get_cooldown_remaining() -> float:
+	return 0.0 if _left_arm_instance == null else maxf(_left_arm_instance.ability_cooldown_remaining, 0.0)
+
 func _get_ability_definition() -> LeftArmAbilityDefinition:
 	if _left_arm_instance == null or _left_arm_instance.definition == null:
 		return null
@@ -114,7 +149,7 @@ func _is_shield_available() -> bool:
 	return ability_definition != null and ability_definition.ability_id == SHIELD_ABILITY_ID
 
 func _can_activate() -> bool:
-	return _is_shield_available()
+	return _is_shield_available() and not is_cooling_down()
 
 func _deactivate() -> void:
 	if not _is_active:
@@ -166,4 +201,4 @@ func _update_saturation_presentation() -> void:
 
 func _emit_state() -> void:
 	_update_saturation_presentation()
-	shield_state_changed.emit(_is_shield_available(), _is_active, get_current_charge(), get_maximum_charge(), is_saturated())
+	shield_state_changed.emit(_is_shield_available(), _is_active, get_current_charge(), get_maximum_charge(), is_saturated(), get_cooldown_remaining())

@@ -48,6 +48,8 @@ Replace the temporary time-draining Shield runtime with an indefinite kinetic ab
 
 Q activates a valid Shield regardless of stored charge and keeps it active indefinitely while held. New Shield instances start with zero charge. `absorb_damage(incoming_damage: float) -> float` clamps negative input to zero, returns all damage when inactive, fills only available capacity when active, and returns overflow. Full storage is represented by the typed saturated state signal. Each enemy projectile resolves its overlapping ShieldArea to the parent ShieldController and marks its shield interaction as processed once.
 
+Task 041 follow-up adds a two-second per-instance counter-blast cooldown. Q retains LMB ownership during that vulnerable recovery, and holding Q reactivates the Shield automatically when the cooldown reaches zero.
+
 ## Geometry and orientation
 
 The ShieldController is a direct child of `BodyRoot`, not `AimPivot`, so mouse Y and weapon rotation cannot tilt the barrier. Standing collision and visual coverage are 96 pixels from local Y -96 through 0. Crouching coverage is 64 pixels from local Y -64 through 0. The panel is placed at local X +/-44 through +/-60, with a 16-pixel collision thickness centered at X +/-52. Mouse X selects the side; the horizontal dead zone preserves the current side.

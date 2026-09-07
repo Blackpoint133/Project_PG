@@ -65,6 +65,7 @@ func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
 	left_arm_equipment_controller.set_ability_input(Input.is_action_pressed("left_arm_ability"))
 	shield_controller.set_protected_side(_get_shield_side())
+	shield_controller.advance(delta)
 	if Input.is_action_just_pressed("leg_ability"):
 		leg_equipment_controller.activate_ability()
 	var dash_active: bool = knee_dash_controller.is_active()
@@ -115,7 +116,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("interact"):
 		interaction_controller.try_interact(self)
 	var fire_pressed: bool = Input.is_action_pressed("fire")
-	if shield_controller.is_active():
+	if shield_controller.captures_fire_input():
 		if Input.is_action_just_pressed("fire"):
 			shield_controller.try_counter_blast()
 	else:

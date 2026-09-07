@@ -9,3 +9,4 @@ display_name = "SHIELD"
 max_charge = 100.0
 counter_projectile_speed = 900.0
 counter_projectile_lifetime = 2.0
+counter_blast_cooldown = 2.0

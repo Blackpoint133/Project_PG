@@ -72,7 +72,7 @@ Run the Windows runtime checklist and verify the heat bar and overheat latch at 
 
 ## Commit and push results
 
-The implementation and publication commit hashes, push results, final HEAD/origin comparison, and working-tree state will be recorded here after publication.
+Implementation commit: `8642f7af5fa778ac73ae90c25d8efbef05cc914b` (`feat: add jetpack heat limit`). The commit was pushed normally to `origin/main` and remote verification passed. After the implementation push, `HEAD` and `origin/main` both matched `8642f7af5fa778ac73ae90c25d8efbef05cc914b`, and the working tree was clean. This report-only publication update will record the final documentation commit and state.
 
 ## Windows runtime checklist
 
@@ -80,7 +80,7 @@ The implementation and publication commit hashes, push results, final HEAD/origi
 2. Jump and hold Space; confirm thrust works and heat rises.
 3. Hold thrust until approximately 100% after 2.5 seconds; confirm thrust stops and `OVERHEATED 100%` appears.
 4. Continue holding Space and confirm thrust does not restart.
-5. Release and press Space before overheat; confirm heat is retained in air and thrust can resume.
+5. Release and press Space again before overheat; confirm heat is retained in air and thrust can resume.
 6. Pulse Space repeatedly airborne and confirm heat never cools.
 7. Land with heat and confirm `COOLING` until zero.
 8. Jump before zero after overheat and confirm thrust remains unavailable.

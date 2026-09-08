@@ -43,6 +43,13 @@ func process_contact(contact: Node) -> void:
 		return
 	_hit_targets.append(contact)
 	contact.call(&"take_damage", _ability_definition.contact_damage)
+	if (collision_object.collision_layer & 4) != 0 and contact.has_method(&"apply_bleeding"):
+		contact.call(
+			&"apply_bleeding",
+			_ability_definition.bleed_damage_per_tick,
+			_ability_definition.bleed_tick_interval,
+			_ability_definition.bleed_tick_count
+		)
 	if contact.has_method(&"apply_knockback"):
 		var impulse: Vector2 = _dash_direction * _ability_definition.knockback_strength
 		contact.call(&"apply_knockback", impulse)

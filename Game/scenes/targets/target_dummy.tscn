@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/targets/target_dummy.gd" id="1_target"]
+[ext_resource type="Script" path="res://scripts/status_effects/bleeding_status_controller.gd" id="2_bleeding"]
 
 [sub_resource type="RectangleShape2D" id="target_shape"]
 size = Vector2(32, 80)
@@ -9,6 +10,9 @@ size = Vector2(32, 80)
 collision_layer = 4
 collision_mask = 1
 script = ExtResource("1_target")
+
+[node name="BleedingStatusController" type="Node" parent="."]
+script = ExtResource("2_bleeding")
 
 [node name="Visual" type="ColorRect" parent="."]
 size = Vector2(32, 80)

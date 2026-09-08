@@ -62,7 +62,7 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 - Clamp the dash angle to no more than 45 degrees from the horizontal ground line.
 - During the active dash, Player CharacterBody2D contact with a living enemy deals damage once per target per dash activation; the full Player collision body is the contact source.
 - Knock contacted enemies backward.
-- Reserve an extension point for a future bleeding status effect; bleeding is not implemented in this task.
+- A successful contact applies four delayed Bleeding ticks of 4 damage at one-second intervals, for 16 total delayed damage. Reapplying Bleeding refreshes four future ticks without stacking.
 
 The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary, directional dash, contact damage, capped knockback, and cooldown metadata. Final dash presentation and additional effects remain deferred.
 

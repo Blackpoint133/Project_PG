@@ -12,3 +12,6 @@ cooldown = 1.5
 contact_damage = 25
 knockback_strength = 640.0
 max_aim_angle_degrees = 45.0
+bleed_damage_per_tick = 4
+bleed_tick_interval = 1.0
+bleed_tick_count = 4

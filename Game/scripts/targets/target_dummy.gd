@@ -13,12 +13,19 @@ var _hook_stop_distance: float = 0.0
 var _hook_stunned_remaining: float = 0.0
 
 @onready var visual: ColorRect = $Visual
+@onready var bleeding_controller: BleedingStatusController = $BleedingStatusController
 
 func _ready() -> void:
 	current_health = max_health
 
 func _physics_process(delta: float) -> void:
 	_hook_stunned_remaining = maxf(_hook_stunned_remaining - delta, 0.0)
+	var bleeding_damage: int = bleeding_controller.advance(delta)
+	if bleeding_damage > 0:
+		take_damage(bleeding_damage)
+		if current_health <= 0:
+			_update_visual_feedback()
+			return
 	if _hook_pull_active:
 		_process_hook_pull(delta)
 	elif _knockback_remaining > 0.0:
@@ -39,6 +46,14 @@ func take_damage(amount: int) -> void:
 func apply_knockback(impulse: Vector2) -> void:
 	_knockback_velocity_x = clampf(impulse.x, -KNOCKBACK_MAX_SPEED, KNOCKBACK_MAX_SPEED)
 	_knockback_remaining = 0.18
+
+func apply_bleeding(damage_per_tick: int, tick_interval: float, tick_count: int) -> bool:
+	if current_health <= 0:
+		return false
+	return bleeding_controller.apply_bleeding(damage_per_tick, tick_interval, tick_count)
+
+func is_bleeding() -> bool:
+	return bleeding_controller.is_active()
 
 func begin_hook_pull(pull_anchor: Node2D, pull_speed: float, stop_distance: float, stun_duration: float) -> bool:
 	if pull_anchor == null or current_health <= 0 or _hook_pull_active:
@@ -92,10 +107,14 @@ func _update_visual_feedback() -> void:
 	if is_hook_stunned():
 		visual.modulate = Color(0.25, 0.85, 1.0)
 		return
+	if is_bleeding():
+		visual.modulate = Color(1.0, 0.1, 0.1)
+		return
 	var health_ratio := float(current_health) / float(max_health)
 	visual.modulate = Color(1.0, 0.4 + health_ratio * 0.6, 0.4)
 
 func _disable_target() -> void:
 	cancel_hook_pull()
+	bleeding_controller.clear()
 	set_collision_layer_value(3, false)
 	visual.modulate = Color(0.3, 0.3, 0.3)

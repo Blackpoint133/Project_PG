@@ -9,3 +9,6 @@ extends Resource
 @export var contact_damage: int = 25
 @export var knockback_strength: float = 640.0
 @export var max_aim_angle_degrees: float = 45.0
+@export var bleed_damage_per_tick: int = 0
+@export var bleed_tick_interval: float = 1.0
+@export var bleed_tick_count: int = 0

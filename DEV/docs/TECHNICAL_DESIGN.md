@@ -20,7 +20,7 @@ Future high-detail modular sprites must support the existing slot architecture a
 - Equipment definitions use custom `Resource` data where appropriate.
 - Dropped equipment uses reusable world pickup scenes.
 - Character state must explicitly support locomotion, crouching, airborne movement, jetpack flight, equipment swapping, shielding, hook use, knee dash, damage, and death without becoming one monolithic script.
-- Future bleeding and reflected-wave effects must have clean extension points but remain unimplemented.
+- Bleeding and reflected-wave effects use focused extension points; Bleeding is implemented for Knee Dash while reflected-wave behavior remains unimplemented.
 - Placeholder visuals must be replaceable with final sprites without changing gameplay systems.
 
 ## Scene Layout
@@ -163,6 +163,8 @@ Task 032 adds a `KneeDashController` that owns active dash timing, dash directio
 
 Task 054 replaces the former offset Knee Dash Area2D with Player CharacterBody2D slide contacts. After the existing dash `move_and_slide()` call, Player forwards each frame collision to `KneeDashController`, which filters generic living enemy-layer contacts exposing `take_damage`, tracks each target once per dash, and applies the existing damage and knockback. World and defeated-target contacts remain passable to damage dispatch.
 
+Task 055 adds `BleedingStatusController` as a state-only target child. Knee Dash keeps its 25 direct damage and requests generic `apply_bleeding` only after valid living enemy contact. Bleeding deals 4 damage per tick at one-second intervals for exactly four delayed ticks, refreshes without stacking, and clears on defeat. Hook stun presentation takes priority over the red bleeding tint while the timer continues.
+
 Task 036 adds the independent left-arm equipment boundary: `LeftArmDefinition` is shared configuration, `LeftArmInstance` owns one exact runtime item, and `LeftArmEquipmentController` owns the single equipped instance. `LeftArmSlot` is populated dynamically from the definition's held visual scene. `WorldLeftArmPickup` transfers exact instances through F while remaining separate from leg and weapon ownership. Standard Left Arm has no ability; Shield Left Arm exposes only typed shield metadata and held-Q input state until Task 037. Right-arm equipment follows the same separate slot boundary and does not share left-arm instances or behavior.
 
 Task 037 added `ShieldController`; Task 039 reworks it as a kinetic absorber under stable `BodyRoot` rather than the freely rotating `AimPivot`. The inactive Shield Arm remains a compact emitter, while held Q projects a vertical translucent cyan panel covering 96 standing pixels or 64 crouching pixels on the mouse-selected horizontal side. Incoming attacks build charge on the exact `LeftArmInstance`, saturating at the authored maximum with overflow passing through. While active, Player applies the firing lock before processing LMB; a distinct Q plus LMB press releases stored charge as a horizontal cyan counter-projectile. Task 041 adds a two-second per-instance counter-blast recovery: Q retains LMB ownership during the vulnerable cooldown, and held Q reactivates the Shield when it reaches zero. Enemy attacks use logical layer 5 and the Player damage receiver provides a 100-health foundation. Recharge, passive drain, depletion latches, hostile projectile absorption beyond this focused test foundation, and final damage effects remain deferred.
@@ -205,12 +207,12 @@ Suggested layer allocation:
 1. World — ground, platforms, and static level collision.
 2. Player body — player gameplay collision.
 3. Enemies — enemy gameplay collision.
-4. Player attacks — weapon projectiles, shotgun pellets, hook, and ability contact dispatch.
+4. Player attacks — weapon projectiles, shotgun pellets, and Hook behavior.
 5. Enemy attacks — enemy projectiles and contact hazards.
 6. Interactables — radio, loot case, and equipment pickups.
 7. Equipment visuals / sensor-only shapes — detached legs, sockets, and presentation effects.
 
-Player gameplay collision remains active during the leg swap. The Player uses collision mask 5 to detect world layer 1 and enemy layer 4, while living enemies block CharacterBody2D movement through standard `move_and_slide` resolution. Defeated targets may clear their enemy layer and become passable. Only the leg visual module detaches. Use masks sparingly and document any exception if layer allocation changes.
+Player gameplay collision remains active during the leg swap. The Player uses collision layer 2 and mask 5 to detect world layer 1 and enemy layer 4, while living enemies block CharacterBody2D movement through standard `move_and_slide` resolution. Full-body Knee Dash contact uses this Player layer 2 against enemy layer 3; it is not a Player Attacks layer 4 hitbox. Defeated targets may clear their enemy layer and become passable. Only the leg visual module detaches. Use masks sparingly and document any exception if layer allocation changes.
 
 ## Data Flow
 

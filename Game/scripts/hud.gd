@@ -11,6 +11,7 @@ extends CanvasLayer
 @onready var interaction_label: Label = $InteractionLabel
 @onready var jetpack_status_label: Label = $JetpackStatusLabel
 @onready var jetpack_heat_bar: ProgressBar = $JetpackHeatBar
+@onready var slide_status_label: Label = $SlideStatusLabel
 var _is_reloading := false
 var _loaded_ammo := 0
 var _reserve_ammo := 0
@@ -35,6 +36,8 @@ var _jetpack_heat: float = 0.0
 var _jetpack_maximum_heat: float = 100.0
 var _jetpack_overheated: bool = false
 var _jetpack_active: bool = false
+var _slide_active: bool = false
+var _slide_cooldown_remaining: float = 0.0
 
 func _ready() -> void:
 	set_process(true)
@@ -65,6 +68,8 @@ func _ready() -> void:
 		_jetpack_maximum_heat = player.jetpack_controller.get_maximum_heat()
 		_jetpack_overheated = player.jetpack_controller.is_overheated()
 		_jetpack_active = player.jetpack_controller.is_active()
+		_slide_active = player.slide_controller.is_active()
+		_slide_cooldown_remaining = player.slide_controller.get_cooldown_remaining()
 		_render_weapon_state()
 		_render_weapon_slots(player)
 		_render_leg_status(player)
@@ -72,6 +77,7 @@ func _ready() -> void:
 		_render_right_arm_status()
 		_render_health()
 		_render_jetpack_status(player)
+		_render_slide_status()
 		interaction_label.text = player.get_interaction_prompt()
 		interaction_label.visible = not interaction_label.text.is_empty()
 		player.weapon_controller.reload_started.connect(_on_reload_started)
@@ -94,6 +100,7 @@ func _ready() -> void:
 		player.knee_dash_controller.dash_ended.connect(_on_dash_ended)
 		player.interaction_prompt_changed.connect(_on_interaction_prompt_changed)
 		player.jetpack_controller.jetpack_state_changed.connect(_on_jetpack_state_changed)
+		player.slide_controller.slide_state_changed.connect(_on_slide_state_changed)
 
 func _process(_delta: float) -> void:
 	var player: Player = get_tree().get_first_node_in_group("player")
@@ -182,6 +189,14 @@ func _render_right_arm_status() -> void:
 		else:
 			ability_name = "%s READY" % _right_arm_ability_name
 	right_arm_status_label.text = "RIGHT ARM: %s\nE: %s" % [_right_arm_name, ability_name]
+
+func _render_slide_status() -> void:
+	if _slide_active:
+		slide_status_label.text = "SLIDE: ACTIVE"
+	elif _slide_cooldown_remaining > 0.0:
+		slide_status_label.text = "SLIDE: COOLDOWN %.1fs" % _slide_cooldown_remaining
+	else:
+		slide_status_label.text = "SLIDE: READY"
 
 func _on_reload_started() -> void:
 	_is_reloading = true
@@ -282,3 +297,8 @@ func _on_jetpack_state_changed(current_heat: float, maximum_heat: float, overhea
 	var player: Player = get_tree().get_first_node_in_group("player")
 	if player != null:
 		_render_jetpack_status(player)
+
+func _on_slide_state_changed(active: bool, cooldown_remaining: float) -> void:
+	_slide_active = active
+	_slide_cooldown_remaining = cooldown_remaining
+	_render_slide_status()

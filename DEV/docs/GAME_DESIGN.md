@@ -98,7 +98,7 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - A living hook-compatible enemy is pulled toward the Player, stops before overlap, and is briefly stunned without taking damage.
 - A solid world hit creates a fixed grapple anchor and retracts the Player toward it with preserved momentum; E detaches manually and arrival, timeout, obstruction, arm replacement, Space, and Knee Dash also detach safely.
 - Every Hook session starts its full authored cooldown only after completion or cancellation. Automatic completion while E remains held does not refire; E must be released and pressed again.
-- The grapple is acceleration-based retracting movement rather than final rope-swing physics; jetpack heat remains deferred to a later focused task, while grounded and landing slide remain deferred to the next focused task.
+- The grapple is acceleration-based retracting movement rather than final rope-swing physics; final jetpack heat balancing remains deferred to later focused work, while grounded and landing slide remain deferred to the next focused task.
 - Hook cooldown belongs to the exact RightArmInstance and remains preserved through pickup swaps.
 - Final animation, audio, effects, and production enemy AI remain deferred.
 
@@ -108,6 +108,15 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - Use a 100.0-unit heat meter with 40.0 heat gain per second during actual thrust.
 - Heat never recovers in the air. Grounded cooling removes 50.0 heat per second, and an overheat latch clears only at zero heat.
 - Pulsing Space cannot bypass the finite airborne heat limit; Player movement remains the sole authority for velocity and collisions.
+
+### Sliding
+
+- Ctrl while standing still keeps the existing ordinary crouch.
+- A new Ctrl press while grounded with at least 260.0 horizontal speed starts a slide; holding Ctrl while accelerating does not auto-start one.
+- Holding Ctrl through an airborne-to-grounded landing with at least 260.0 horizontal speed starts a slide.
+- Slides last 0.65 seconds, decelerate toward 180.0 pixels per second, preserve their locked horizontal momentum, and continue briefly after Ctrl is released.
+- Slide completion or cancellation starts a one-second cooldown. Jumping from a slide preserves horizontal momentum and starts the cooldown.
+- Final slide animation, effects, and production balancing remain deferred.
 
 ### Weapons
 

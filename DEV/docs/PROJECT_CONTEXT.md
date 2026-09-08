@@ -82,7 +82,7 @@ Task 043 adds the Hook Right Arm runtime: full-direction E firing, a world-block
 
 Task 044 corrects Hook pull collision: the target now pulls toward the stable Player `HookPullAnchor` at `(0, -40)`, floor contact alone no longer cancels horizontal movement, and `HookController` validates the reusable hook-compatible method contract without a `TargetDummy` type dependency. Windows runtime validation remains pending.
 
-Task 045 adds world grapple movement. Solid Hook hits retain the exact collision point as a fixed anchor, and Player adds acceleration toward it while preserving velocity, gravity, collisions, and jetpack follow-up behavior. E, Space, arrival, timeout, obstruction, arm replacement, and Knee Dash detach paths preserve momentum; enemy pulls remain unchanged. This is retracting movement, not final rope-swing physics. Jetpack heat remains deferred to a later focused task; grounded and landing slide remain deferred to the next focused task. Windows runtime validation remains pending.
+Task 045 adds world grapple movement. Solid Hook hits retain the exact collision point as a fixed anchor, and Player adds acceleration toward it while preserving velocity, gravity, collisions, and jetpack follow-up behavior. E, Space, arrival, timeout, obstruction, arm replacement, and Knee Dash detach paths preserve momentum; enemy pulls remain unchanged. This is retracting movement, not final rope-swing physics. Final jetpack heat balancing remains deferred to later focused work; grounded and landing slide remain deferred to the next focused task. Windows runtime validation remains pending.
 
 Task 046 corrects post-grapple horizontal momentum preservation. Airborne no-input damping is bypassed only for momentum inherited from a successful world grapple and only until landing; ground friction, movement constants, and ordinary airborne behavior remain unchanged. Knee Dash clears this exception because it replaces velocity, and active Knee Dash suppresses same-frame Hook firing. Windows runtime validation remains pending.
 
@@ -90,7 +90,9 @@ Task 048 changes the Hook input to hold-to-maintain behavior: E fires on press, 
 
 Task 049 adds finite Jetpack heat. `JetpackController` owns 100.0 maximum heat, 40.0 per-second thrust gain, 50.0 per-second grounded cooling, and the overheat latch; heat never cools airborne, and Player remains the sole movement authority. Windows runtime validation remains pending.
 
-The remaining focused roadmap is: add grounded and landing slide with anti-bunny-hop cooldown; replace the small Knee Dash hitbox with full Player-body contact; add the Knee Dash bleeding debuff; run an integrated movement and combat audit; then begin the first radio/helicopter mission slice.
+Task 051 adds grounded and landing Slide runtime. A new Ctrl press with at least 260.0 horizontal speed starts a locked 0.65-second slide, while held Ctrl can start an edge-triggered landing slide at the same threshold. Slide cooldown is one second, jump preserves horizontal momentum, and Player remains the movement authority. Windows runtime validation remains pending.
+
+The remaining focused roadmap is: replace the small Knee Dash hitbox with full Player-body contact; add the Knee Dash bleeding debuff; run an integrated movement and combat audit; then begin the first radio/helicopter mission slice.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

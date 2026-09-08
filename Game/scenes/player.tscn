@@ -37,6 +37,9 @@ shape = SubResource("player_shape")
 
 [node name="BodySlot" type="Node2D" parent="BodyRoot"]
 
+[node name="HookPullAnchor" type="Marker2D" parent="BodyRoot"]
+position = Vector2(0, -40)
+
 [node name="PlaceholderBody" parent="BodyRoot/BodySlot" instance=ExtResource("2_body")]
 
 [node name="LegsSlot" type="Node2D" parent="BodyRoot"]

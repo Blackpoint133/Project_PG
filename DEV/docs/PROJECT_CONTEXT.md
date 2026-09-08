@@ -80,6 +80,8 @@ Task 042 adds the separate Right Arm equipment foundation. Standard Right Arm st
 
 Task 043 adds the Hook Right Arm runtime: full-direction E firing, a world-blocked hook projectile, a transform-safe cable, and a reusable target pull/stun boundary without hook damage. Hook cooldown is three seconds and belongs to the exact right-arm instance across swaps. Final hook presentation, audio, effects, and production enemy AI remain pending. Windows runtime validation is pending.
 
+Task 044 corrects Hook pull collision: the target now pulls toward the stable Player `HookPullAnchor` at `(0, -40)`, floor contact alone no longer cancels horizontal movement, and `HookController` validates the reusable hook-compatible method contract without a `TargetDummy` type dependency. Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

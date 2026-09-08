@@ -41,6 +41,7 @@ var facing_direction := 1
 @onready var left_arm_equipment_controller: LeftArmEquipmentController = $LeftArmEquipmentController
 @onready var right_arm_equipment_controller: RightArmEquipmentController = $RightArmEquipmentController
 @onready var hook_controller: HookController = $HookController
+@onready var hook_pull_anchor: Marker2D = $BodyRoot/HookPullAnchor
 @onready var knee_dash_controller: KneeDashController = $KneeDashController
 @onready var interaction_controller: InteractionController = $InteractionSensor
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -60,6 +61,7 @@ func _ready() -> void:
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
+	hook_controller.set_player_pull_anchor(hook_pull_anchor)
 	leg_equipment_controller.setup(STANDARD_LEGS)
 	left_arm_equipment_controller.setup(STANDARD_LEFT_ARM)
 	right_arm_equipment_controller.setup(STANDARD_RIGHT_ARM)

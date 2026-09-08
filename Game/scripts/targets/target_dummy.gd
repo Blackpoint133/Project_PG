@@ -7,7 +7,7 @@ var current_health: int
 var _knockback_velocity_x: float = 0.0
 var _knockback_remaining: float = 0.0
 var _hook_pull_active: bool = false
-var _hook_pull_player: Node2D
+var _hook_pull_anchor: Node2D
 var _hook_pull_speed: float = 0.0
 var _hook_stop_distance: float = 0.0
 var _hook_stunned_remaining: float = 0.0
@@ -40,10 +40,10 @@ func apply_knockback(impulse: Vector2) -> void:
 	_knockback_velocity_x = clampf(impulse.x, -KNOCKBACK_MAX_SPEED, KNOCKBACK_MAX_SPEED)
 	_knockback_remaining = 0.18
 
-func begin_hook_pull(player: Node2D, pull_speed: float, stop_distance: float, stun_duration: float) -> bool:
-	if player == null or current_health <= 0 or _hook_pull_active:
+func begin_hook_pull(pull_anchor: Node2D, pull_speed: float, stop_distance: float, stun_duration: float) -> bool:
+	if pull_anchor == null or current_health <= 0 or _hook_pull_active:
 		return false
-	_hook_pull_player = player
+	_hook_pull_anchor = pull_anchor
 	_hook_pull_speed = maxf(pull_speed, 0.0)
 	_hook_stop_distance = maxf(stop_distance, 0.0)
 	_hook_pull_active = true
@@ -55,7 +55,7 @@ func begin_hook_pull(player: Node2D, pull_speed: float, stop_distance: float, st
 
 func cancel_hook_pull() -> void:
 	_hook_pull_active = false
-	_hook_pull_player = null
+	_hook_pull_anchor = null
 	velocity = Vector2.ZERO
 
 func is_hook_pull_active() -> bool:
@@ -68,19 +68,21 @@ func is_hook_stunned() -> bool:
 	return _hook_stunned_remaining > 0.0
 
 func _process_hook_pull(delta: float) -> void:
-	if _hook_pull_player == null or not is_instance_valid(_hook_pull_player) or current_health <= 0:
+	if _hook_pull_anchor == null or not is_instance_valid(_hook_pull_anchor) or current_health <= 0:
 		cancel_hook_pull()
 		return
-	var offset_to_player: Vector2 = _hook_pull_player.global_position - get_hook_anchor_position()
+	var offset_to_player: Vector2 = _hook_pull_anchor.global_position - get_hook_anchor_position()
 	var distance_to_player: float = offset_to_player.length()
 	if distance_to_player <= _hook_stop_distance:
 		cancel_hook_pull()
 		return
 	var pull_direction: Vector2 = offset_to_player.normalized()
 	var step_speed: float = minf(_hook_pull_speed, (distance_to_player - _hook_stop_distance) / maxf(delta, 0.0001))
+	var previous_distance: float = distance_to_player
 	velocity = pull_direction * step_speed
 	move_and_slide()
-	if get_slide_collision_count() > 0:
+	var distance_after_move: float = (_hook_pull_anchor.global_position - get_hook_anchor_position()).length()
+	if distance_after_move >= previous_distance - 0.1:
 		cancel_hook_pull()
 
 func _update_visual_feedback() -> void:

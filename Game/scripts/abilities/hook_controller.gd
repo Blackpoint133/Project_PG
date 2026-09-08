@@ -9,21 +9,23 @@ const STATE_PULLING: String = "pulling"
 
 @onready var cable: Line2D = $Cable
 
-var _player: Player
 var _hook_origin: Marker2D
+var _player_pull_anchor: Node2D
 var _projectile: HookProjectile
-var _target: TargetDummy
+var _target: Node2D
 var _ability_definition: RightArmAbilityDefinition
 var _state: String = STATE_IDLE
 var _pull_remaining: float = 0.0
 
 func _ready() -> void:
-	_player = get_parent() as Player
 	cable.visible = false
 
 func set_hook_origin(origin: Marker2D) -> void:
 	_hook_origin = origin
 	_update_cable()
+
+func set_player_pull_anchor(anchor: Node2D) -> void:
+	_player_pull_anchor = anchor
 
 func get_hook_origin() -> Marker2D:
 	return _hook_origin
@@ -56,8 +58,8 @@ func cancel_hook() -> void:
 	if _projectile != null:
 		_projectile.cancel()
 		_projectile = null
-	if _target != null and _target.is_hook_pull_active():
-		_target.cancel_hook_pull()
+	if _target != null and is_instance_valid(_target) and _target.has_method(&"cancel_hook_pull"):
+		_target.call(&"cancel_hook_pull")
 	_target = null
 	_pull_remaining = 0.0
 	_set_idle()
@@ -70,9 +72,13 @@ func _physics_process(delta: float) -> void:
 		_update_cable()
 	elif _state == STATE_PULLING:
 		_pull_remaining = maxf(_pull_remaining - delta, 0.0)
-		if _target == null or not is_instance_valid(_target) or not _target.is_hook_pull_active() or _pull_remaining <= 0.0:
-			if _target != null and is_instance_valid(_target) and _target.is_hook_pull_active():
-				_target.cancel_hook_pull()
+		var target_pull_active: bool = false
+		if _target != null and is_instance_valid(_target) and _target.has_method(&"is_hook_pull_active"):
+			var active_result: Variant = _target.call(&"is_hook_pull_active")
+			target_pull_active = bool(active_result)
+		if not target_pull_active or _pull_remaining <= 0.0:
+			if _target != null and is_instance_valid(_target) and _target.has_method(&"cancel_hook_pull"):
+				_target.call(&"cancel_hook_pull")
 			_target = null
 			_set_idle()
 		else:
@@ -81,8 +87,12 @@ func _physics_process(delta: float) -> void:
 func _on_projectile_hit(collider: Node2D) -> void:
 	if _state != STATE_EXTENDING:
 		return
-	var target: TargetDummy = collider as TargetDummy
-	if target == null or _ability_definition == null or not target.begin_hook_pull(_player, _ability_definition.pull_speed, _ability_definition.stop_distance, _ability_definition.stun_duration):
+	var target: Node2D = collider
+	if not _is_hook_compatible_target(target) or _ability_definition == null or _player_pull_anchor == null:
+		return
+	var begin_result: Variant = target.call(&"begin_hook_pull", _player_pull_anchor, _ability_definition.pull_speed, _ability_definition.stop_distance, _ability_definition.stun_duration)
+	var pull_started: bool = bool(begin_result)
+	if not pull_started:
 		return
 	_target = target
 	_pull_remaining = _ability_definition.maximum_pull_duration
@@ -108,5 +118,11 @@ func _update_cable() -> void:
 	if _state == STATE_EXTENDING and _projectile != null and is_instance_valid(_projectile):
 		end_position = _projectile.global_position
 	elif _state == STATE_PULLING and _target != null and is_instance_valid(_target):
-		end_position = _target.get_hook_anchor_position()
+		var anchor_result: Variant = _target.call(&"get_hook_anchor_position")
+		end_position = Vector2(anchor_result)
 	cable.points = PackedVector2Array([to_local(_hook_origin.global_position), to_local(end_position)])
+
+func _is_hook_compatible_target(target: Node2D) -> bool:
+	if target == null:
+		return false
+	return target.has_method(&"begin_hook_pull") and target.has_method(&"cancel_hook_pull") and target.has_method(&"is_hook_pull_active") and target.has_method(&"get_hook_anchor_position")

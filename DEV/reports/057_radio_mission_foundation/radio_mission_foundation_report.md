@@ -87,4 +87,4 @@ The radio is a foundation-only placeholder. Helicopter spawning, movement, healt
 
 ## Publication
 
-Implementation and documentation publication results are returned with the final task handoff.
+Implementation commit: `1fa31f9a076bacf0bd4a7741450449183a82a1ab` (`feat: add radio mission activation foundation`). Push to `origin/main` succeeded. This report and the Project Context publication entry are finalized in the separate documentation commit reported with the task handoff.

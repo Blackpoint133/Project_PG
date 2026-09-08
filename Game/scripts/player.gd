@@ -58,6 +58,7 @@ func _ready() -> void:
 	left_arm_equipment_controller.left_arm_ability_input_changed.connect(_on_left_arm_ability_input_changed)
 	right_arm_equipment_controller.right_arm_changed.connect(_on_right_arm_changed)
 	right_arm_equipment_controller.right_arm_ability_requested.connect(_on_right_arm_ability_requested)
+	hook_controller.player_grapple_started.connect(_on_player_grapple_started)
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
@@ -78,7 +79,14 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("leg_ability"):
 		leg_equipment_controller.activate_ability()
 	if Input.is_action_just_pressed("right_arm_ability"):
-		right_arm_equipment_controller.activate_ability()
+		if hook_controller.is_active():
+			hook_controller.cancel_hook()
+		else:
+			right_arm_equipment_controller.activate_ability()
+	if hook_controller.is_player_grappling() and Input.is_action_pressed("jump"):
+		hook_controller.cancel_hook()
+		if not was_on_floor:
+			_jetpack_authorized = true
 	var dash_active: bool = knee_dash_controller.is_active()
 	var input_direction := Input.get_axis("move_left", "move_right")
 	var crouching := Input.is_action_pressed("crouch") and was_on_floor and not dash_active
@@ -92,6 +100,9 @@ func _physics_process(delta: float) -> void:
 		knee_dash_controller.process_contacts()
 		knee_dash_controller.advance(delta)
 	else:
+		var world_grapple_active: bool = hook_controller.is_player_grappling()
+		if world_grapple_active and not was_on_floor:
+			_jetpack_authorized = true
 		if Input.is_action_just_pressed("jump") and was_on_floor:
 			_jetpack_authorized = true
 			velocity.y = JUMP_VELOCITY
@@ -113,8 +124,16 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, horizontal_velocity, acceleration * delta)
 		else:
 			velocity.x = move_toward(velocity.x, 0.0, GROUND_FRICTION * delta)
+		if world_grapple_active:
+			var grapple_offset: Vector2 = hook_controller.get_player_grapple_anchor() - hook_pull_anchor.global_position
+			if grapple_offset.length_squared() > 0.0:
+				var grapple_direction: Vector2 = grapple_offset.normalized()
+				velocity += grapple_direction * hook_controller.get_player_grapple_acceleration() * delta
+				velocity = velocity.limit_length(hook_controller.get_player_grapple_maximum_speed())
 
 		move_and_slide()
+		if world_grapple_active:
+			hook_controller.update_player_grapple(delta, hook_pull_anchor.global_position)
 
 	_update_crouch(crouching)
 	_update_visuals(input_direction, jetpack_active)
@@ -240,6 +259,10 @@ func _on_right_arm_ability_requested(ability_definition: RightArmAbilityDefiniti
 		hook_direction = aim_pivot.global_transform.x
 	hook_controller.start_hook(ability_definition, hook_direction.normalized())
 
+func _on_player_grapple_started(_anchor: Vector2) -> void:
+	if not is_on_floor():
+		_jetpack_authorized = true
+
 func _on_legs_changed(definition: LegDefinition) -> void:
 	if definition == null or definition.ability_definition == null or definition.ability_definition.ability_id != "knee_dash":
 		knee_dash_controller.cancel_dash()
@@ -263,7 +286,9 @@ func _on_leg_ability_requested(ability_definition: LegAbilityDefinition) -> void
 	if ability_definition == null or ability_definition.ability_id != "knee_dash":
 		return
 	var dash_direction: Vector2 = _get_knee_dash_direction(ability_definition)
-	knee_dash_controller.start_dash(ability_definition, dash_direction)
+	var dash_started: bool = knee_dash_controller.start_dash(ability_definition, dash_direction)
+	if dash_started and hook_controller.is_active():
+		hook_controller.cancel_hook()
 
 func _get_knee_dash_direction(ability_definition: LegAbilityDefinition) -> Vector2:
 	var mouse_offset: Vector2 = get_global_mouse_position() - global_position

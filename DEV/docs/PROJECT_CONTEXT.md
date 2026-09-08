@@ -82,6 +82,8 @@ Task 043 adds the Hook Right Arm runtime: full-direction E firing, a world-block
 
 Task 044 corrects Hook pull collision: the target now pulls toward the stable Player `HookPullAnchor` at `(0, -40)`, floor contact alone no longer cancels horizontal movement, and `HookController` validates the reusable hook-compatible method contract without a `TargetDummy` type dependency. Windows runtime validation remains pending.
 
+Task 045 adds world grapple movement. Solid Hook hits retain the exact collision point as a fixed anchor, and Player adds acceleration toward it while preserving velocity, gravity, collisions, and jetpack follow-up behavior. E, Space, arrival, timeout, obstruction, arm replacement, and Knee Dash detach paths preserve momentum; enemy pulls remain unchanged. This is retracting movement, not final rope-swing physics. Jetpack heat remains deferred to Task 046; Ctrl crouch migration and slide remain deferred to Tasks 047 and 048. Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

@@ -1,7 +1,7 @@
 class_name HookProjectile
 extends Area2D
 
-signal hook_hit(collider: Node2D)
+signal hook_hit(collider: Node2D, collision_position: Vector2)
 signal hook_finished
 
 var direction: Vector2 = Vector2.RIGHT
@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 		global_position = collision_position
 		var collider: Node2D = result.get("collider") as Node2D
 		_resolved = true
-		hook_hit.emit(collider)
+		hook_hit.emit(collider, collision_position)
 		_finished()
 		return
 	global_position = next_position

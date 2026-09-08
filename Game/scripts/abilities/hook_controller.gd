@@ -2,12 +2,15 @@ class_name HookController
 extends Node2D
 
 signal hook_state_changed(state: String)
+signal player_grapple_started(anchor: Vector2)
 
 const STATE_IDLE: String = "idle"
 const STATE_EXTENDING: String = "extending"
 const STATE_PULLING: String = "pulling"
+const STATE_GRAPPLING: String = "grappling"
 
 @onready var cable: Line2D = $Cable
+@onready var grapple_anchor_visual: Polygon2D = $GrappleAnchor
 
 var _hook_origin: Marker2D
 var _player_pull_anchor: Node2D
@@ -16,9 +19,14 @@ var _target: Node2D
 var _ability_definition: RightArmAbilityDefinition
 var _state: String = STATE_IDLE
 var _pull_remaining: float = 0.0
+var _world_anchor: Vector2 = Vector2.ZERO
+var _grapple_remaining: float = 0.0
+var _grapple_obstructed_remaining: float = 0.0
+var _grapple_last_distance: float = 0.0
 
 func _ready() -> void:
 	cable.visible = false
+	grapple_anchor_visual.visible = false
 
 func set_hook_origin(origin: Marker2D) -> void:
 	_hook_origin = origin
@@ -29,6 +37,27 @@ func set_player_pull_anchor(anchor: Node2D) -> void:
 
 func get_hook_origin() -> Marker2D:
 	return _hook_origin
+
+func is_active() -> bool:
+	return _state != STATE_IDLE
+
+func is_player_grappling() -> bool:
+	return _state == STATE_GRAPPLING
+
+func get_player_grapple_anchor() -> Vector2:
+	return _world_anchor
+
+func get_player_grapple_acceleration() -> float:
+	return 0.0 if _ability_definition == null else _ability_definition.player_grapple_acceleration
+
+func get_player_grapple_maximum_speed() -> float:
+	return 0.0 if _ability_definition == null else _ability_definition.player_grapple_maximum_speed
+
+func get_player_grapple_arrival_distance() -> float:
+	return 0.0 if _ability_definition == null else _ability_definition.player_grapple_arrival_distance
+
+func get_player_grapple_obstruction_timeout() -> float:
+	return 0.0 if _ability_definition == null else _ability_definition.player_grapple_obstruction_timeout
 
 func start_hook(ability_definition: RightArmAbilityDefinition, direction: Vector2) -> bool:
 	if ability_definition == null or ability_definition.ability_id != "hook" or _state != STATE_IDLE:
@@ -62,12 +91,33 @@ func cancel_hook() -> void:
 		_target.call(&"cancel_hook_pull")
 	_target = null
 	_pull_remaining = 0.0
+	_grapple_remaining = 0.0
+	_grapple_obstructed_remaining = 0.0
 	_set_idle()
+
+func update_player_grapple(delta: float, player_anchor: Vector2) -> void:
+	if _state != STATE_GRAPPLING or _ability_definition == null:
+		return
+	var distance_to_anchor: float = player_anchor.distance_to(_world_anchor)
+	if distance_to_anchor <= _ability_definition.player_grapple_arrival_distance:
+		cancel_hook()
+		return
+	if distance_to_anchor < _grapple_last_distance - 0.25:
+		_grapple_obstructed_remaining = 0.0
+	else:
+		_grapple_obstructed_remaining += delta
+	_grapple_last_distance = distance_to_anchor
+	_grapple_remaining = maxf(_grapple_remaining - delta, 0.0)
+	if _grapple_remaining <= 0.0 or _grapple_obstructed_remaining >= _ability_definition.player_grapple_obstruction_timeout:
+		cancel_hook()
 
 func get_state() -> String:
 	return _state
 
 func _physics_process(delta: float) -> void:
+	if _state != STATE_IDLE and (_ability_definition == null or _hook_origin == null or not is_instance_valid(_hook_origin) or _player_pull_anchor == null or not is_instance_valid(_player_pull_anchor)):
+		cancel_hook()
+		return
 	if _state == STATE_EXTENDING:
 		_update_cable()
 	elif _state == STATE_PULLING:
@@ -83,22 +133,25 @@ func _physics_process(delta: float) -> void:
 			_set_idle()
 		else:
 			_update_cable()
+	elif _state == STATE_GRAPPLING:
+		_update_cable()
 
-func _on_projectile_hit(collider: Node2D) -> void:
+func _on_projectile_hit(collider: Node2D, collision_position: Vector2) -> void:
 	if _state != STATE_EXTENDING:
 		return
 	var target: Node2D = collider
-	if not _is_hook_compatible_target(target) or _ability_definition == null or _player_pull_anchor == null:
+	if _is_hook_compatible_target(target) and _ability_definition != null and _player_pull_anchor != null:
+		var begin_result: Variant = target.call(&"begin_hook_pull", _player_pull_anchor, _ability_definition.pull_speed, _ability_definition.stop_distance, _ability_definition.stun_duration)
+		var pull_started: bool = bool(begin_result)
+		if pull_started:
+			_target = target
+			_pull_remaining = _ability_definition.maximum_pull_duration
+			_state = STATE_PULLING
+			hook_state_changed.emit(_state)
+			_update_cable()
 		return
-	var begin_result: Variant = target.call(&"begin_hook_pull", _player_pull_anchor, _ability_definition.pull_speed, _ability_definition.stop_distance, _ability_definition.stun_duration)
-	var pull_started: bool = bool(begin_result)
-	if not pull_started:
-		return
-	_target = target
-	_pull_remaining = _ability_definition.maximum_pull_duration
-	_state = STATE_PULLING
-	hook_state_changed.emit(_state)
-	_update_cable()
+	if _is_valid_world_collision(collider, collision_position):
+		_start_player_grapple(collision_position)
 
 func _on_projectile_finished() -> void:
 	_projectile = null
@@ -108,7 +161,11 @@ func _on_projectile_finished() -> void:
 func _set_idle() -> void:
 	_state = STATE_IDLE
 	_ability_definition = null
+	_world_anchor = Vector2.ZERO
+	_grapple_remaining = 0.0
+	_grapple_obstructed_remaining = 0.0
 	cable.visible = false
+	grapple_anchor_visual.visible = false
 	hook_state_changed.emit(_state)
 
 func _update_cable() -> void:
@@ -120,7 +177,30 @@ func _update_cable() -> void:
 	elif _state == STATE_PULLING and _target != null and is_instance_valid(_target):
 		var anchor_result: Variant = _target.call(&"get_hook_anchor_position")
 		end_position = Vector2(anchor_result)
+	elif _state == STATE_GRAPPLING:
+		end_position = _world_anchor
+	grapple_anchor_visual.position = to_local(_world_anchor)
 	cable.points = PackedVector2Array([to_local(_hook_origin.global_position), to_local(end_position)])
+
+func _start_player_grapple(collision_position: Vector2) -> void:
+	if _ability_definition == null or not collision_position.is_finite() or _player_pull_anchor == null:
+		return
+	_world_anchor = collision_position
+	_grapple_remaining = _ability_definition.maximum_player_grapple_duration
+	_grapple_obstructed_remaining = 0.0
+	_grapple_last_distance = _player_pull_anchor.global_position.distance_to(_world_anchor)
+	_state = STATE_GRAPPLING
+	grapple_anchor_visual.visible = true
+	cable.visible = true
+	hook_state_changed.emit(_state)
+	player_grapple_started.emit(_world_anchor)
+	_update_cable()
+
+func _is_valid_world_collision(collider: Node2D, collision_position: Vector2) -> bool:
+	if collider == null or not collision_position.is_finite():
+		return false
+	var collision_object: CollisionObject2D = collider as CollisionObject2D
+	return collision_object != null and collision_object.get_collision_layer_value(1)
 
 func _is_hook_compatible_target(target: Node2D) -> bool:
 	if target == null:

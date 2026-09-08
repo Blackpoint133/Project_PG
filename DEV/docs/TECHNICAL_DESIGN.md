@@ -171,6 +171,8 @@ Task 043 adds `HookController` and a configured `HookProjectile`. E fires in the
 
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Living hook-compatible targets use enemy layer 3 (integer collision layer 4); `TargetDummy` uses world collision mask 1 for collision-aware pull and knockback movement. Floating targets remain stationary while idle without gravity, living targets block Player CharacterBody2D movement, and defeated targets may become passable after clearing enemy layer 3.
 
+Task 045 adds the explicit Hook `grappling` state for solid world hits. The projectile forwards the exact collision position; `HookController` owns the fixed anchor, cable, marker, lifetime, arrival, timeout, and obstruction bookkeeping, while Player remains the sole owner of velocity and `move_and_slide()`. Player grapple acceleration is added to existing velocity and capped without resetting tangential momentum. E, Space, arm replacement, arrival, timeout, obstruction, and successful Knee Dash detach without clearing velocity. This is retracting acceleration movement rather than pendulum or rope-swing physics; jetpack heat remains deferred to Task 046 and Ctrl crouch migration/slide remain deferred to Tasks 047 and 048.
+
 ## Signals
 
 Important expected signals:

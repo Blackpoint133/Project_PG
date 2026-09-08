@@ -147,6 +147,8 @@ func _render_right_arm_status() -> void:
 			ability_name = "HOOK FIRING"
 		elif _hook_state == "pulling":
 			ability_name = "HOOK PULLING"
+		elif _hook_state == "grappling":
+			ability_name = "HOOK GRAPPLING"
 		elif _right_arm_cooldown_remaining > 0.0:
 			ability_name = "HOOK %.1fs" % _right_arm_cooldown_remaining
 		else:

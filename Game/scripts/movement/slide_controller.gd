@@ -5,7 +5,7 @@ signal slide_state_changed(active: bool, cooldown_remaining: float)
 
 const MINIMUM_ENTRY_SPEED: float = 260.0
 const MINIMUM_INITIAL_SPEED: float = 600.0
-const SLIDE_DURATION: float = 0.65
+const SLIDE_DURATION: float = 0.975
 const SLIDE_DECELERATION: float = 720.0
 const MINIMUM_ACTIVE_SPEED: float = 180.0
 const SLIDE_COOLDOWN: float = 1.0

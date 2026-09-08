@@ -114,7 +114,7 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - Ctrl while standing still keeps the existing ordinary crouch.
 - A new Ctrl press while grounded with at least 260.0 horizontal speed starts a slide; holding Ctrl while accelerating does not auto-start one.
 - Holding Ctrl through an airborne-to-grounded landing with at least 260.0 horizontal speed starts a slide.
-- Slides last 0.65 seconds, decelerate toward 180.0 pixels per second, preserve their locked horizontal momentum, and continue briefly after Ctrl is released.
+- Slides last 0.975 seconds, decelerate toward 180.0 pixels per second, preserve their locked horizontal momentum, and continue briefly after Ctrl is released.
 - Slide completion or cancellation starts a one-second cooldown. Jumping from a slide preserves horizontal momentum and starts the cooldown.
 - Final slide animation, effects, and production balancing remain deferred.
 

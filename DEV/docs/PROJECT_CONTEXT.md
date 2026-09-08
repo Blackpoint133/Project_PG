@@ -94,7 +94,9 @@ Task 051 adds grounded and landing Slide runtime. A new Ctrl press with at least
 
 Task 052 corrects the Slide runtime integration: Player advances `SlideController` exactly once before reading slide state, so duration, deceleration, and cooldown progress in every movement state. Slide-jump copies the latest signed slide velocity before cancellation and preserves it through the transition, while final crouch state is synchronized with the Shield presentation after landing-slide detection. Implementation commit `ffb65d136a69019efce620f27392a439a9657067` is published; Windows runtime validation remains pending.
 
-The remaining focused roadmap is: Task 053 replaces the small Knee Dash hitbox with full Player-body contact; Task 054 adds the Knee Dash bleeding debuff; Task 055 runs an integrated movement and combat audit; Task 056+ begins the first radio/helicopter mission slice.
+Task 053 supersedes the previous 0.65-second Slide runtime duration with 0.975 seconds. Entry rules, deceleration, momentum, cooldown, crouch synchronization, and movement ownership are unchanged. Windows runtime validation remains pending.
+
+The remaining focused roadmap is: Task 054 replaces the small Knee Dash hitbox with full Player-body contact; Task 055 adds the Knee Dash bleeding debuff; Task 056 runs an integrated movement and combat audit; Task 057+ begins the first radio/helicopter mission slice.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

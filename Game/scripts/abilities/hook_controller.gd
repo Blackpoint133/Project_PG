@@ -2,6 +2,7 @@ class_name HookController
 extends Node2D
 
 signal hook_state_changed(state: String)
+signal hook_completed
 signal player_grapple_started(anchor: Vector2)
 
 const STATE_IDLE: String = "idle"
@@ -23,6 +24,7 @@ var _world_anchor: Vector2 = Vector2.ZERO
 var _grapple_remaining: float = 0.0
 var _grapple_obstructed_remaining: float = 0.0
 var _grapple_last_distance: float = 0.0
+var _session_active: bool = false
 
 func _ready() -> void:
 	cable.visible = false
@@ -78,6 +80,7 @@ func start_hook(ability_definition: RightArmAbilityDefinition, direction: Vector
 	_projectile = projectile
 	_ability_definition = ability_definition
 	_state = STATE_EXTENDING
+	_session_active = true
 	cable.visible = true
 	hook_state_changed.emit(_state)
 	_update_cable()
@@ -159,6 +162,8 @@ func _on_projectile_finished() -> void:
 		_set_idle()
 
 func _set_idle() -> void:
+	var completed_session: bool = _session_active
+	_session_active = false
 	_state = STATE_IDLE
 	_ability_definition = null
 	_world_anchor = Vector2.ZERO
@@ -167,6 +172,8 @@ func _set_idle() -> void:
 	cable.visible = false
 	grapple_anchor_visual.visible = false
 	hook_state_changed.emit(_state)
+	if completed_session:
+		hook_completed.emit()
 
 func _update_cable() -> void:
 	if _hook_origin == null or not cable.visible:

@@ -60,6 +60,7 @@ func _ready() -> void:
 	right_arm_equipment_controller.right_arm_changed.connect(_on_right_arm_changed)
 	right_arm_equipment_controller.right_arm_ability_requested.connect(_on_right_arm_ability_requested)
 	hook_controller.player_grapple_started.connect(_on_player_grapple_started)
+	hook_controller.hook_completed.connect(_on_hook_completed)
 	weapon_controller.weapon_changed.connect(_on_weapon_changed)
 	weapon_controller.fired.connect(_spawn_projectile)
 	interaction_controller.prompt_changed.connect(_on_interaction_prompt_changed)
@@ -81,10 +82,10 @@ func _physics_process(delta: float) -> void:
 		leg_equipment_controller.activate_ability()
 	var dash_active: bool = knee_dash_controller.is_active()
 	if Input.is_action_just_pressed("right_arm_ability"):
-		if hook_controller.is_active():
-			hook_controller.cancel_hook()
-		elif not dash_active:
+		if not hook_controller.is_active() and not dash_active:
 			right_arm_equipment_controller.activate_ability()
+	if hook_controller.is_active() and not Input.is_action_pressed("right_arm_ability"):
+		hook_controller.cancel_hook()
 	if hook_controller.is_player_grappling() and Input.is_action_pressed("jump"):
 		hook_controller.cancel_hook()
 		if not was_on_floor:
@@ -255,14 +256,21 @@ func _on_right_arm_changed(definition: RightArmDefinition) -> void:
 
 func _on_right_arm_ability_requested(ability_definition: RightArmAbilityDefinition) -> void:
 	if ability_definition == null or ability_definition.ability_id != "hook":
+		right_arm_equipment_controller.abandon_active_ability_use()
 		return
 	var hook_origin: Marker2D = hook_controller.get_hook_origin()
 	if hook_origin == null:
+		right_arm_equipment_controller.abandon_active_ability_use()
 		return
 	var hook_direction: Vector2 = get_global_mouse_position() - hook_origin.global_position
 	if hook_direction.length_squared() <= 1.0:
 		hook_direction = aim_pivot.global_transform.x
-	hook_controller.start_hook(ability_definition, hook_direction.normalized())
+	var hook_started: bool = hook_controller.start_hook(ability_definition, hook_direction.normalized())
+	if not hook_started:
+		right_arm_equipment_controller.abandon_active_ability_use()
+
+func _on_hook_completed() -> void:
+	right_arm_equipment_controller.complete_active_ability_use()
 
 func _on_player_grapple_started(_anchor: Vector2) -> void:
 	_world_grapple_momentum_active = true

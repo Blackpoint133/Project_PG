@@ -90,13 +90,15 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 
 ### Hook Right Arm
 
-- Activated with E.
+- Press E to fire and hold E to maintain the current Hook use.
+- Releasing E cancels extending, enemy pulling, or Player world grappling immediately; release during projectile flight is supported.
 - Hook Right Arm is acquired as a physical replacement for Standard Right Arm.
 - E is the dedicated typed right-arm ability request.
 - The hook fires in the full mouse aim direction with a visible world-blocked projectile and transform-safe cable.
 - A living hook-compatible enemy is pulled toward the Player, stops before overlap, and is briefly stunned without taking damage.
 - A solid world hit creates a fixed grapple anchor and retracts the Player toward it with preserved momentum; E detaches manually and arrival, timeout, obstruction, arm replacement, Space, and Knee Dash also detach safely.
-- The grapple is acceleration-based retracting movement rather than final rope-swing physics; jetpack heat remains deferred to Task 046, while Ctrl crouch migration and slide remain deferred to Tasks 047 and 048.
+- Every Hook session starts its full authored cooldown only after completion or cancellation. Automatic completion while E remains held does not refire; E must be released and pressed again.
+- The grapple is acceleration-based retracting movement rather than final rope-swing physics; jetpack heat remains deferred to a later focused task, while Ctrl crouch migration and slide remain deferred to later focused tasks.
 - Hook cooldown belongs to the exact RightArmInstance and remains preserved through pickup swaps.
 - Final animation, audio, effects, and production enemy AI remain deferred.
 

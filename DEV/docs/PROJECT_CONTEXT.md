@@ -86,6 +86,8 @@ Task 045 adds world grapple movement. Solid Hook hits retain the exact collision
 
 Task 046 corrects post-grapple horizontal momentum preservation. Airborne no-input damping is bypassed only for momentum inherited from a successful world grapple and only until landing; ground friction, movement constants, and ordinary airborne behavior remain unchanged. Knee Dash clears this exception because it replaces velocity, and active Knee Dash suppresses same-frame Hook firing. Windows runtime validation remains pending.
 
+Task 048 changes the Hook input to hold-to-maintain behavior: E fires on press, remains active while held, and cancels every active Hook state on release. The full exact-instance Hook cooldown starts only after the session finishes, including automatic completion, and holding E through cooldown completion does not refire. Player world-grapple momentum remains preserved after release.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

@@ -175,6 +175,8 @@ Task 045 adds the explicit Hook `grappling` state for solid world hits. The proj
 
 Task 046 adds a Player-owned exception for horizontal momentum inherited from a successful world grapple. While airborne, no-input horizontal damping is bypassed only for that inherited momentum and the exception ends on landing. Ground friction, movement constants, and ordinary airborne behavior are unchanged. A successfully started Knee Dash clears the exception because dash movement replaces velocity. The physics input order resolves the active Knee Dash state before E can request a new Hook, suppressing same-frame Hook firing while preserving normal E cancellation.
 
+Task 048 changes Hook input ownership to a held session. `Player` accepts only a discrete E press, `HookController` emits one idempotent completion signal for each started session, and `RightArmEquipmentController` reserves the exact `RightArmInstance` until completion before starting its full cooldown. Release, automatic completion, invalidation, Space, Knee Dash, and arm replacement all converge on completion without resetting Player velocity or the preserved grapple-momentum exception.
+
 ## Signals
 
 Important expected signals:

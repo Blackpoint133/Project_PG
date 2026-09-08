@@ -133,7 +133,9 @@ func _physics_process(delta: float) -> void:
 				velocity = velocity.limit_length(hook_controller.get_player_grapple_maximum_speed())
 
 		move_and_slide()
-		if is_on_floor():
+		if hook_controller.is_player_grappling():
+			_world_grapple_momentum_active = true
+		elif is_on_floor():
 			_world_grapple_momentum_active = false
 		if world_grapple_active:
 			hook_controller.update_player_grapple(delta, hook_pull_anchor.global_position)

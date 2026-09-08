@@ -134,6 +134,8 @@ Likely scripts, kept focused:
 - `interaction_system.gd` or per-object interaction component — shared F prompt and interaction handling.
 - `mission_hud.gd` — read-only presentation of player, weapon, jetpack, ability, mission, and target state.
 
+Task 057 adds a scene-owned `MissionController` and reusable `MissionRadio`. Main is the composition boundary: it connects the radio activation request to the controller and forwards the controller objective signal to HUD. The radio uses the existing interactable layer 6 / integer layer 32 and exposes only the generic `get_interaction_prompt` and `interact` methods. Mission state is not stored in Player, HUD, or an autoload; the initial `AVAILABLE` state changes once to `ACTIVE` for `destroy_helicopter`.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

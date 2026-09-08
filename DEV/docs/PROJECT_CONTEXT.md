@@ -104,6 +104,10 @@ Task 056 completes the integrated movement, combat, equipment, and ability stati
 
 The remaining focused roadmap begins with Task 057, the first radio/helicopter mission foundation.
 
+Task 057 adds the first radio mission activation foundation. A physical MissionRadio uses the existing F interaction selector, Main explicitly connects its typed activation request to MissionController, and the controller changes the objective from FIND THE RADIO to DESTROY THE HELICOPTER exactly once. The HUD renders the supplied objective, while helicopter combat, movement, health, destruction, rewards, and extraction remain deferred. Windows runtime validation remains pending.
+
+The next focused roadmap stage is Task 058: react to the active destroy_helicopter mission with the first helicopter mission slice.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

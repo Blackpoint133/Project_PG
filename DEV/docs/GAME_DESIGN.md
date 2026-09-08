@@ -53,6 +53,8 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 11. The next level section lets the player test the new equipment.
 12. The player defeats a final enemy group and reaches an extraction point.
 
+The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F near the physical radio activates the `destroy_helicopter` mission once, changes the objective to `OBJECTIVE: DESTROY THE HELICOPTER`, and removes the radio prompt. Helicopter combat, movement, health, destruction, rewards, and extraction remain later mission-slice work.
+
 ## Equipment Abilities
 
 ### Knee-Dash Legs

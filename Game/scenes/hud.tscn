@@ -118,3 +118,11 @@ offset_right = 640.0
 offset_bottom = 404.0
 theme_override_font_sizes/font_size = 24
 text = "SLIDE: READY"
+
+[node name="MissionObjectiveLabel" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 408.0
+offset_right = 640.0
+offset_bottom = 444.0
+theme_override_font_sizes/font_size = 24
+text = "OBJECTIVE: FIND THE RADIO"

@@ -77,7 +77,7 @@ Run the Windows runtime checklist with E held and released at each Hook state, i
 
 ## Commit and push results
 
-The implementation commit and normal push result will be recorded here after publication. A report-only publication commit will record the verified implementation hash, remote result, HEAD/origin comparison, and working-tree state.
+Implementation commit: `16c4bd240b2bba977faf6bcb98c6dcbe2179f93e` (`feat: make hook hold-to-maintain`). The commit was pushed normally to `origin/main` and remote verification passed. After the implementation push, `HEAD` and `origin/main` both matched `16c4bd240b2bba977faf6bcb98c6dcbe2179f93e`, and the working tree was clean. This report-only update records that publication result.
 
 ## Windows runtime checklist
 

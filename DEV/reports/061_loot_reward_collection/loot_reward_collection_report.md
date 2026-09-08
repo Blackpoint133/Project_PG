@@ -74,6 +74,6 @@ Run the focused Windows collection checklist, then implement the next mission st
 
 Implementation commit: `102e1f9553ad6e0807eb1111909494d79fa525f1` (`feat: track loot reward collection`), pushed successfully to `origin/main`.
 
-Documentation commit: pending until publication.
+Documentation commit: `ad1b35e46591f45165c80821b39800335c8cde72` (`docs: record loot reward collection`), pushed successfully to `origin/main`.
 
-Implementation push result: successful. Documentation push result and final HEAD/origin equality: pending until publication.
+Implementation and documentation push results: successful. Final publication record update is pending this report-only commit.

@@ -2,7 +2,7 @@ class_name MissionHelicopter
 extends CharacterBody2D
 
 signal health_changed(current_health: int, maximum_health: int)
-signal destroyed
+signal destroyed(drop_position: Vector2, ejection_velocity: Vector2)
 
 @export var maximum_health: int = 300
 @export var horizontal_speed: float = 120.0
@@ -15,11 +15,16 @@ var _active: bool = false
 var _destroyed: bool = false
 var _patrol_direction: int = -1
 
+@onready var visuals: Node2D = $Visuals
+@onready var explosion_flash: Polygon2D = $ExplosionFlash
+@onready var explosion_timer: Timer = $ExplosionTimer
+
 func _ready() -> void:
 	_current_health = maxi(maximum_health, 0)
 	_patrol_direction = -1 if initial_direction < 0 else 1
 	visible = false
 	set_collision_layer_value(3, false)
+	explosion_timer.timeout.connect(_on_explosion_timer_timeout)
 	health_changed.emit(_current_health, maximum_health)
 
 func _physics_process(_delta: float) -> void:
@@ -64,9 +69,18 @@ func get_maximum_health() -> int:
 func _destroy() -> void:
 	if _destroyed:
 		return
+	var destruction_position: Vector2 = global_position
+	var inherited_velocity: Vector2 = velocity
 	_destroyed = true
 	_active = false
 	velocity = Vector2.ZERO
 	set_collision_layer_value(3, false)
-	modulate = Color(0.55, 0.55, 0.55, 1.0)
-	destroyed.emit()
+	visuals.visible = false
+	explosion_flash.visible = true
+	explosion_timer.start(0.4)
+	var ejection_velocity: Vector2 = Vector2(inherited_velocity.x * 0.5, -260.0)
+	destroyed.emit(destruction_position, ejection_velocity)
+
+func _on_explosion_timer_timeout() -> void:
+	explosion_flash.visible = false
+	visible = false

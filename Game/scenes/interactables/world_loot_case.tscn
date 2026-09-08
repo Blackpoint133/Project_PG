@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/interactables/world_loot_case.gd" id="1_loot_case"]
+
+[sub_resource type="RectangleShape2D" id="loot_case_shape"]
+size = Vector2(80, 56)
+
+[node name="WorldLootCase" type="CharacterBody2D"]
+script = ExtResource("1_loot_case")
+collision_layer = 32
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+shape = SubResource("loot_case_shape")
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-40, 0, -40, -48, -32, -56, 32, -56, 40, -48, 40, 0)
+color = Color(0.16, 0.2, 0.22, 1)
+
+[node name="Corners" type="Line2D" parent="."]
+points = PackedVector2Array(-34, -48, -34, -8, 34, -8, 34, -48)
+width = 5.0
+default_color = Color(0.62, 0.67, 0.64, 1)
+
+[node name="Accent" type="Line2D" parent="."]
+points = PackedVector2Array(-28, -28, 28, -28)
+width = 6.0
+default_color = Color(0.85, 0.68, 0.16, 1)

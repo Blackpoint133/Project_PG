@@ -138,6 +138,8 @@ Task 057 adds a scene-owned `MissionController` and reusable `MissionRadio`. Mai
 
 Task 058 adds `MissionHelicopter` as a separate CharacterBody2D mission actor. Main connects `MissionController.mission_activated` to explicit helicopter activation, forwards typed health signals to HUD, and completes the mission from the helicopter's one-shot destroyed signal. The helicopter is hidden with collision disabled before activation, uses enemy layer 3 / integer layer 4 and world mask 1 while active, patrols without gravity, and accepts only the generic `take_damage` contract. Its disabled gray wreck clears the enemy collision layer; attacks, AI, explosion, loot, and rewards remain deferred.
 
+Task 059 replaces the permanent helicopter wreck with a deterministic 0.4-second local explosion presentation and typed destruction payload. Main owns the reusable `WorldLootCase` scene, spawns exactly one case at the supplied destruction position plus offset, and launches it with inherited horizontal momentum. The case uses interactable layer 6 / integer layer 32 and world mask 1, does not implement the interaction contract, and changes the objective to `OPEN THE LOOT CASE` only after its one-shot landing signal. Opening, rewards, and item ejection remain deferred to Task 060.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

@@ -63,6 +63,13 @@ The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F n
 - At zero health it stops, becomes a gray disabled wreck, and completes the mission with the objective `HELICOPTER DESTROYED`.
 - Helicopter attacks, AI, explosion, loot, rewards, audio, and extraction remain deferred.
 
+### Helicopter Destruction and Loot Case
+
+- When the mission helicopter reaches zero health, it stops and produces a short restrained placeholder explosion at its destruction point.
+- Exactly one closed physical loot case is ejected from that point, falls under gravity, and settles on world geometry.
+- After the case lands, the objective becomes `OPEN THE LOOT CASE`.
+- The case is intentionally not interactive until the next focused mission task; it has no F prompt yet.
+
 ## Equipment Abilities
 
 ### Knee-Dash Legs

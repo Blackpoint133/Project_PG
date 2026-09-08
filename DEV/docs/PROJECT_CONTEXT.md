@@ -108,7 +108,9 @@ Task 057 adds the first radio mission activation foundation. A physical MissionR
 
 Task 058 adds the first mission helicopter combat slice. Activating `destroy_helicopter` reveals a 300-health horizontal patrol at 120 pixels per second; existing rifle and shotgun projectiles use the generic `take_damage` boundary. Zero health stops movement, disables living-enemy collision, applies a gray wreck presentation, completes the mission, hides the helicopter HUD, and changes the objective to HELICOPTER DESTROYED. Helicopter attacks, AI, explosion, loot, rewards, audio, and extraction remain deferred. Implementation commit `c1bd9ab93af6bc6e96c5912de052befec3aee998` is published; Windows runtime validation remains pending.
 
-The next focused roadmap stage is Task 059: continue the mission slice with the next focused objective or helicopter presentation audit.
+Task 059 adds deterministic helicopter destruction presentation and a physical closed loot-case drop. The 0.4-second explosion emits the exact destruction position and ejection velocity; Main spawns one non-interactive WorldLootCase, which falls with gravity and emits landed once. Only after landing does the objective become OPEN THE LOOT CASE. Opening, rewards, and item ejection remain deferred to Task 060; Windows runtime validation remains pending.
+
+The next focused roadmap stage is Task 060: open the landed loot case and implement its deferred reward foundation.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

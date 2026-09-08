@@ -51,7 +51,7 @@ Run the Windows runtime checklist and verify the slide state transitions against
 
 ## Commit and push results
 
-To be completed after the implementation and publication commits are pushed.
+Implementation commit: `ffb65d136a69019efce620f27392a439a9657067` (`fix: advance slide runtime state`). It was pushed normally to `origin/main`; after the push, `HEAD` and `origin/main` both resolved to `ffb65d136a69019efce620f27392a439a9657067` and the working tree was clean. The report and Project Context publication record are finalized in the separate docs commit required for this task.
 
 ## Windows runtime checklist
 

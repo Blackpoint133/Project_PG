@@ -92,7 +92,7 @@ Task 049 adds finite Jetpack heat. `JetpackController` owns 100.0 maximum heat, 
 
 Task 051 adds grounded and landing Slide runtime. A new Ctrl press with at least 260.0 horizontal speed starts a locked 0.65-second slide, while held Ctrl can start an edge-triggered landing slide at the same threshold. Slide cooldown is one second, jump preserves horizontal momentum, and Player remains the movement authority. Windows runtime validation remains pending.
 
-Task 052 corrects the Slide runtime integration: Player advances `SlideController` exactly once before reading slide state, so duration, deceleration, and cooldown progress in every movement state. Slide-jump copies the latest signed slide velocity before cancellation and preserves it through the transition, while final crouch state is synchronized with the Shield presentation after landing-slide detection. Windows runtime validation remains pending.
+Task 052 corrects the Slide runtime integration: Player advances `SlideController` exactly once before reading slide state, so duration, deceleration, and cooldown progress in every movement state. Slide-jump copies the latest signed slide velocity before cancellation and preserves it through the transition, while final crouch state is synchronized with the Shield presentation after landing-slide detection. Implementation commit `ffb65d136a69019efce620f27392a439a9657067` is published; Windows runtime validation remains pending.
 
 The remaining focused roadmap is: Task 053 replaces the small Knee Dash hitbox with full Player-body contact; Task 054 adds the Knee Dash bleeding debuff; Task 055 runs an integrated movement and combat audit; Task 056+ begins the first radio/helicopter mission slice.
 

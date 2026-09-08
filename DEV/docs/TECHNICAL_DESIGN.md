@@ -173,6 +173,8 @@ Player input routes fire and reload actions to the `WeaponController`; cadence, 
 
 Task 045 adds the explicit Hook `grappling` state for solid world hits. The projectile forwards the exact collision position; `HookController` owns the fixed anchor, cable, marker, lifetime, arrival, timeout, and obstruction bookkeeping, while Player remains the sole owner of velocity and `move_and_slide()`. Player grapple acceleration is added to existing velocity and capped without resetting tangential momentum. E, Space, arm replacement, arrival, timeout, obstruction, and successful Knee Dash detach without clearing velocity. This is retracting acceleration movement rather than pendulum or rope-swing physics; jetpack heat remains deferred to Task 046 and Ctrl crouch migration/slide remain deferred to Tasks 047 and 048.
 
+Task 046 adds a Player-owned exception for horizontal momentum inherited from a successful world grapple. While airborne, no-input horizontal damping is bypassed only for that inherited momentum and the exception ends on landing. Ground friction, movement constants, and ordinary airborne behavior are unchanged. A successfully started Knee Dash clears the exception because dash movement replaces velocity. The physics input order resolves the active Knee Dash state before E can request a new Hook, suppressing same-frame Hook firing while preserving normal E cancellation.
+
 ## Signals
 
 Important expected signals:

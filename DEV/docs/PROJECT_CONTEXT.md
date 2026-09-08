@@ -84,6 +84,8 @@ Task 044 corrects Hook pull collision: the target now pulls toward the stable Pl
 
 Task 045 adds world grapple movement. Solid Hook hits retain the exact collision point as a fixed anchor, and Player adds acceleration toward it while preserving velocity, gravity, collisions, and jetpack follow-up behavior. E, Space, arrival, timeout, obstruction, arm replacement, and Knee Dash detach paths preserve momentum; enemy pulls remain unchanged. This is retracting movement, not final rope-swing physics. Jetpack heat remains deferred to Task 046; Ctrl crouch migration and slide remain deferred to Tasks 047 and 048. Windows runtime validation remains pending.
 
+Task 046 corrects post-grapple horizontal momentum preservation. Airborne no-input damping is bypassed only for momentum inherited from a successful world grapple and only until landing; ground friction, movement constants, and ordinary airborne behavior remain unchanged. Knee Dash clears this exception because it replaces velocity, and active Knee Dash suppresses same-frame Hook firing. Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

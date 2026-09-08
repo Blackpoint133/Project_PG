@@ -55,7 +55,7 @@ Run the Windows runtime checklist with a world grapple that slides across or bri
 
 ## Commit and push results
 
-The implementation commit and normal push result will be recorded here after publication. A report-only publication commit will record the verified implementation hash, remote result, HEAD/origin comparison, and working-tree state.
+Implementation commit: `44b90664cd8e8110b213d6234c7b481097059f4f` (`fix: retain momentum through grapple ground contact`). The commit was pushed normally to `origin/main` and remote verification passed. After the implementation push, `HEAD` and `origin/main` both matched `44b90664cd8e8110b213d6234c7b481097059f4f`, and the working tree was clean. This report-only update records that publication result.
 
 ## Windows runtime checklist
 

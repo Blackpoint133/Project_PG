@@ -1,6 +1,8 @@
 class_name WorldRightArmPickup
 extends CharacterBody2D
 
+signal pickup_completed(actor: Node)
+
 const INTERACTION_COOLDOWN: float = 0.35
 const FLOOR_FRICTION: float = 1200.0
 
@@ -11,6 +13,7 @@ const FLOOR_FRICTION: float = 1200.0
 
 var _interaction_cooldown: float = 0.0
 var _right_arm_instance: RightArmInstance
+var _pickup_completion_reported: bool = false
 
 func _ready() -> void:
 	if right_arm_definition != null:
@@ -79,7 +82,10 @@ func get_interaction_prompt(actor: Node) -> String:
 func interact(actor: Node) -> void:
 	if not is_available() or actor == null or not actor.has_method(&"swap_right_arm_with_pickup"):
 		return
-	actor.call(&"swap_right_arm_with_pickup", self)
+	var transfer_result: Variant = actor.call(&"swap_right_arm_with_pickup", self)
+	if transfer_result is bool and bool(transfer_result) and not _pickup_completion_reported:
+		_pickup_completion_reported = true
+		pickup_completed.emit(actor)
 
 func launch(initial_velocity: Vector2) -> void:
 	velocity = initial_velocity

@@ -400,19 +400,23 @@ func get_current_health() -> float:
 func get_maximum_health() -> float:
 	return player_damage_receiver.get_maximum_health()
 
-func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
+func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> bool:
 	if pickup == null:
-		return
+		return false
 	var incoming_instance: WeaponInstance = pickup.take_weapon_instance()
 	if incoming_instance == null:
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	var target_slot: int = weapon_controller.get_first_empty_slot()
 	if target_slot == -1:
 		target_slot = weapon_controller.get_active_slot_index()
 	var outgoing_instance: WeaponInstance = weapon_controller.replace_slot_instance(target_slot, incoming_instance)
 	if target_slot != weapon_controller.get_active_slot_index():
 		weapon_controller.select_slot(target_slot)
+	if weapon_controller.get_slot_instance(target_slot) != incoming_instance:
+		pickup.set_weapon_instance(incoming_instance)
+		interaction_controller.refresh_prompt()
+		return false
 	if outgoing_instance != null:
 		pickup.set_weapon_instance(outgoing_instance)
 		pickup.global_position = global_position + Vector2(0, -32)
@@ -420,57 +424,73 @@ func swap_weapon_with_pickup(pickup: WorldWeaponPickup) -> void:
 	else:
 		pickup.queue_free()
 	interaction_controller.refresh_prompt()
+	return true
 
-func swap_legs_with_pickup(pickup: WorldLegPickup) -> void:
+func swap_legs_with_pickup(pickup: WorldLegPickup) -> bool:
 	if pickup == null:
-		return
+		return false
 	var incoming_instance: LegInstance = pickup.take_leg_instance()
 	if incoming_instance == null:
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	var outgoing_instance: LegInstance = leg_equipment_controller.replace_leg_instance(incoming_instance)
+	if leg_equipment_controller.current_instance != incoming_instance:
+		pickup.set_leg_instance(incoming_instance)
+		interaction_controller.refresh_prompt()
+		return false
 	if outgoing_instance == null:
 		pickup.set_leg_instance(incoming_instance)
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	pickup.set_leg_instance(outgoing_instance)
 	pickup.global_position = global_position + Vector2(0, -32)
 	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
 	interaction_controller.refresh_prompt()
+	return true
 
-func swap_left_arm_with_pickup(pickup: WorldLeftArmPickup) -> void:
+func swap_left_arm_with_pickup(pickup: WorldLeftArmPickup) -> bool:
 	if pickup == null:
-		return
+		return false
 	var incoming_instance: LeftArmInstance = pickup.take_left_arm_instance()
 	if incoming_instance == null:
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	var outgoing_instance: LeftArmInstance = left_arm_equipment_controller.replace_left_arm_instance(incoming_instance)
+	if left_arm_equipment_controller.current_instance != incoming_instance:
+		pickup.set_left_arm_instance(incoming_instance)
+		interaction_controller.refresh_prompt()
+		return false
 	if outgoing_instance == null:
 		pickup.set_left_arm_instance(incoming_instance)
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	pickup.set_left_arm_instance(outgoing_instance)
 	pickup.global_position = global_position + Vector2(0, -32)
 	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
 	interaction_controller.refresh_prompt()
+	return true
 
-func swap_right_arm_with_pickup(pickup: WorldRightArmPickup) -> void:
+func swap_right_arm_with_pickup(pickup: WorldRightArmPickup) -> bool:
 	if pickup == null:
-		return
+		return false
 	var incoming_instance: RightArmInstance = pickup.take_right_arm_instance()
 	if incoming_instance == null:
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	var outgoing_instance: RightArmInstance = right_arm_equipment_controller.replace_right_arm_instance(incoming_instance)
+	if right_arm_equipment_controller.current_instance != incoming_instance:
+		pickup.set_right_arm_instance(incoming_instance)
+		interaction_controller.refresh_prompt()
+		return false
 	if outgoing_instance == null:
 		pickup.set_right_arm_instance(incoming_instance)
 		interaction_controller.refresh_prompt()
-		return
+		return false
 	pickup.set_right_arm_instance(outgoing_instance)
 	pickup.global_position = global_position + Vector2(0, -32)
 	pickup.launch(Vector2(-180.0 * float(facing_direction), -360.0))
 	interaction_controller.refresh_prompt()
+	return true
 
 func get_weapon_slot_summary(slot_index: int) -> String:
 	var instance: WeaponInstance = weapon_controller.get_slot_instance(slot_index)

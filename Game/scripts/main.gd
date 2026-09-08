@@ -15,11 +15,16 @@ const REWARD_SPAWN_OFFSET: Vector2 = Vector2(0, -48)
 @onready var mission_controller: MissionController = $MissionController
 @onready var mission_radio: MissionRadio = $World/MissionRadio
 @onready var mission_helicopter: MissionHelicopter = $World/MissionHelicopter
+@onready var player: Player = $World/Player
 @onready var hud: GameHud = $HUD
 
 var _loot_case: WorldLootCase = null
 var _loot_case_spawned: bool = false
 var _rewards_spawned: bool = false
+var _shotgun_reward: WorldWeaponPickup = null
+var _shield_reward: WorldLeftArmPickup = null
+var _hook_reward: WorldRightArmPickup = null
+var _legs_reward: WorldLegPickup = null
 
 func _ready() -> void:
 	mission_radio.mission_activation_requested.connect(_on_mission_activation_requested)
@@ -96,6 +101,14 @@ func _spawn_loot_case_rewards(source_position: Vector2) -> bool:
 	shield_pickup.left_arm_definition = SHIELD_DEFINITION
 	hook_pickup.right_arm_definition = HOOK_DEFINITION
 	legs_pickup.leg_definition = LEGS_DEFINITION
+	_shotgun_reward = shotgun_pickup
+	_shield_reward = shield_pickup
+	_hook_reward = hook_pickup
+	_legs_reward = legs_pickup
+	shotgun_pickup.pickup_completed.connect(_on_shotgun_reward_collected)
+	shield_pickup.pickup_completed.connect(_on_shield_reward_collected)
+	hook_pickup.pickup_completed.connect(_on_hook_reward_collected)
+	legs_pickup.pickup_completed.connect(_on_legs_reward_collected)
 	$World.add_child(shotgun_pickup)
 	$World.add_child(shield_pickup)
 	$World.add_child(hook_pickup)
@@ -109,3 +122,20 @@ func _spawn_loot_case_rewards(source_position: Vector2) -> bool:
 	hook_pickup.launch(Vector2(140.0, -760.0))
 	legs_pickup.launch(Vector2(360.0, -620.0))
 	return true
+
+func _on_shotgun_reward_collected(actor: Node) -> void:
+	_forward_reward_collection(actor, MissionController.SHOTGUN_REWARD_ID)
+
+func _on_shield_reward_collected(actor: Node) -> void:
+	_forward_reward_collection(actor, MissionController.SHIELD_LEFT_ARM_REWARD_ID)
+
+func _on_hook_reward_collected(actor: Node) -> void:
+	_forward_reward_collection(actor, MissionController.HOOK_RIGHT_ARM_REWARD_ID)
+
+func _on_legs_reward_collected(actor: Node) -> void:
+	_forward_reward_collection(actor, MissionController.KNEE_DASH_LEGS_REWARD_ID)
+
+func _forward_reward_collection(actor: Node, reward_id: String) -> void:
+	if actor != player:
+		return
+	mission_controller.register_reward_collected(reward_id)

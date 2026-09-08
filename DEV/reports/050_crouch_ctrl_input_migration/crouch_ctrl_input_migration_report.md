@@ -55,7 +55,7 @@ Run the Windows checklist and implement grounded/landing slide with anti-bunny-h
 
 ## Commit and push results
 
-The implementation and publication commit hashes, push results, final HEAD/origin comparison, and working-tree state will be recorded here after publication.
+Implementation commit: `34490bab25b65e80d93ef9742d08c12d55c8d14f` (`fix: move crouch input to Ctrl`). The commit was pushed normally to `origin/main` and remote verification passed. After the implementation push, `HEAD` and `origin/main` both matched `34490bab25b65e80d93ef9742d08c12d55c8d14f`, and the working tree was clean. This report-only publication update will record the final documentation commit and state.
 
 ## Windows runtime checklist
 

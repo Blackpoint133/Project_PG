@@ -135,7 +135,10 @@ func _physics_process(delta: float) -> void:
 		crouching = false
 		velocity = knee_dash_controller.get_dash_velocity()
 		move_and_slide()
-		knee_dash_controller.process_contacts()
+		for collision_index: int in range(get_slide_collision_count()):
+			var collision: KinematicCollision2D = get_slide_collision(collision_index)
+			var collider: Node = collision.get_collider() as Node
+			knee_dash_controller.process_contact(collider)
 		knee_dash_controller.advance(delta)
 	else:
 		jetpack_active = jetpack_allowed

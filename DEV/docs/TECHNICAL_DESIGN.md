@@ -98,7 +98,7 @@ Use a small finite-state controller or one focused state node per major mode. Th
 - `EquipmentSwap` — locked control, hover, detach/attach sequence, and temporary invulnerability.
 - `Shielding` — frontal damage absorption and firing lock.
 - `HookUse` — hook firing, pull, and brief enemy interruption/stun.
-- `KneeDash` — forward dash, contact damage, and backward knockback.
+- `KneeDash` — directional dash, Player-body contact damage, and backward knockback.
 - `Damage` — hit reaction and source bookkeeping.
 - `Death` — disable control and gameplay interactions.
 
@@ -159,7 +159,9 @@ Task 029 implements two physical weapon slots. Slot 1 starts with the rifle and 
 
 Task 031 keeps leg equipment in a separate controller and ownership boundary from both weapon slots. `leg_ability` is the physical C request; it safely returns without effect for Standard Legs and emits only a typed request for Knee-Dash Legs. The one-second swap presentation remains pending.
 
-Task 032 adds a `KneeDashController` that owns active dash timing, dash direction/velocity, a temporary target-only hitbox, and once-per-activation hit tracking. Player computes the mouse-directed dash vector and clamps its signed angle to -45 through +45 degrees relative to the selected horizontal side, using current facing for near-vertical or origin aim. Player retains CharacterBody2D velocity and move_and_slide ownership, while normal locomotion, gravity, jump, and jetpack are suspended only during the active dash. The controller emits typed dash signals; target dummies provide a capped horizontal placeholder knockback API. Bleeding, invulnerability, camera effects, final animation, and full dash presentation remain deferred.
+Task 032 adds a `KneeDashController` that owns active dash timing, dash direction/velocity, and once-per-activation hit tracking. Player computes the mouse-directed dash vector and clamps its signed angle to -45 through +45 degrees relative to the selected horizontal side, using current facing for near-vertical or origin aim. Player retains CharacterBody2D velocity and move_and_slide ownership, while normal locomotion, gravity, jump, and jetpack are suspended only during the active dash. The controller emits typed dash signals; target dummies provide a capped horizontal placeholder knockback API. Bleeding, invulnerability, camera effects, final animation, and full dash presentation remain deferred.
+
+Task 054 replaces the former offset Knee Dash Area2D with Player CharacterBody2D slide contacts. After the existing dash `move_and_slide()` call, Player forwards each frame collision to `KneeDashController`, which filters generic living enemy-layer contacts exposing `take_damage`, tracks each target once per dash, and applies the existing damage and knockback. World and defeated-target contacts remain passable to damage dispatch.
 
 Task 036 adds the independent left-arm equipment boundary: `LeftArmDefinition` is shared configuration, `LeftArmInstance` owns one exact runtime item, and `LeftArmEquipmentController` owns the single equipped instance. `LeftArmSlot` is populated dynamically from the definition's held visual scene. `WorldLeftArmPickup` transfers exact instances through F while remaining separate from leg and weapon ownership. Standard Left Arm has no ability; Shield Left Arm exposes only typed shield metadata and held-Q input state until Task 037. Right-arm equipment follows the same separate slot boundary and does not share left-arm instances or behavior.
 
@@ -203,7 +205,7 @@ Suggested layer allocation:
 1. World — ground, platforms, and static level collision.
 2. Player body — player gameplay collision.
 3. Enemies — enemy gameplay collision.
-4. Player attacks — weapon projectiles, shotgun pellets, hook, and dash hitbox.
+4. Player attacks — weapon projectiles, shotgun pellets, hook, and ability contact dispatch.
 5. Enemy attacks — enemy projectiles and contact hazards.
 6. Interactables — radio, loot case, and equipment pickups.
 7. Equipment visuals / sensor-only shapes — detached legs, sockets, and presentation effects.

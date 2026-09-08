@@ -60,9 +60,9 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 - Activated with C.
 - Launch toward the mouse cursor, including left, right, and diagonal directions.
 - Clamp the dash angle to no more than 45 degrees from the horizontal ground line.
-- Damage valid enemies on contact once per dash activation.
+- During the active dash, Player CharacterBody2D contact with a living enemy deals damage once per target per dash activation; the full Player collision body is the contact source.
 - Knock contacted enemies backward.
-- Reserve an extension point for a future bleeding status effect; bleeding is not implemented in the first vertical slice.
+- Reserve an extension point for a future bleeding status effect; bleeding is not implemented in this task.
 
 The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary, directional dash, contact damage, capped knockback, and cooldown metadata. Final dash presentation and additional effects remain deferred.
 

@@ -96,7 +96,9 @@ Task 052 corrects the Slide runtime integration: Player advances `SlideControlle
 
 Task 053 supersedes the previous 0.65-second Slide runtime duration with 0.975 seconds. Entry rules, deceleration, momentum, cooldown, crouch synchronization, and movement ownership are unchanged. Implementation commit `adb155ef65326fc067de0afa5bd8f5021e11db9b` is published; Windows runtime validation remains pending.
 
-The remaining focused roadmap is: Task 054 replaces the small Knee Dash hitbox with full Player-body contact; Task 055 adds the Knee Dash bleeding debuff; Task 056 runs an integrated movement and combat audit; Task 057+ begins the first radio/helicopter mission slice.
+Task 054 replaces the former 64x28 Knee Dash attack Area2D with Player CharacterBody2D movement contacts. During an active dash, eligible living enemy-layer collisions are forwarded after `move_and_slide()` and damage each target once per dash; world and defeated-target contacts remain non-damaging. Windows runtime validation remains pending.
+
+The remaining focused roadmap is: Task 055 adds the Knee Dash bleeding debuff; Task 056 runs an integrated movement and combat audit; Task 057+ begins the first radio/helicopter mission slice.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

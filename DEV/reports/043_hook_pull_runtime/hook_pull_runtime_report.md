@@ -102,3 +102,7 @@ Godot 4.7.2 is not available in this environment, so parser, runtime, collision,
 ## Recommended next step
 
 Run the Windows Godot validation checklist, then tune target pull presentation and implement the deferred production Hook effects only after the focused runtime is confirmed.
+
+## Commit and push results
+
+Implementation commit: `302566ebb6b66d07d0ebeed457fe3da3849ad0a6` (`feat: add hook pull runtime`). The commit was pushed normally to `origin/main`, and remote verification confirmed that `HEAD` matched `origin/main` with a clean working tree. Godot runtime validation remains pending because Godot is unavailable in this environment.

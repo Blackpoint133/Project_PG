@@ -102,7 +102,7 @@ No changes were made to `Game/project.godot`, arena geometry, weapons, ammunitio
 
 ## Commit and push results
 
-To be recorded after publication.
+Implementation commit: `93b771acca7a5284f3d76861ea2574d44403b043` (`feat: add world grapple movement`). The commit was pushed normally to `origin/main`; remote verification confirmed the published commit and a clean working tree. Godot runtime validation remains pending because the Godot executable is unavailable in this environment.
 
 ## Recommended next step
 

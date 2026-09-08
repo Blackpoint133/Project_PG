@@ -116,7 +116,7 @@ Use custom `Resource` classes for data-driven definitions. Keep tuning values in
 
 Task 031 adds `LegDefinition`, `LegAbilityDefinition`, and `LegInstance` resources/runtime ownership, plus `LegEquipmentController` and `WorldLegPickup`. The player owns one leg slot that starts with Standard Legs; physical F interaction transfers exact leg instances and preserves the existing LegsSlot crouch contract. Standard Legs have no ability, while Knee-Dash Legs expose only ability metadata until Task 032.
 
-Future bleeding is an effect or damage-extension point on `DamageReceiver` or contact attacks. Future reflected damage is an optional response hook on the shield handler. Neither is implemented in the first slice.
+Bleeding is implemented as a focused `BleedingStatusController` state component for Knee Dash contacts and remains extensible through generic damage/status boundaries. Future reflected damage is an optional response hook on the shield handler and remains unimplemented.
 
 ## Scripts and Responsibility Boundaries
 

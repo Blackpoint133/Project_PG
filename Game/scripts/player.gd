@@ -26,6 +26,7 @@ const STANDARD_RIGHT_ARM: RightArmDefinition = preload("res://resources/equipmen
 
 var movement_state := "grounded"
 var _jetpack_authorized := false
+var _slide_jump_momentum_active: bool = false
 var _world_grapple_momentum_active: bool = false
 var facing_direction := 1
 
@@ -80,6 +81,7 @@ func _physics_process(delta: float) -> void:
 	left_arm_equipment_controller.set_ability_input(Input.is_action_pressed("left_arm_ability"))
 	shield_controller.set_protected_side(_get_shield_side())
 	shield_controller.advance(delta)
+	slide_controller.advance(delta)
 	if Input.is_action_just_pressed("leg_ability"):
 		leg_equipment_controller.activate_ability()
 	var dash_active: bool = knee_dash_controller.is_active()
@@ -94,6 +96,8 @@ func _physics_process(delta: float) -> void:
 			_jetpack_authorized = true
 	var input_direction := Input.get_axis("move_left", "move_right")
 	var world_grapple_active: bool = hook_controller.is_player_grappling()
+	if world_grapple_active:
+		_slide_jump_momentum_active = false
 	var slide_active: bool = slide_controller.is_active()
 	if world_grapple_active and slide_active:
 		slide_controller.cancel_slide()
@@ -102,11 +106,14 @@ func _physics_process(delta: float) -> void:
 		var fallback_direction: int = 1 if input_direction > 0.0 else -1 if input_direction < 0.0 else facing_direction
 		slide_controller.try_start(velocity.x, fallback_direction)
 		slide_active = slide_controller.is_active()
+	var slide_jump_transition: bool = false
 	if slide_active and Input.is_action_just_pressed("jump") and was_on_floor:
+		velocity.x = slide_controller.get_horizontal_velocity()
 		slide_controller.cancel_slide()
+		_slide_jump_momentum_active = true
+		slide_jump_transition = true
 		slide_active = false
 	var crouching: bool = (slide_active or Input.is_action_pressed("crouch") and was_on_floor) and not dash_active
-	shield_controller.set_crouching(crouching and not dash_active)
 
 	var jetpack_active: bool = false
 	var thrust_requested: bool = false
@@ -124,9 +131,8 @@ func _physics_process(delta: float) -> void:
 	slide_active = slide_controller.is_active()
 	if not slide_active:
 		crouching = Input.is_action_pressed("crouch") and was_on_floor and not dash_active
-		shield_controller.set_crouching(crouching and not dash_active)
 	if dash_active:
-		_update_crouch(false)
+		crouching = false
 		velocity = knee_dash_controller.get_dash_velocity()
 		move_and_slide()
 		knee_dash_controller.process_contacts()
@@ -141,13 +147,16 @@ func _physics_process(delta: float) -> void:
 
 		if slide_active:
 			velocity.x = slide_controller.get_horizontal_velocity()
+		elif slide_jump_transition:
+			pass
 		else:
 			var target_speed := CROUCH_SPEED if crouching else RUN_SPEED
 			var horizontal_velocity := input_direction * target_speed
 			var acceleration := GROUND_ACCELERATION if was_on_floor else AIR_ACCELERATION
-			if absf(horizontal_velocity) > 0.0:
+			var same_direction_slide_momentum: bool = _slide_jump_momentum_active and not was_on_floor and absf(velocity.x) > 0.0 and absf(input_direction) > 0.0 and signf(velocity.x) == signf(input_direction)
+			if absf(horizontal_velocity) > 0.0 and not same_direction_slide_momentum:
 				velocity.x = move_toward(velocity.x, horizontal_velocity, acceleration * delta)
-			elif not (_world_grapple_momentum_active and not was_on_floor):
+			elif absf(horizontal_velocity) <= 0.0 and not (_world_grapple_momentum_active and not was_on_floor) and not (_slide_jump_momentum_active and not was_on_floor):
 				velocity.x = move_toward(velocity.x, 0.0, GROUND_FRICTION * delta)
 		if world_grapple_active:
 			var grapple_offset: Vector2 = hook_controller.get_player_grapple_anchor() - hook_pull_anchor.global_position
@@ -164,6 +173,8 @@ func _physics_process(delta: float) -> void:
 		if world_grapple_active:
 			hook_controller.update_player_grapple(delta, hook_pull_anchor.global_position)
 		var landed: bool = not was_on_floor and is_on_floor()
+		if is_on_floor():
+			_slide_jump_momentum_active = false
 		if slide_controller.is_active() and (not is_on_floor() or _has_slide_wall_collision()):
 			slide_controller.cancel_slide()
 		if landed and Input.is_action_pressed("crouch") and not dash_active and not hook_controller.is_player_grappling():
@@ -174,6 +185,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			crouching = Input.is_action_pressed("crouch") and is_on_floor() and not dash_active
 
+	shield_controller.set_crouching(crouching and not dash_active)
 	_update_crouch(crouching)
 	_update_visuals(input_direction, jetpack_active)
 	_update_state(jetpack_active)
@@ -307,6 +319,7 @@ func _on_hook_completed() -> void:
 
 func _on_player_grapple_started(_anchor: Vector2) -> void:
 	slide_controller.cancel_slide()
+	_slide_jump_momentum_active = false
 	_world_grapple_momentum_active = true
 	if not is_on_floor():
 		_jetpack_authorized = true
@@ -337,6 +350,7 @@ func _on_leg_ability_requested(ability_definition: LegAbilityDefinition) -> void
 	var dash_started: bool = knee_dash_controller.start_dash(ability_definition, dash_direction)
 	if dash_started:
 		slide_controller.cancel_slide()
+		_slide_jump_momentum_active = false
 		_world_grapple_momentum_active = false
 		if hook_controller.is_active():
 			hook_controller.cancel_hook()

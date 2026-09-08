@@ -181,6 +181,8 @@ Task 049 adds `JetpackController` as a state-only child owned by Player. It owns
 
 Task 051 adds `SlideController` as a state-only Player child. It owns slide timing, locked signed horizontal speed, and cooldown while Player remains the sole authority for velocity, crouch pose, collisions, jumping, gravity, and `move_and_slide()`. A new grounded Ctrl press requires at least 260.0 horizontal speed; held Ctrl can start an edge-triggered landing slide at the same threshold. Slides use a 600.0 minimum initial speed, 0.65-second duration, 720.0 deceleration, 180.0 minimum active speed, and a one-second cooldown. Jump, Knee Dash, grapple, jetpack, wall, enemy, and shield interactions preserve existing movement ownership and collision boundaries.
 
+Task 052 advances `SlideController` exactly once at the start of each Player physics frame, before slide state is read or new entry is requested. A slide-jump stores the latest signed controller velocity before cancellation and uses a focused Player-owned momentum exception so grounded movement cannot reduce it on the jump frame or immediately during same-direction airborne input; landing, Knee Dash, and world grapple clear that exception as appropriate. Final crouch state is applied to both Player visuals and Shield after landing-slide detection.
+
 ## Signals
 
 Important expected signals:

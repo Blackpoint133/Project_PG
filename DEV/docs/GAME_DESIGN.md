@@ -13,7 +13,7 @@ The approved visual direction is original high-detail industrial science-fiction
 | Input | Action |
 | --- | --- |
 | A / D | Move left and right |
-| S | Crouch |
+| Ctrl | Crouch |
 | Space press | Jump |
 | Space held while airborne | Activate the jetpack |
 | Mouse | Aim |
@@ -98,7 +98,7 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - A living hook-compatible enemy is pulled toward the Player, stops before overlap, and is briefly stunned without taking damage.
 - A solid world hit creates a fixed grapple anchor and retracts the Player toward it with preserved momentum; E detaches manually and arrival, timeout, obstruction, arm replacement, Space, and Knee Dash also detach safely.
 - Every Hook session starts its full authored cooldown only after completion or cancellation. Automatic completion while E remains held does not refire; E must be released and pressed again.
-- The grapple is acceleration-based retracting movement rather than final rope-swing physics; jetpack heat remains deferred to a later focused task, while Ctrl crouch migration and slide remain deferred to later focused tasks.
+- The grapple is acceleration-based retracting movement rather than final rope-swing physics; jetpack heat remains deferred to a later focused task, while grounded and landing slide remain deferred to the next focused task.
 - Hook cooldown belongs to the exact RightArmInstance and remains preserved through pickup swaps.
 - Final animation, audio, effects, and production enemy AI remain deferred.
 

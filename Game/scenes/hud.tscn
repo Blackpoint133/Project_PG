@@ -59,6 +59,15 @@ value = 100.0
 show_percentage = false
 visible = false
 
+[node name="RightArmStatusLabel" type="Label" parent="."]
+offset_left = 680.0
+offset_top = 304.0
+offset_right = 1240.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+text = "RIGHT ARM: STANDARD\nE: NONE"
+
 [node name="HealthLabel" type="Label" parent="."]
 offset_left = 24.0
 offset_top = 220.0
@@ -73,7 +82,7 @@ offset_top = 104.0
 offset_right = 640.0
 offset_bottom = 212.0
 theme_override_font_sizes/font_size = 24
-text = "A/D: move  S: crouch  Space: jump\n1/2: switch  LMB: fire  R: reload\nF: equip  C: legs  Q: left arm"
+text = "A/D: move  S: crouch  Space: jump\n1/2: switch  LMB: fire  R: reload\nF: equip  C: legs  Q: left arm  E: right arm"
 
 [node name="InteractionLabel" type="Label" parent="."]
 visible = false

@@ -76,6 +76,8 @@ Task 040 corrected the kinetic Shield audit defects: new Shield instances start 
 
 Task 041 adds a two-second per-instance kinetic Shield counter-blast cooldown. Q retains LMB ownership during the vulnerable cooldown, held Q reactivates the Shield when recovery ends, and exact-instance cooldown state persists through equipment swaps. Windows runtime validation remains pending.
 
+Task 042 adds the separate Right Arm equipment foundation. Standard Right Arm starts passively, while a physical Hook Right Arm pickup transfers exact `RightArmInstance` ownership through F. E emits the typed Hook ability request and updates the HUD; hook projectile, cable, pulling, damage, stun, and cooldown runtime remain deferred. Windows runtime validation is pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

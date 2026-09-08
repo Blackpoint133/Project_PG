@@ -91,9 +91,10 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 ### Hook Right Arm
 
 - Activated with E.
-- Fire the hook toward the mouse cursor.
-- When it hits an enemy, pull that enemy toward the player.
-- Briefly interrupt or stun the pulled enemy.
+- Hook Right Arm is acquired as a physical replacement for Standard Right Arm.
+- E is the dedicated typed right-arm ability request.
+- The current foundation provides the replaceable visual, exact-instance pickup transfer, and passive/ability HUD boundary.
+- Hook projectile, cable, collision, pulling, damage, and stun runtime remain deferred to the next task.
 
 ### Jetpack
 

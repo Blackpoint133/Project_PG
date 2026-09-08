@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var leg_status_label: Label = $LegStatusLabel
 @onready var left_arm_status_label: Label = $LeftArmStatusLabel
 @onready var shield_energy_bar: ProgressBar = $ShieldEnergyBar
+@onready var right_arm_status_label: Label = $RightArmStatusLabel
 @onready var health_label: Label = $HealthLabel
 @onready var interaction_label: Label = $InteractionLabel
 var _is_reloading := false
@@ -22,6 +23,8 @@ var _shield_charge: float = 0.0
 var _shield_max_charge: float = 0.0
 var _shield_saturated: bool = false
 var _shield_cooldown_remaining: float = 0.0
+var _right_arm_name: String = "UNKNOWN"
+var _right_arm_ability_name: String = "NONE"
 var _current_health: float = 100.0
 var _maximum_health: float = 100.0
 
@@ -42,12 +45,17 @@ func _ready() -> void:
 		_shield_max_charge = player.shield_controller.get_maximum_charge()
 		_shield_saturated = player.shield_controller.is_saturated()
 		_shield_cooldown_remaining = player.shield_controller.get_cooldown_remaining()
+		var right_arm_definition: RightArmDefinition = player.right_arm_equipment_controller.current_definition
+		var right_arm_ability: RightArmAbilityDefinition = player.right_arm_equipment_controller.current_ability_definition
+		_right_arm_name = "UNKNOWN" if right_arm_definition == null else right_arm_definition.display_name
+		_right_arm_ability_name = "NONE" if right_arm_ability == null else right_arm_ability.display_name
 		_current_health = player.get_current_health()
 		_maximum_health = player.get_maximum_health()
 		_render_weapon_state()
 		_render_weapon_slots(player)
 		_render_leg_status(player)
 		_render_left_arm_status()
+		_render_right_arm_status()
 		_render_health()
 		interaction_label.text = player.get_interaction_prompt()
 		interaction_label.visible = not interaction_label.text.is_empty()
@@ -61,6 +69,8 @@ func _ready() -> void:
 		player.leg_equipment_controller.leg_ability_state_changed.connect(_on_leg_ability_state_changed)
 		player.left_arm_equipment_controller.left_arm_changed.connect(_on_left_arm_changed)
 		player.left_arm_equipment_controller.left_arm_ability_changed.connect(_on_left_arm_ability_changed)
+		player.right_arm_equipment_controller.right_arm_changed.connect(_on_right_arm_changed)
+		player.right_arm_equipment_controller.right_arm_ability_changed.connect(_on_right_arm_ability_changed)
 		player.shield_controller.shield_state_changed.connect(_on_shield_state_changed)
 		player.player_damage_receiver.health_changed.connect(_on_health_changed)
 		player.knee_dash_controller.dash_started.connect(_on_dash_started)
@@ -124,6 +134,10 @@ func _render_left_arm_status() -> void:
 func _render_health() -> void:
 	health_label.text = "HEALTH: %.0f / %.0f" % [_current_health, _maximum_health]
 
+func _render_right_arm_status() -> void:
+	var ability_name: String = "NONE" if _right_arm_ability_name == "NONE" else "%s READY" % _right_arm_ability_name
+	right_arm_status_label.text = "RIGHT ARM: %s\nE: %s" % [_right_arm_name, ability_name]
+
 func _on_reload_started() -> void:
 	_is_reloading = true
 	weapon_label.text = "RELOADING %s" % _weapon_name
@@ -168,6 +182,14 @@ func _on_left_arm_changed(definition: LeftArmDefinition) -> void:
 func _on_left_arm_ability_changed(ability_definition: LeftArmAbilityDefinition) -> void:
 	_left_arm_ability_name = "" if ability_definition == null else ability_definition.display_name
 	_render_left_arm_status()
+
+func _on_right_arm_changed(definition: RightArmDefinition) -> void:
+	_right_arm_name = "UNKNOWN" if definition == null else definition.display_name
+	_render_right_arm_status()
+
+func _on_right_arm_ability_changed(ability_definition: RightArmAbilityDefinition) -> void:
+	_right_arm_ability_name = "NONE" if ability_definition == null else ability_definition.display_name
+	_render_right_arm_status()
 
 func _on_shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool, cooldown_remaining: float) -> void:
 	_shield_available = available

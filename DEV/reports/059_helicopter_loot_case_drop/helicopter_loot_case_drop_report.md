@@ -93,4 +93,7 @@ The case is a closed placeholder and cannot be opened. No rewards, contents, ope
 
 ## Publication results
 
-Implementation and documentation publication results are finalized in the task handoff after the two requested commits and pushes.
+- Implementation commit: `c9b36cb93991e3e980425983069b46e4c146a715`.
+- Implementation push to `origin/main`: succeeded.
+- Documentation publication commit: recorded in the final task handoff.
+- Windows runtime validation remains pending.

@@ -98,7 +98,7 @@ Task 053 supersedes the previous 0.65-second Slide runtime duration with 0.975 s
 
 Task 054 replaces the former 64x28 Knee Dash attack Area2D with Player CharacterBody2D movement contacts. During an active dash, eligible living enemy-layer collisions are forwarded after `move_and_slide()` and damage each target once per dash; world and defeated-target contacts remain non-damaging. Implementation commit `b1df00cbe49dbdc1083a3fd3661a1f67f2b39b96` is published; Windows runtime validation remains pending.
 
-Task 055 adds reusable BleedingStatusController state to TargetDummy. Knee Dash applies 4 damage per tick for four delayed one-second ticks, totaling 16 damage; reapplication refreshes four future ticks without stacking, and defeat clears the effect. Implementation and Windows runtime validation remain pending.
+Task 055 adds reusable BleedingStatusController state to TargetDummy. Knee Dash applies 4 damage per tick for four delayed one-second ticks, totaling 16 damage; reapplication refreshes four future ticks without stacking, and defeat clears the effect. Implementation commit `26a6cd2ef4056cbf765694df182b826c8b2bda71` is published; Windows runtime validation remains pending.
 
 The remaining focused roadmap is: Task 056 runs an integrated movement and combat audit; Task 057+ begins the first radio/helicopter mission slice.
 

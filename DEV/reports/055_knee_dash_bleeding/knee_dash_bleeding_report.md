@@ -77,4 +77,4 @@ Run the Windows runtime checklist and then continue with the integrated movement
 
 ## Implementation commit and push result
 
-To be recorded after publication.
+Implementation commit: `26a6cd2ef4056cbf765694df182b826c8b2bda71` (`feat: add knee dash bleeding`). It was pushed normally to `origin/main`; after the push, local HEAD and `origin/main` matched and the working tree was clean. The final report and Project Context publication record are committed separately with the required documentation commit.

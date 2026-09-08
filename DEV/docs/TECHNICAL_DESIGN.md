@@ -140,6 +140,8 @@ Task 058 adds `MissionHelicopter` as a separate CharacterBody2D mission actor. M
 
 Task 059 replaces the permanent helicopter wreck with a deterministic 0.4-second local explosion presentation and typed destruction payload. Main owns the reusable `WorldLootCase` scene, spawns exactly one case at the supplied destruction position plus offset, and launches it with inherited horizontal momentum. The case uses interactable layer 6 / integer layer 32 and world mask 1, does not implement the interaction contract, and changes the objective to `OPEN THE LOOT CASE` only after its one-shot landing signal. Opening, rewards, and item ejection remain deferred to Task 060.
 
+Task 060 makes the landed WorldLootCase a one-shot F interactable. Main connects its opened signal, assigns each existing pickup definition before adding four typed pickup scenes to World, launches them with a deterministic fan, and then requests the MissionController transition to `COLLECT THE EQUIPMENT`. The case owns only opening presentation and its interaction latch; it does not own mission state or reward construction. Reward collection tracking and final completion remain deferred.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

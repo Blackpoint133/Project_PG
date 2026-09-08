@@ -70,6 +70,12 @@ The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F n
 - After the case lands, the objective becomes `OPEN THE LOOT CASE`.
 - The case is intentionally not interactive until the next focused mission task; it has no F prompt yet.
 
+### Loot Case Rewards
+
+- After landing, the closed case shows `F: OPEN LOOT CASE` and can be opened once.
+- Opening changes the objective to `COLLECT THE EQUIPMENT` and physically ejects exactly four normal pickups: Shotgun, Shield Left Arm, Hook Right Arm, and Knee-Dash Legs.
+- Reward collection tracking, case completion, extraction, and final reward presentation remain deferred.
+
 ## Equipment Abilities
 
 ### Knee-Dash Legs

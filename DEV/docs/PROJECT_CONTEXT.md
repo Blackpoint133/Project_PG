@@ -110,7 +110,9 @@ Task 058 adds the first mission helicopter combat slice. Activating `destroy_hel
 
 Task 059 adds deterministic helicopter destruction presentation and a physical closed loot-case drop. The 0.4-second explosion emits the exact destruction position and ejection velocity; Main spawns one non-interactive WorldLootCase, which falls with gravity and emits landed once. Only after landing does the objective become OPEN THE LOOT CASE. Opening, rewards, and item ejection remain deferred to Task 060. Implementation commit `c9b36cb93991e3e980425983069b46e4c146a715` is published; Windows runtime validation remains pending.
 
-The next focused roadmap stage is Task 060: open the landed loot case and implement its deferred reward foundation.
+Task 060 makes the landed loot case openable once through F. Main physically ejects exactly four existing normal pickups with their authored definitions assigned before `add_child`: Shotgun, Shield Left Arm, Hook Right Arm, and Knee-Dash Legs. After successful reward creation, the objective becomes COLLECT THE EQUIPMENT. Reward collection tracking and final mission completion remain deferred. Implementation commit `af50959a15b01334f68b441d908eab6c8f64eedd` is published; Windows runtime validation remains pending.
+
+The next focused roadmap stage is Task 061: track equipment reward collection and complete the reward objective.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

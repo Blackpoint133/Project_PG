@@ -9,6 +9,8 @@ extends CanvasLayer
 @onready var right_arm_status_label: Label = $RightArmStatusLabel
 @onready var health_label: Label = $HealthLabel
 @onready var interaction_label: Label = $InteractionLabel
+@onready var jetpack_status_label: Label = $JetpackStatusLabel
+@onready var jetpack_heat_bar: ProgressBar = $JetpackHeatBar
 var _is_reloading := false
 var _loaded_ammo := 0
 var _reserve_ammo := 0
@@ -29,6 +31,10 @@ var _right_arm_cooldown_remaining: float = 0.0
 var _hook_state: String = "idle"
 var _current_health: float = 100.0
 var _maximum_health: float = 100.0
+var _jetpack_heat: float = 0.0
+var _jetpack_maximum_heat: float = 100.0
+var _jetpack_overheated: bool = false
+var _jetpack_active: bool = false
 
 func _ready() -> void:
 	set_process(true)
@@ -55,12 +61,17 @@ func _ready() -> void:
 		_hook_state = player.hook_controller.get_state()
 		_current_health = player.get_current_health()
 		_maximum_health = player.get_maximum_health()
+		_jetpack_heat = player.jetpack_controller.get_current_heat()
+		_jetpack_maximum_heat = player.jetpack_controller.get_maximum_heat()
+		_jetpack_overheated = player.jetpack_controller.is_overheated()
+		_jetpack_active = player.jetpack_controller.is_active()
 		_render_weapon_state()
 		_render_weapon_slots(player)
 		_render_leg_status(player)
 		_render_left_arm_status()
 		_render_right_arm_status()
 		_render_health()
+		_render_jetpack_status(player)
 		interaction_label.text = player.get_interaction_prompt()
 		interaction_label.visible = not interaction_label.text.is_empty()
 		player.weapon_controller.reload_started.connect(_on_reload_started)
@@ -82,6 +93,7 @@ func _ready() -> void:
 		player.knee_dash_controller.dash_started.connect(_on_dash_started)
 		player.knee_dash_controller.dash_ended.connect(_on_dash_ended)
 		player.interaction_prompt_changed.connect(_on_interaction_prompt_changed)
+		player.jetpack_controller.jetpack_state_changed.connect(_on_jetpack_state_changed)
 
 func _process(_delta: float) -> void:
 	var player: Player = get_tree().get_first_node_in_group("player")
@@ -139,6 +151,22 @@ func _render_left_arm_status() -> void:
 
 func _render_health() -> void:
 	health_label.text = "HEALTH: %.0f / %.0f" % [_current_health, _maximum_health]
+
+func _render_jetpack_status(player: Player) -> void:
+	var percentage: float = 0.0
+	if _jetpack_maximum_heat > 0.0:
+		percentage = clampf(_jetpack_heat / _jetpack_maximum_heat * 100.0, 0.0, 100.0)
+	jetpack_heat_bar.value = percentage
+	var state_text: String = "READY 0%"
+	if _jetpack_active:
+		state_text = "ACTIVE %.0f%%" % percentage
+	elif _jetpack_overheated and not player.is_on_floor():
+		state_text = "OVERHEATED 100%"
+	elif player.is_on_floor() and _jetpack_heat > 0.0:
+		state_text = "COOLING %.0f%%" % percentage
+	elif _jetpack_heat > 0.0:
+		state_text = "HEAT %.0f%%" % percentage
+	jetpack_status_label.text = "JETPACK: %s" % state_text
 
 func _render_right_arm_status() -> void:
 	var ability_name: String = "NONE"
@@ -245,3 +273,12 @@ func _on_dash_ended() -> void:
 func _on_interaction_prompt_changed(prompt_text: String) -> void:
 	interaction_label.text = prompt_text
 	interaction_label.visible = not prompt_text.is_empty()
+
+func _on_jetpack_state_changed(current_heat: float, maximum_heat: float, overheated: bool, active: bool) -> void:
+	_jetpack_heat = current_heat
+	_jetpack_maximum_heat = maximum_heat
+	_jetpack_overheated = overheated
+	_jetpack_active = active
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player != null:
+		_render_jetpack_status(player)

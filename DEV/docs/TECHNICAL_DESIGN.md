@@ -177,6 +177,8 @@ Task 046 adds a Player-owned exception for horizontal momentum inherited from a 
 
 Task 048 changes Hook input ownership to a held session. `Player` accepts only a discrete E press, `HookController` emits one idempotent completion signal for each started session, and `RightArmEquipmentController` reserves the exact `RightArmInstance` until completion before starting its full cooldown. Release, automatic completion, invalidation, Space, Knee Dash, and arm replacement all converge on completion without resetting Player velocity or the preserved grapple-momentum exception.
 
+Task 049 adds `JetpackController` as a state-only child owned by Player. It owns 100.0 maximum heat, 40.0 per-second airborne thrust gain, 50.0 per-second grounded cooling, and the overheat latch; Player remains the sole authority for authorization, gravity, jetpack acceleration, velocity, and `move_and_slide()`. Heat never cools in the air, so pulsing Space cannot bypass the limit, and an overheat latch clears only after grounded heat reaches zero. JetpackController is advanced exactly once per physics frame and never moves the Player directly.
+
 ## Signals
 
 Important expected signals:

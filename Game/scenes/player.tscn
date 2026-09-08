@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/combat/weapon_controller.gd" id="8_weapon_controller"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://scripts/abilities/shield_controller.gd" id="13_shield_controller"]
 [ext_resource type="Script" path="res://scripts/player_damage_receiver.gd" id="14_damage_receiver"]
 [ext_resource type="Script" path="res://scripts/abilities/hook_controller.gd" id="16_hook_controller"]
+[ext_resource type="Script" path="res://scripts/movement/jetpack_controller.gd" id="17_jetpack_controller"]
 
 [sub_resource type="RectangleShape2D" id="player_shape"]
 size = Vector2(40, 96)
@@ -92,6 +93,9 @@ script = ExtResource("12_left_arm_controller")
 
 [node name="RightArmEquipmentController" type="Node" parent="."]
 script = ExtResource("15_right_arm_controller")
+
+[node name="JetpackController" type="Node" parent="."]
+script = ExtResource("17_jetpack_controller")
 
 [node name="HookController" type="Node2D" parent="."]
 script = ExtResource("16_hook_controller")

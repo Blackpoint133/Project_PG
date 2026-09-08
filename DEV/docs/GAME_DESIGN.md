@@ -105,8 +105,9 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 ### Jetpack
 
 - Activate by holding Space while airborne.
-- Use a heat meter.
-- Recover heat after landing.
+- Use a 100.0-unit heat meter with 40.0 heat gain per second during actual thrust.
+- Heat never recovers in the air. Grounded cooling removes 50.0 heat per second, and an overheat latch clears only at zero heat.
+- Pulsing Space cannot bypass the finite airborne heat limit; Player movement remains the sole authority for velocity and collisions.
 
 ### Weapons
 

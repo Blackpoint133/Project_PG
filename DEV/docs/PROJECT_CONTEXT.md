@@ -88,6 +88,10 @@ Task 046 corrects post-grapple horizontal momentum preservation. Airborne no-inp
 
 Task 048 changes the Hook input to hold-to-maintain behavior: E fires on press, remains active while held, and cancels every active Hook state on release. The full exact-instance Hook cooldown starts only after the session finishes, including automatic completion, and holding E through cooldown completion does not refire. Player world-grapple momentum remains preserved after release.
 
+Task 049 adds finite Jetpack heat. `JetpackController` owns 100.0 maximum heat, 40.0 per-second thrust gain, 50.0 per-second grounded cooling, and the overheat latch; heat never cools airborne, and Player remains the sole movement authority. Windows runtime validation remains pending.
+
+The next focused roadmap remains: move crouch input from S to Ctrl; add grounded and landing slide with anti-bunny-hop cooldown; replace the small Knee Dash hitbox with full Player-body contact; add the Knee Dash bleeding debuff; run an integrated movement and combat audit; then begin the first radio/helicopter mission slice.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

@@ -92,3 +92,21 @@ offset_right = 900.0
 offset_bottom = 300.0
 theme_override_font_sizes/font_size = 28
 text = ""
+
+[node name="JetpackStatusLabel" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 304.0
+offset_right = 640.0
+offset_bottom = 340.0
+theme_override_font_sizes/font_size = 24
+text = "JETPACK: READY 0%"
+
+[node name="JetpackHeatBar" type="ProgressBar" parent="."]
+offset_left = 24.0
+offset_top = 344.0
+offset_right = 640.0
+offset_bottom = 360.0
+min_value = 0.0
+max_value = 100.0
+value = 0.0
+show_percentage = false

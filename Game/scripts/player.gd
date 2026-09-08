@@ -41,6 +41,7 @@ var facing_direction := 1
 @onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
 @onready var left_arm_equipment_controller: LeftArmEquipmentController = $LeftArmEquipmentController
 @onready var right_arm_equipment_controller: RightArmEquipmentController = $RightArmEquipmentController
+@onready var jetpack_controller: JetpackController = $JetpackController
 @onready var hook_controller: HookController = $HookController
 @onready var hook_pull_anchor: Marker2D = $BodyRoot/HookPullAnchor
 @onready var knee_dash_controller: KneeDashController = $KneeDashController
@@ -95,14 +96,10 @@ func _physics_process(delta: float) -> void:
 	shield_controller.set_crouching(crouching and not dash_active)
 
 	var jetpack_active: bool = false
-	if dash_active:
-		_update_crouch(false)
-		velocity = knee_dash_controller.get_dash_velocity()
-		move_and_slide()
-		knee_dash_controller.process_contacts()
-		knee_dash_controller.advance(delta)
-	else:
-		var world_grapple_active: bool = hook_controller.is_player_grappling()
+	var thrust_requested: bool = false
+	var world_grapple_active: bool = false
+	if not dash_active:
+		world_grapple_active = hook_controller.is_player_grappling()
 		if world_grapple_active and not was_on_floor:
 			_jetpack_authorized = true
 		if Input.is_action_just_pressed("jump") and was_on_floor:
@@ -111,8 +108,16 @@ func _physics_process(delta: float) -> void:
 		elif was_on_floor:
 			# Landing always clears the previous authorization, even if Space is held.
 			_jetpack_authorized = false
-
-		jetpack_active = _jetpack_authorized and not was_on_floor and Input.is_action_pressed("jump")
+		thrust_requested = _jetpack_authorized and not was_on_floor and Input.is_action_pressed("jump")
+	var jetpack_allowed: bool = jetpack_controller.advance(delta, was_on_floor, thrust_requested)
+	if dash_active:
+		_update_crouch(false)
+		velocity = knee_dash_controller.get_dash_velocity()
+		move_and_slide()
+		knee_dash_controller.process_contacts()
+		knee_dash_controller.advance(delta)
+	else:
+		jetpack_active = jetpack_allowed
 		if jetpack_active:
 			# Smoothly approach the rise target without fighting gravity in the same frame.
 			velocity.y = move_toward(velocity.y, JETPACK_TARGET_RISE_VELOCITY, JETPACK_ACCELERATION * delta)

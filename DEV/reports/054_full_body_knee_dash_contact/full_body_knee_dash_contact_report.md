@@ -61,4 +61,4 @@ Run the Windows runtime checklist and then implement the approved Knee Dash blee
 
 ## Implementation commit and push result
 
-To be recorded after publication.
+Implementation commit: `b1df00cbe49dbdc1083a3fd3661a1f67f2b39b96` (`fix: use player body for knee dash hits`). It was pushed normally to `origin/main`; after the push, local HEAD and `origin/main` matched and the working tree was clean. The final report and Project Context publication record are committed separately with the required documentation commit.

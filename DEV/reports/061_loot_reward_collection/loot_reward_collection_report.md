@@ -36,7 +36,7 @@ The Player swap methods return `false` for invalid or rejected transfers and `tr
 
 ## Mission progress
 
-MissionController accepts only the four stable IDs: `shotgun`, `shield_left_arm`, `hook_right_arm`, and `knee_dash_legs`. It rejects duplicates, unknown IDs, early calls, and mismatched mission state. Progress is shown as `COLLECT THE EQUIPMENT (N/4)`, and the fourth successful transfer changes the objective to `EQUIPMENT COLLECTED` exactly once.
+MissionController accepts only the four stable `StringName` IDs: `shotgun`, `shield_left_arm`, `hook_right_arm`, and `knee_dash_legs`, together with the matching mission id. It rejects duplicates, unknown IDs, early calls, and mismatched mission state. Opening starts at `COLLECT THE EQUIPMENT (0/4)`; progress displays only `(0/4)` through `(3/4)`, and the fourth successful transfer changes the objective directly to `EQUIPMENT COLLECTED` exactly once.
 
 ## Checks actually performed
 
@@ -59,7 +59,7 @@ The mission objective remains in its completed reward state after all four trans
 ## Pending Windows runtime checklist
 
 1. Open the landed case and verify only its four exact reward nodes advance progress.
-2. Collect each reward and verify progress reaches `(4/4)` before `EQUIPMENT COLLECTED`.
+2. Collect each reward and verify progress displays `(1/4)`, `(2/4)`, and `(3/4)`, then changes directly to `EQUIPMENT COLLECTED` on the fourth.
 3. Re-equip an outgoing item from a replacement pickup and confirm it does not count twice.
 4. Confirm unrelated arena pickups do not change mission progress.
 5. Confirm the queued-for-deletion Shotgun reward counts once.
@@ -76,4 +76,4 @@ Implementation commit: `102e1f9553ad6e0807eb1111909494d79fa525f1` (`feat: track 
 
 Documentation commit: `ad1b35e46591f45165c80821b39800335c8cde72` (`docs: record loot reward collection`), pushed successfully to `origin/main`.
 
-Implementation and documentation push results: successful. Final publication record update is pending this report-only commit.
+Task 062 implementation commit: `cfb6d4b02fc6f60008b4d400122c419d93e5efad` (`fix: correct loot reward progress contract`), pushed successfully to `origin/main`.

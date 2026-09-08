@@ -94,4 +94,7 @@ The helicopter has no attacks, AI, explosion, falling wreck physics, loot, rewar
 
 ## Publication results
 
-Implementation and documentation publication results are finalized in the task handoff after the two requested commits and pushes.
+- Implementation commit: `c1bd9ab93af6bc6e96c5912de052befec3aee998`.
+- Implementation push to `origin/main`: succeeded.
+- Documentation publication commit: recorded in the final task handoff.
+- Windows runtime validation remains pending.

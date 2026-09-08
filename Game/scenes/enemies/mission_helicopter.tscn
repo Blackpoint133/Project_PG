@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/mission_helicopter.gd" id="1_helicopter"]
+
+[sub_resource type="RectangleShape2D" id="helicopter_shape"]
+size = Vector2(240, 80)
+
+[node name="MissionHelicopter" type="CharacterBody2D"]
+script = ExtResource("1_helicopter")
+collision_layer = 0
+collision_mask = 1
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("helicopter_shape")
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-108, -24, -84, -44, 64, -44, 108, -18, 108, 20, 60, 38, -76, 38, -108, 18)
+color = Color(0.18, 0.25, 0.28, 1)
+
+[node name="Cockpit" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-72, -20, -42, -38, 12, -38, 34, -18, 10, 4, -62, 4)
+color = Color(0.2, 0.55, 0.62, 1)
+
+[node name="Tail" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(72, -22, 124, -42, 150, -30, 150, 4, 112, 14, 72, 10)
+color = Color(0.12, 0.18, 0.2, 1)
+
+[node name="Rotor" type="Line2D" parent="."]
+points = PackedVector2Array(-116, -52, 116, -52)
+width = 6.0
+default_color = Color(0.72, 0.78, 0.76, 1)
+
+[node name="RotorMast" type="Line2D" parent="."]
+points = PackedVector2Array(0, -44, 0, -58)
+width = 5.0
+default_color = Color(0.72, 0.78, 0.76, 1)
+
+[node name="Skids" type="Line2D" parent="."]
+points = PackedVector2Array(-72, 42, 72, 42)
+width = 5.0
+default_color = Color(0.6, 0.66, 0.64, 1)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/arena.tscn" id="2_arena"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/missions/mission_controller.gd" id="5_mission_controller"]
 [ext_resource type="PackedScene" path="res://scenes/interactables/mission_radio.tscn" id="6_mission_radio"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/mission_helicopter.tscn" id="7_mission_helicopter_scene"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -19,6 +20,9 @@ position = Vector2(240, 600)
 
 [node name="MissionRadio" parent="World" instance=ExtResource("6_mission_radio")]
 position = Vector2(360, 624)
+
+[node name="MissionHelicopter" parent="World" instance=ExtResource("7_mission_helicopter_scene")]
+position = Vector2(1440, 180)
 
 [node name="MissionController" type="Node" parent="."]
 script = ExtResource("5_mission_controller")

@@ -55,6 +55,14 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
 
 The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F near the physical radio activates the `destroy_helicopter` mission once, changes the objective to `OBJECTIVE: DESTROY THE HELICOPTER`, and removes the radio prompt. Helicopter combat, movement, health, destruction, rewards, and extraction remain later mission-slice work.
 
+### Mission Helicopter
+
+- The helicopter is hidden and inactive until the radio activates `destroy_helicopter`.
+- Once active, it patrols horizontally between authored world bounds at 120 pixels per second, initially moving left.
+- The helicopter has 300 health and accepts generic projectile `take_damage` calls from the existing rifle and shotgun projectiles.
+- At zero health it stops, becomes a gray disabled wreck, and completes the mission with the objective `HELICOPTER DESTROYED`.
+- Helicopter attacks, AI, explosion, loot, rewards, audio, and extraction remain deferred.
+
 ## Equipment Abilities
 
 ### Knee-Dash Legs

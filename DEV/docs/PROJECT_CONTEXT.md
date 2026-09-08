@@ -106,7 +106,9 @@ The remaining focused roadmap begins with Task 057, the first radio/helicopter m
 
 Task 057 adds the first radio mission activation foundation. A physical MissionRadio uses the existing F interaction selector, Main explicitly connects its typed activation request to MissionController, and the controller changes the objective from FIND THE RADIO to DESTROY THE HELICOPTER exactly once. The HUD renders the supplied objective, while helicopter combat, movement, health, destruction, rewards, and extraction remain deferred. Implementation commit `1fa31f926ee58934a2b8b10a30a2a9553b4aabc0` is published; Windows runtime validation remains pending.
 
-The next focused roadmap stage is Task 058: react to the active destroy_helicopter mission with the first helicopter mission slice.
+Task 058 adds the first mission helicopter combat slice. Activating `destroy_helicopter` reveals a 300-health horizontal patrol at 120 pixels per second; existing rifle and shotgun projectiles use the generic `take_damage` boundary. Zero health stops movement, disables living-enemy collision, applies a gray wreck presentation, completes the mission, hides the helicopter HUD, and changes the objective to HELICOPTER DESTROYED. Helicopter attacks, AI, explosion, loot, rewards, audio, and extraction remain deferred; Windows runtime validation remains pending.
+
+The next focused roadmap stage is Task 059: continue the mission slice with the next focused objective or helicopter presentation audit.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

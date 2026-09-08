@@ -14,6 +14,8 @@ extends CanvasLayer
 @onready var jetpack_heat_bar: ProgressBar = $JetpackHeatBar
 @onready var slide_status_label: Label = $SlideStatusLabel
 @onready var mission_objective_label: Label = $MissionObjectiveLabel
+@onready var helicopter_health_label: Label = $HelicopterHealthLabel
+@onready var helicopter_health_bar: ProgressBar = $HelicopterHealthBar
 var _is_reloading := false
 var _loaded_ammo := 0
 var _reserve_ammo := 0
@@ -43,6 +45,17 @@ var _slide_cooldown_remaining: float = 0.0
 
 func set_mission_objective(objective_text: String) -> void:
 	mission_objective_label.text = "OBJECTIVE: %s" % objective_text
+
+func set_helicopter_health(current_health: int, maximum_health: int) -> void:
+	helicopter_health_label.text = "HELICOPTER %d / %d" % [current_health, maximum_health]
+	helicopter_health_bar.max_value = maximum_health
+	helicopter_health_bar.value = current_health
+	helicopter_health_label.visible = true
+	helicopter_health_bar.visible = true
+
+func hide_helicopter_health() -> void:
+	helicopter_health_label.visible = false
+	helicopter_health_bar.visible = false
 
 func _ready() -> void:
 	set_process(true)

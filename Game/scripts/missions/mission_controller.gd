@@ -4,6 +4,7 @@ extends Node
 signal mission_state_changed(state: int, mission_id: String)
 signal objective_changed(objective_text: String)
 signal mission_activated(mission_id: String)
+signal mission_completed(mission_id: String)
 
 enum MissionState {
 	AVAILABLE,
@@ -14,6 +15,7 @@ enum MissionState {
 const DESTROY_HELICOPTER_ID: String = "destroy_helicopter"
 const FIND_RADIO_OBJECTIVE: String = "FIND THE RADIO"
 const DESTROY_HELICOPTER_OBJECTIVE: String = "DESTROY THE HELICOPTER"
+const HELICOPTER_DESTROYED_OBJECTIVE: String = "HELICOPTER DESTROYED"
 
 var _state: int = MissionState.AVAILABLE
 var _active_mission_id: String = ""
@@ -40,7 +42,10 @@ func complete_mission(mission_id: String) -> bool:
 	if _state != MissionState.ACTIVE or mission_id != _active_mission_id:
 		return false
 	_state = MissionState.COMPLETED
+	_objective_text = HELICOPTER_DESTROYED_OBJECTIVE
 	mission_state_changed.emit(_state, _active_mission_id)
+	objective_changed.emit(_objective_text)
+	mission_completed.emit(_active_mission_id)
 	return true
 
 func get_state() -> int:

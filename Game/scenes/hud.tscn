@@ -126,3 +126,24 @@ offset_right = 640.0
 offset_bottom = 444.0
 theme_override_font_sizes/font_size = 24
 text = "OBJECTIVE: FIND THE RADIO"
+
+[node name="HelicopterHealthLabel" type="Label" parent="."]
+visible = false
+offset_left = 680.0
+offset_top = 408.0
+offset_right = 1240.0
+offset_bottom = 444.0
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+text = "HELICOPTER 300 / 300"
+
+[node name="HelicopterHealthBar" type="ProgressBar" parent="."]
+visible = false
+offset_left = 680.0
+offset_top = 448.0
+offset_right = 1240.0
+offset_bottom = 464.0
+min_value = 0.0
+max_value = 300.0
+value = 300.0
+show_percentage = false

@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/abilities/hook_projectile.gd" id="1_hook_projectile"]
+
+[sub_resource type="RectangleShape2D" id="hook_shape"]
+size = Vector2(16, 10)
+
+[node name="HookProjectile" type="Area2D"]
+collision_layer = 8
+collision_mask = 5
+script = ExtResource("1_hook_projectile")
+
+[node name="Visual" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-8, -5, 4, -5, 8, 0, 4, 5, -8, 5, -3, 0)
+color = Color(1, 0.65, 0.12, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("hook_shape")

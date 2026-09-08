@@ -1,8 +1,17 @@
-[gd_resource type="Resource" script_class="RightArmAbilityDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="RightArmAbilityDefinition" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/equipment/right_arm_ability_definition.gd" id="1_ability"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/hook_projectile.tscn" id="2_projectile"]
 
 [resource]
 script = ExtResource("1_ability")
 ability_id = "hook"
 display_name = "HOOK"
+projectile_scene = ExtResource("2_projectile")
+projectile_speed = 1200.0
+maximum_range = 720.0
+pull_speed = 960.0
+stop_distance = 72.0
+maximum_pull_duration = 0.75
+stun_duration = 1.0
+cooldown = 3.0

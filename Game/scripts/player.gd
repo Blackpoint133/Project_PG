@@ -40,6 +40,7 @@ var facing_direction := 1
 @onready var leg_equipment_controller: LegEquipmentController = $LegEquipmentController
 @onready var left_arm_equipment_controller: LeftArmEquipmentController = $LeftArmEquipmentController
 @onready var right_arm_equipment_controller: RightArmEquipmentController = $RightArmEquipmentController
+@onready var hook_controller: HookController = $HookController
 @onready var knee_dash_controller: KneeDashController = $KneeDashController
 @onready var interaction_controller: InteractionController = $InteractionSensor
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -206,6 +207,8 @@ func _on_left_arm_ability_input_changed(_ability_definition: LeftArmAbilityDefin
 	shield_controller.set_input_pressed(is_pressed)
 
 func _on_right_arm_changed(definition: RightArmDefinition) -> void:
+	hook_controller.cancel_hook()
+	hook_controller.set_hook_origin(null)
 	for child: Node in right_arm_slot.get_children():
 		child.free()
 	if definition == null or definition.held_visual_scene == null:
@@ -216,10 +219,24 @@ func _on_right_arm_changed(definition: RightArmDefinition) -> void:
 		visual_node.free()
 		return
 	right_arm_slot.add_child(visual_transform)
+	var origin_node: Node = visual_transform.get_node_or_null(NodePath("HookOrigin"))
+	var installed_origin: Marker2D = origin_node as Marker2D
+	if installed_origin == null or installed_origin.get_parent() != visual_transform:
+		if definition.ability_definition != null and definition.ability_definition.ability_id == "hook":
+			push_error("Hook right-arm visual must have a direct Marker2D child named HookOrigin.")
+		return
+	hook_controller.set_hook_origin(installed_origin)
 
-func _on_right_arm_ability_requested(_ability_definition: RightArmAbilityDefinition) -> void:
-	# Hook runtime behavior is intentionally deferred to the next task.
-	return
+func _on_right_arm_ability_requested(ability_definition: RightArmAbilityDefinition) -> void:
+	if ability_definition == null or ability_definition.ability_id != "hook":
+		return
+	var hook_origin: Marker2D = hook_controller.get_hook_origin()
+	if hook_origin == null:
+		return
+	var hook_direction: Vector2 = get_global_mouse_position() - hook_origin.global_position
+	if hook_direction.length_squared() <= 1.0:
+		hook_direction = aim_pivot.global_transform.x
+	hook_controller.start_hook(ability_definition, hook_direction.normalized())
 
 func _on_legs_changed(definition: LegDefinition) -> void:
 	if definition == null or definition.ability_definition == null or definition.ability_definition.ability_id != "knee_dash":

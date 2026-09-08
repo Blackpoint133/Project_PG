@@ -25,6 +25,8 @@ var _shield_saturated: bool = false
 var _shield_cooldown_remaining: float = 0.0
 var _right_arm_name: String = "UNKNOWN"
 var _right_arm_ability_name: String = "NONE"
+var _right_arm_cooldown_remaining: float = 0.0
+var _hook_state: String = "idle"
 var _current_health: float = 100.0
 var _maximum_health: float = 100.0
 
@@ -49,6 +51,8 @@ func _ready() -> void:
 		var right_arm_ability: RightArmAbilityDefinition = player.right_arm_equipment_controller.current_ability_definition
 		_right_arm_name = "UNKNOWN" if right_arm_definition == null else right_arm_definition.display_name
 		_right_arm_ability_name = "NONE" if right_arm_ability == null else right_arm_ability.display_name
+		_right_arm_cooldown_remaining = player.right_arm_equipment_controller.current_instance.ability_cooldown_remaining if player.right_arm_equipment_controller.current_instance != null else 0.0
+		_hook_state = player.hook_controller.get_state()
 		_current_health = player.get_current_health()
 		_maximum_health = player.get_maximum_health()
 		_render_weapon_state()
@@ -71,6 +75,8 @@ func _ready() -> void:
 		player.left_arm_equipment_controller.left_arm_ability_changed.connect(_on_left_arm_ability_changed)
 		player.right_arm_equipment_controller.right_arm_changed.connect(_on_right_arm_changed)
 		player.right_arm_equipment_controller.right_arm_ability_changed.connect(_on_right_arm_ability_changed)
+		player.right_arm_equipment_controller.right_arm_ability_state_changed.connect(_on_right_arm_ability_state_changed)
+		player.hook_controller.hook_state_changed.connect(_on_hook_state_changed)
 		player.shield_controller.shield_state_changed.connect(_on_shield_state_changed)
 		player.player_damage_receiver.health_changed.connect(_on_health_changed)
 		player.knee_dash_controller.dash_started.connect(_on_dash_started)
@@ -135,7 +141,16 @@ func _render_health() -> void:
 	health_label.text = "HEALTH: %.0f / %.0f" % [_current_health, _maximum_health]
 
 func _render_right_arm_status() -> void:
-	var ability_name: String = "NONE" if _right_arm_ability_name == "NONE" else "%s READY" % _right_arm_ability_name
+	var ability_name: String = "NONE"
+	if _right_arm_ability_name != "NONE":
+		if _hook_state == "extending":
+			ability_name = "HOOK FIRING"
+		elif _hook_state == "pulling":
+			ability_name = "HOOK PULLING"
+		elif _right_arm_cooldown_remaining > 0.0:
+			ability_name = "HOOK %.1fs" % _right_arm_cooldown_remaining
+		else:
+			ability_name = "%s READY" % _right_arm_ability_name
 	right_arm_status_label.text = "RIGHT ARM: %s\nE: %s" % [_right_arm_name, ability_name]
 
 func _on_reload_started() -> void:
@@ -189,6 +204,14 @@ func _on_right_arm_changed(definition: RightArmDefinition) -> void:
 
 func _on_right_arm_ability_changed(ability_definition: RightArmAbilityDefinition) -> void:
 	_right_arm_ability_name = "NONE" if ability_definition == null else ability_definition.display_name
+	_render_right_arm_status()
+
+func _on_right_arm_ability_state_changed(_ability_definition: RightArmAbilityDefinition, cooldown_remaining: float) -> void:
+	_right_arm_cooldown_remaining = cooldown_remaining
+	_render_right_arm_status()
+
+func _on_hook_state_changed(state: String) -> void:
+	_hook_state = state
 	_render_right_arm_status()
 
 func _on_shield_state_changed(available: bool, active: bool, current_charge: float, maximum_charge: float, saturated: bool, cooldown_remaining: float) -> void:

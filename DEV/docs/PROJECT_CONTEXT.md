@@ -78,6 +78,8 @@ Task 041 adds a two-second per-instance kinetic Shield counter-blast cooldown. Q
 
 Task 042 adds the separate Right Arm equipment foundation. Standard Right Arm starts passively, while a physical Hook Right Arm pickup transfers exact `RightArmInstance` ownership through F. E emits the typed Hook ability request and updates the HUD; hook projectile, cable, pulling, damage, stun, and cooldown runtime remain deferred. Windows runtime validation is pending.
 
+Task 043 adds the Hook Right Arm runtime: full-direction E firing, a world-blocked hook projectile, a transform-safe cable, and a reusable target pull/stun boundary without hook damage. Hook cooldown is three seconds and belongs to the exact right-arm instance across swaps. Final hook presentation, audio, effects, and production enemy AI remain pending. Windows runtime validation is pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

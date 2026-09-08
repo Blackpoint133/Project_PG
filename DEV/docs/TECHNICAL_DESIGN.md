@@ -167,6 +167,8 @@ Task 037 added `ShieldController`; Task 039 reworks it as a kinetic absorber und
 
 Task 042 adds `RightArmDefinition`, `RightArmInstance`, `RightArmEquipmentController`, and `WorldRightArmPickup`. Standard Right Arm is installed dynamically at startup; Hook Right Arm is acquired with F and transfers exact instances back into the same pickup. E emits a typed Hook ability request, while projectile, cable, pulling, damage, stun, and cooldown behavior remain deferred.
 
+Task 043 adds `HookController` and a configured `HookProjectile`. E fires in the full mouse direction, the projectile uses continuous segment collision against world and enemy layers, and a Line2D cable converts global endpoints into the controller's local space. Hook-compatible living targets expose pull and stun methods; they move as CharacterBody2D instances toward a 72-pixel stop distance with world collision and no hook damage. The three-second cooldown is stored on the exact `RightArmInstance` and survives swaps.
+
 Player input routes fire and reload actions to the `WeaponController`; cadence, ammunition, reloading, and projectile behavior remain outside `player.gd` and arm visuals. Collision uses logical layers with integer bit values: world 1/1, player 2/1, targets 3/4, and player projectiles 4/8 with mask 5 detecting world and targets. Target dummies use logical enemy layer 3 (integer collision layer 4) with collision mask 0; living targets block Player CharacterBody2D movement, while defeated targets may become passable after clearing enemy layer 3.
 
 ## Signals

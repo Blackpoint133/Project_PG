@@ -61,7 +61,7 @@ Hook damage remains zero. Hook tuning, projectile behavior, cooldown, HUD, input
 
 ## Commit and push results
 
-To be recorded after the focused validation and publication steps.
+Implementation commit: `34fb1ddd1329dd7207a72b3a98ae5bb31fceef62` (`fix: correct hook pull collision`). The commit was pushed normally to `origin/main`; remote verification confirmed the published commit and a clean working tree. Godot runtime validation remains pending because the Godot executable is unavailable in this environment.
 
 ## Recommended next step
 

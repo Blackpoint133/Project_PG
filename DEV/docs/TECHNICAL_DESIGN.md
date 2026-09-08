@@ -142,6 +142,8 @@ Task 059 replaces the permanent helicopter wreck with a deterministic 0.4-second
 
 Task 060 makes the landed WorldLootCase a one-shot F interactable. Main connects its opened signal, assigns each existing pickup definition before adding four typed pickup scenes to World, launches them with a deterministic fan, and then requests the MissionController transition to `COLLECT THE EQUIPMENT`. The case owns only opening presentation and its interaction latch; it does not own mission state or reward construction. Reward collection tracking and final completion remain deferred.
 
+Task 061 adds one-shot `pickup_completed` signals to the four existing pickup classes. Each signal is emitted only after the Player returns a successful exact-instance transfer, so replacement pickups cannot report the same reward twice. Main retains and connects only the four exact nodes created for the loot case; unrelated arena pickups are never connected. MissionController tracks the stable reward IDs `shotgun`, `shield_left_arm`, `hook_right_arm`, and `knee_dash_legs`, updates collection progress, and changes the objective to `EQUIPMENT COLLECTED` after all four transfers.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

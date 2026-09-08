@@ -68,13 +68,14 @@ The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F n
 - When the mission helicopter reaches zero health, it stops and produces a short restrained placeholder explosion at its destruction point.
 - Exactly one closed physical loot case is ejected from that point, falls under gravity, and settles on world geometry.
 - After the case lands, the objective becomes `OPEN THE LOOT CASE`.
-- The case is intentionally not interactive until the next focused mission task; it has no F prompt yet.
+- The landed case can be opened once with F and then becomes a stable open case without another prompt.
 
 ### Loot Case Rewards
 
 - After landing, the closed case shows `F: OPEN LOOT CASE` and can be opened once.
 - Opening changes the objective to `COLLECT THE EQUIPMENT` and physically ejects exactly four normal pickups: Shotgun, Shield Left Arm, Hook Right Arm, and Knee-Dash Legs.
-- Reward collection tracking, case completion, extraction, and final reward presentation remain deferred.
+- Only those four exact reward pickup nodes count toward collection. The objective shows collected progress and becomes `EQUIPMENT COLLECTED` after all four are successfully transferred to Player.
+- Reward tracking does not implement extraction or a final combat encounter.
 
 ## Equipment Abilities
 

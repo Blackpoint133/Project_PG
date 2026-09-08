@@ -112,7 +112,7 @@ Task 059 adds deterministic helicopter destruction presentation and a physical c
 
 Task 060 makes the landed loot case openable once through F. Main physically ejects exactly four existing normal pickups with their authored definitions assigned before `add_child`: Shotgun, Shield Left Arm, Hook Right Arm, and Knee-Dash Legs. After successful reward creation, the objective becomes COLLECT THE EQUIPMENT. Reward collection tracking and final mission completion remain deferred. Implementation commit `af50959a15b01334f68b441d908eab6c8f64eedd` is published; Windows runtime validation remains pending.
 
-The next focused roadmap stage is Task 061: track equipment reward collection and complete the reward objective.
+Task 061 tracks successful collection of the four exact loot-case pickup nodes. Pickup classes emit one-shot completion signals only after Player returns a successful transfer; Main connects only those retained reward nodes and forwards stable reward IDs to MissionController. The objective reports progress and becomes `EQUIPMENT COLLECTED` after all four rewards are equipped. Implementation commit `102e1f9553ad6e0807eb1111909494d79fa525f1` is published; Windows runtime validation remains pending.
 
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 

@@ -66,7 +66,7 @@ Run the Windows runtime checklist with grounded and airborne world anchors, incl
 
 ## Commit and push results
 
-The implementation commit and its normal push will be recorded here after publication. The report-only publication update will record the verified implementation hash, remote result, HEAD/origin comparison, and working-tree state.
+Implementation commit: `2f0ddfa0847d87d645f58187967b58e3e984760f` (`fix: preserve world grapple momentum`). The commit was pushed normally to `origin/main` and remote verification passed. After the implementation push, `HEAD` and `origin/main` both matched `2f0ddfa0847d87d645f58187967b58e3e984760f`, and the working tree was clean. This report-only update records that publication result.
 
 ## Windows runtime checklist
 

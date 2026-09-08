@@ -81,7 +81,7 @@ Run the Windows runtime checklist and tune slide feel only after confirming coll
 
 ## Commit and push results
 
-The implementation and publication commit hashes, push results, final HEAD/origin comparison, and working-tree state will be recorded here after publication.
+Implementation commit: `5ccde38ae159478b41504ef27db0e7c27e68be7f` (`feat: add grounded movement slide`). The implementation commit was pushed normally to `origin/main` and verified remotely. The publication report update is committed separately as `docs: record slide movement publication`; its final hash and verification are recorded by the repository history after that commit is pushed. The final expected state is `HEAD == origin/main` with a clean working tree.
 
 ## Windows runtime checklist
 

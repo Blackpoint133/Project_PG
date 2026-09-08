@@ -86,7 +86,7 @@ This task intentionally does not implement a hook projectile, cable, collision o
 
 ## Commit and push results
 
-Commit and remote verification are recorded after validation in the final task handoff.
+Implementation commit: `0f4552062e944d8fc9d818db9a1948c9a5f91098` (`feat: add right arm equipment foundation`). The commit was pushed normally to `origin/main`; remote verification confirmed `origin/main` matched this hash and the working tree was clean at handoff.
 
 ## Recommended next step
 

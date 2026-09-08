@@ -7,7 +7,7 @@ signal mission_activated(mission_id: String)
 signal mission_completed(mission_id: String)
 signal loot_case_ready(mission_id: String)
 signal loot_case_opened(mission_id: String)
-signal reward_collected(reward_id: String, collected_count: int, required_count: int)
+signal reward_collected(reward_id: StringName, collected_count: int, required_count: int)
 signal reward_collection_completed(mission_id: String)
 
 enum MissionState {
@@ -23,10 +23,10 @@ const HELICOPTER_DESTROYED_OBJECTIVE: String = "HELICOPTER DESTROYED"
 const OPEN_LOOT_CASE_OBJECTIVE: String = "OPEN THE LOOT CASE"
 const COLLECT_EQUIPMENT_OBJECTIVE: String = "COLLECT THE EQUIPMENT"
 const EQUIPMENT_COLLECTED_OBJECTIVE: String = "EQUIPMENT COLLECTED"
-const SHOTGUN_REWARD_ID: String = "shotgun"
-const SHIELD_LEFT_ARM_REWARD_ID: String = "shield_left_arm"
-const HOOK_RIGHT_ARM_REWARD_ID: String = "hook_right_arm"
-const KNEE_DASH_LEGS_REWARD_ID: String = "knee_dash_legs"
+const SHOTGUN_REWARD_ID: StringName = &"shotgun"
+const SHIELD_LEFT_ARM_REWARD_ID: StringName = &"shield_left_arm"
+const HOOK_RIGHT_ARM_REWARD_ID: StringName = &"hook_right_arm"
+const KNEE_DASH_LEGS_REWARD_ID: StringName = &"knee_dash_legs"
 const REQUIRED_REWARD_COUNT: int = 4
 
 var _state: int = MissionState.AVAILABLE
@@ -80,13 +80,13 @@ func mark_loot_case_opened(mission_id: String) -> bool:
 	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or not _loot_case_ready or _loot_case_opened:
 		return false
 	_loot_case_opened = true
-	_objective_text = COLLECT_EQUIPMENT_OBJECTIVE
+	_objective_text = _format_reward_progress(0)
 	objective_changed.emit(_objective_text)
 	loot_case_opened.emit(_active_mission_id)
 	return true
 
-func register_reward_collected(reward_id: String) -> bool:
-	if _state != MissionState.COMPLETED or _active_mission_id != DESTROY_HELICOPTER_ID or not _loot_case_opened:
+func register_reward_collected(mission_id: String, reward_id: StringName) -> bool:
+	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or mission_id != DESTROY_HELICOPTER_ID or not _loot_case_opened:
 		return false
 	if not _is_valid_reward_id(reward_id) or _has_collected_reward(reward_id):
 		return false
@@ -98,7 +98,7 @@ func register_reward_collected(reward_id: String) -> bool:
 		objective_changed.emit(_objective_text)
 		reward_collection_completed.emit(_active_mission_id)
 	else:
-		_objective_text = "%s (%d/%d)" % [COLLECT_EQUIPMENT_OBJECTIVE, _collected_reward_count, REQUIRED_REWARD_COUNT]
+		_objective_text = _format_reward_progress(_collected_reward_count)
 		objective_changed.emit(_objective_text)
 	return true
 
@@ -114,13 +114,13 @@ func get_objective_text() -> String:
 func get_collected_reward_count() -> int:
 	return _collected_reward_count
 
-func has_collected_reward(reward_id: String) -> bool:
+func has_collected_reward(reward_id: StringName) -> bool:
 	return _has_collected_reward(reward_id)
 
-func _is_valid_reward_id(reward_id: String) -> bool:
+func _is_valid_reward_id(reward_id: StringName) -> bool:
 	return reward_id == SHOTGUN_REWARD_ID or reward_id == SHIELD_LEFT_ARM_REWARD_ID or reward_id == HOOK_RIGHT_ARM_REWARD_ID or reward_id == KNEE_DASH_LEGS_REWARD_ID
 
-func _has_collected_reward(reward_id: String) -> bool:
+func _has_collected_reward(reward_id: StringName) -> bool:
 	match reward_id:
 		SHOTGUN_REWARD_ID:
 			return _shotgun_reward_collected
@@ -132,7 +132,7 @@ func _has_collected_reward(reward_id: String) -> bool:
 			return _knee_dash_legs_reward_collected
 	return false
 
-func _set_reward_collected(reward_id: String) -> void:
+func _set_reward_collected(reward_id: StringName) -> void:
 	match reward_id:
 		SHOTGUN_REWARD_ID:
 			_shotgun_reward_collected = true
@@ -142,3 +142,6 @@ func _set_reward_collected(reward_id: String) -> void:
 			_hook_right_arm_reward_collected = true
 		KNEE_DASH_LEGS_REWARD_ID:
 			_knee_dash_legs_reward_collected = true
+
+func _format_reward_progress(collected_count: int) -> String:
+	return "%s (%d/%d)" % [COLLECT_EQUIPMENT_OBJECTIVE, collected_count, REQUIRED_REWARD_COUNT]

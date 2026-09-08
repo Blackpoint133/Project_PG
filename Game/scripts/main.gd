@@ -135,7 +135,7 @@ func _on_hook_reward_collected(actor: Node) -> void:
 func _on_legs_reward_collected(actor: Node) -> void:
 	_forward_reward_collection(actor, MissionController.KNEE_DASH_LEGS_REWARD_ID)
 
-func _forward_reward_collection(actor: Node, reward_id: String) -> void:
+func _forward_reward_collection(actor: Node, reward_id: StringName) -> void:
 	if actor != player:
 		return
-	mission_controller.register_reward_collected(reward_id)
+	mission_controller.register_reward_collected(MissionController.DESTROY_HELICOPTER_ID, reward_id)

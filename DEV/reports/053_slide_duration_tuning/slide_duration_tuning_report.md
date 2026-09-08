@@ -55,4 +55,4 @@ Run the Windows runtime checklist and confirm the longer slide integrates with c
 
 ## Commit and push results
 
-Implementation commit and push result: to be recorded after the implementation is published. Final documentation commit and push result: to be recorded after the publication update is published.
+Implementation commit: `adb155ef65326fc067de0afa5bd8f5021e11db9b` (`tune: extend slide duration`). It was pushed normally to `origin/main`; after that push, local HEAD and `origin/main` matched and the working tree was clean. The final documentation commit and push result will be recorded by the publication commit below.

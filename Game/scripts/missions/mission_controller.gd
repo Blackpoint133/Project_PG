@@ -6,6 +6,7 @@ signal objective_changed(objective_text: String)
 signal mission_activated(mission_id: String)
 signal mission_completed(mission_id: String)
 signal loot_case_ready(mission_id: String)
+signal loot_case_opened(mission_id: String)
 
 enum MissionState {
 	AVAILABLE,
@@ -18,11 +19,13 @@ const FIND_RADIO_OBJECTIVE: String = "FIND THE RADIO"
 const DESTROY_HELICOPTER_OBJECTIVE: String = "DESTROY THE HELICOPTER"
 const HELICOPTER_DESTROYED_OBJECTIVE: String = "HELICOPTER DESTROYED"
 const OPEN_LOOT_CASE_OBJECTIVE: String = "OPEN THE LOOT CASE"
+const COLLECT_EQUIPMENT_OBJECTIVE: String = "COLLECT THE EQUIPMENT"
 
 var _state: int = MissionState.AVAILABLE
 var _active_mission_id: String = ""
 var _objective_text: String = FIND_RADIO_OBJECTIVE
 var _loot_case_ready: bool = false
+var _loot_case_opened: bool = false
 
 func _ready() -> void:
 	mission_state_changed.emit(_state, _active_mission_id)
@@ -58,6 +61,15 @@ func mark_loot_case_ready(mission_id: String) -> bool:
 	_objective_text = OPEN_LOOT_CASE_OBJECTIVE
 	objective_changed.emit(_objective_text)
 	loot_case_ready.emit(_active_mission_id)
+	return true
+
+func mark_loot_case_opened(mission_id: String) -> bool:
+	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or not _loot_case_ready or _loot_case_opened:
+		return false
+	_loot_case_opened = true
+	_objective_text = COLLECT_EQUIPMENT_OBJECTIVE
+	objective_changed.emit(_objective_text)
+	loot_case_opened.emit(_active_mission_id)
 	return true
 
 func get_state() -> int:

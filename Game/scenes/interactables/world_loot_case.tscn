@@ -14,16 +14,38 @@ collision_mask = 1
 position = Vector2(0, -28)
 shape = SubResource("loot_case_shape")
 
-[node name="Body" type="Polygon2D" parent="."]
+[node name="ClosedVisuals" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="ClosedVisuals"]
 polygon = PackedVector2Array(-40, 0, -40, -48, -32, -56, 32, -56, 40, -48, 40, 0)
 color = Color(0.16, 0.2, 0.22, 1)
 
-[node name="Corners" type="Line2D" parent="."]
+[node name="Corners" type="Line2D" parent="ClosedVisuals"]
 points = PackedVector2Array(-34, -48, -34, -8, 34, -8, 34, -48)
 width = 5.0
 default_color = Color(0.62, 0.67, 0.64, 1)
 
-[node name="Accent" type="Line2D" parent="."]
+[node name="Accent" type="Line2D" parent="ClosedVisuals"]
 points = PackedVector2Array(-28, -28, 28, -28)
 width = 6.0
+default_color = Color(0.85, 0.68, 0.16, 1)
+
+[node name="OpenVisuals" type="Node2D" parent="."]
+visible = false
+
+[node name="LowerBody" type="Polygon2D" parent="OpenVisuals"]
+polygon = PackedVector2Array(-40, 0, -40, -24, -32, -32, 32, -32, 40, -24, 40, 0)
+color = Color(0.16, 0.2, 0.22, 1)
+
+[node name="InnerAccent" type="Polygon2D" parent="OpenVisuals"]
+polygon = PackedVector2Array(-28, -28, 28, -28, 22, -12, -22, -12)
+color = Color(0.2, 0.78, 0.72, 1)
+
+[node name="RaisedLid" type="Polygon2D" parent="OpenVisuals"]
+polygon = PackedVector2Array(-40, -48, -32, -56, 32, -56, 40, -48, 32, -40, -32, -40)
+color = Color(0.28, 0.34, 0.35, 1)
+
+[node name="OpenCorners" type="Line2D" parent="OpenVisuals"]
+points = PackedVector2Array(-34, -48, -34, -40, 34, -40, 34, -48)
+width = 5.0
 default_color = Color(0.85, 0.68, 0.16, 1)

@@ -126,6 +126,8 @@ Task 066 corrects the extraction audit findings. The centered 160x208 collision 
 
 Task 067 corrects the extraction overlap timing boundary. Because `SceneTree.physics_frame` is emitted before `_physics_process` and Area2D overlap lists update during the physics step, the deferred existing-body fallback now awaits two successive physics frames before querying `get_overlapping_bodies()`. `body_entered` remains the normal authoritative path, while the fallback handles an already-overlapping Player and revalidates completion state so duplicate requests remain harmless. Windows runtime validation remains pending.
 
+Task 068 fixes two Windows-observed runtime diagnostics. Main now defers typed loot-case construction and collision-bearing World insertion after helicopter destruction, while preserving synchronous mission completion, HUD hiding, the exact drop position and velocity, and the one-case guard. Player now uses `const CROUCH_VISUAL_OFFSET: float = 32.0`, removing the incompatible int/float ternary warning without changing crouch visuals, collision, movement, or Slide behavior. Implementation commit `db85e187859cb6f70bb419952cffa3f5abd452a2` is published; Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

@@ -37,6 +37,8 @@ The payload contains the global destruction position and deterministic ejection 
 
 Main owns the preloaded `WorldLootCase` PackedScene and guards `_loot_case_spawned`. It instantiates exactly one case, adds it under `World`, places it at the payload position plus offset, connects `landed` before launch, and calls `launch`. The case owns only gravity-driven falling, capped downward speed `1200.0`, grounded horizontal friction `1000.0`, and a one-shot landed latch. It uses the project gravity and world collision through CharacterBody2D movement.
 
+Task 068 corrected the later Windows physics-query diagnostic by moving typed loot-case construction, connection, insertion, placement, and launch into one private deferred Main helper. Helicopter destruction still completes the mission and hides the HUD synchronously, while the one-case latch is set before scheduling the helper. The drop position, spawn offset, ejection velocity, landing, opening, and reward behavior remain unchanged.
+
 ## Collision contract
 
 WorldLootCase uses interactable layer 6 / integer layer 32 and world mask 1. It has no `get_interaction_prompt` or `interact` methods, so InteractionController ignores it safely. Player collision mask 5 does not include the interactable layer, so the case does not block Player movement.

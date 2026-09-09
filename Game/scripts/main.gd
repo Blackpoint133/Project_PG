@@ -70,13 +70,22 @@ func _on_helicopter_destroyed(drop_position: Vector2, ejection_velocity: Vector2
 	_loot_case_spawned = true
 	mission_controller.complete_mission(MissionController.DESTROY_HELICOPTER_ID)
 	hud.hide_helicopter_health()
-	_loot_case = WORLD_LOOT_CASE_SCENE.instantiate() as WorldLootCase
-	if _loot_case == null:
+	call_deferred("_spawn_loot_case_deferred", drop_position, ejection_velocity)
+
+func _spawn_loot_case_deferred(drop_position: Vector2, ejection_velocity: Vector2) -> void:
+	if not _loot_case_spawned or _loot_case != null:
 		return
-	$World.add_child(_loot_case)
-	_loot_case.global_position = drop_position + LOOT_CASE_SPAWN_OFFSET
+	var raw_loot_case: Node = WORLD_LOOT_CASE_SCENE.instantiate()
+	var loot_case: WorldLootCase = raw_loot_case as WorldLootCase
+	if loot_case == null:
+		raw_loot_case.free()
+		push_error("Loot case scene does not contain a WorldLootCase root.")
+		return
+	_loot_case = loot_case
 	_loot_case.landed.connect(_on_loot_case_landed)
 	_loot_case.opened.connect(_on_loot_case_opened)
+	$World.add_child(_loot_case)
+	_loot_case.global_position = drop_position + LOOT_CASE_SPAWN_OFFSET
 	_loot_case.launch(ejection_velocity)
 
 func _on_loot_case_landed() -> void:

@@ -90,6 +90,8 @@ The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F n
 
 The current foundation provides physical Standard Legs and CYBERLANCERS equipment. CYBERLANCERS uses the supplied 64x64 pixel-art player visual while preserving the internal Knee-Dash identity, C interaction boundary, directional dash, contact damage, capped knockback, Bleeding, and cooldown metadata. Dedicated folded or ground-pickup artwork remains deferred.
 
+CYBERLANCERS also provides an optional 32x32 knee-strike icon through the generic leg definition. World pickups display that icon without a frame, while the HUD supplies its own compact framed presentation when the equipment is equipped. Standard Legs retain their existing fallback visual when no icon is defined.
+
 ### Left-Arm Equipment
 
 - Standard Left Arm is the passive starting equipment.

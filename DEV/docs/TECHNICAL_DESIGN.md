@@ -158,6 +158,8 @@ Task 069 integrates the supplied Cyberlancers player visual. `knee_dash_legs.tre
 
 Task 070 corrects the shared leg presentation boundary: `placeholder_legs.gd` types both visual references as `CanvasItem`, allowing Standard Legs `ColorRect` nodes and Cyberlancers `Sprite2D` nodes to use the same visibility-only crouch API. Node paths and `set_crouching(crouching: bool)` behavior remain unchanged; no gameplay or presentation tuning changed.
 
+Task 071 adds the generic optional `LegDefinition.icon_texture` contract. `WorldLegPickup` renders a defined icon at native size with nearest filtering and no frame, and clears the held-visual fallback while that icon is active. Empty icon definitions restore the existing held-scene fallback. HUD owns a separate framed `TextureRect` presentation and refreshes it from the equipped definition during initialization and leg-change signals; equipment state remains owned by the existing leg controller and exact instances.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

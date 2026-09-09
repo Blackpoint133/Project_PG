@@ -29,7 +29,7 @@ The root remains at `Vector2(2440, 520)`. The `Vector2(160, 208)` collision shap
 
 ## Corrected overlap timing
 
-`activate()` still uses deferred monitoring. The existing-body check is now deferred and awaits `get_tree().physics_frame` before reading overlap data. It validates active, completed, and monitoring state after the await, then calls the same `_request_extraction` boundary used by `body_entered`. A normal entry or an already-overlapping exact Player therefore follows the same Main validation and MissionController completion path; later duplicate checks are harmless.
+`activate()` still uses deferred monitoring. The existing-body check is deferred and now awaits two successive `get_tree().physics_frame` signals before reading overlap data. `SceneTree.physics_frame` occurs before `_physics_process`, while Area2D overlap state updates during the physics step; the second await therefore places the query after a complete update opportunity. The coroutine validates active, completed, and monitoring state after both awaits, then calls the same `_request_extraction` boundary used by `body_entered`. A normal entry or an already-overlapping exact Player therefore follows the same Main validation and MissionController completion path; later duplicate checks are harmless.
 
 ## Availability and completion state
 
@@ -44,7 +44,7 @@ The extraction position, objective strings, collision layer and mask, cyan/green
 - Confirmed branch `main`, clean working tree, successful `git fetch origin`, and required HEAD/origin base.
 - Reviewed all required extraction, Main, MissionController, scene, arena, Player, documentation, and historical report files before editing.
 - Verified the geometry arithmetic and corrected local bounds.
-- Verified deferred monitoring plus a complete `physics_frame` await before overlap querying.
+- Verified deferred monitoring plus two successive `physics_frame` awaits before overlap querying, with state validation after the delayed boundary.
 - Verified body-entered and existing-overlap paths share `_request_extraction`.
 - Verified availability is cleared in Main and MissionController before/at completion, while completed state remains latched.
 - Ran `git diff --check` and staged checks.

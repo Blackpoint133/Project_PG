@@ -124,6 +124,8 @@ Task 065 adds the reusable MissionExtractionZone at the far-right arena position
 
 Task 066 corrects the extraction audit findings. The centered 160x208 collision rectangle at `Vector2(2440, 520)` now covers world Y 416 through 624, with field, outline, beacon, and label geometry aligned to the corrected bounds. Existing-body evaluation waits through a complete physics-frame boundary after deferred monitoring activation and converges with `body_entered` on the same request path. Successful extraction clears availability in Main and MissionController while retaining completed state and the one-shot `MISSION COMPLETE` transition. Implementation commit `610087f0850951a13cfcd2979bac1a8b4ec5bf00` is published; Windows runtime validation remains pending.
 
+Task 067 corrects the extraction overlap timing boundary. Because `SceneTree.physics_frame` is emitted before `_physics_process` and Area2D overlap lists update during the physics step, the deferred existing-body fallback now awaits two successive physics frames before querying `get_overlapping_bodies()`. `body_entered` remains the normal authoritative path, while the fallback handles an already-overlapping Player and revalidates completion state so duplicate requests remain harmless. Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

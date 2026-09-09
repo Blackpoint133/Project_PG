@@ -1,0 +1,66 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/mission_mercenary.gd" id="1_mercenary"]
+[ext_resource type="Script" path="res://scripts/status_effects/bleeding_status_controller.gd" id="2_bleeding"]
+[ext_resource type="Script" path="res://scripts/abilities/hostile_projectile_emitter.gd" id="3_emitter"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/enemy_projectile.tscn" id="4_projectile"]
+
+[sub_resource type="RectangleShape2D" id="mercenary_shape"]
+size = Vector2(40, 88)
+
+[node name="MissionMercenary" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_mercenary")
+max_health = 80
+starts_active = false
+ranged_attack_enabled = true
+attack_interval = 1.5
+projectile_speed = 720.0
+projectile_damage = 10.0
+projectile_lifetime = 4.0
+base_visual_color = Color(0.35, 0.55, 0.72, 1)
+
+[node name="Visual" type="ColorRect" parent="."]
+offset_left = -20.0
+offset_top = -88.0
+offset_right = 20.0
+offset_bottom = 0.0
+color = Color(0.35, 0.55, 0.72, 1)
+
+[node name="ArmorPlate" type="ColorRect" parent="Visual"]
+offset_left = 6.0
+offset_top = 12.0
+offset_right = 16.0
+offset_bottom = 70.0
+color = Color(0.12, 0.2, 0.28, 1)
+
+[node name="Head" type="ColorRect" parent="Visual"]
+offset_left = -12.0
+offset_top = -10.0
+offset_right = 12.0
+offset_bottom = 10.0
+color = Color(0.55, 0.65, 0.72, 1)
+
+[node name="BleedingStatusController" type="Node" parent="."]
+script = ExtResource("2_bleeding")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -44)
+shape = SubResource("mercenary_shape")
+
+[node name="HostileProjectileEmitter" type="Node2D" parent="."]
+position = Vector2(-24, -48)
+script = ExtResource("3_emitter")
+projectile_scene = ExtResource("4_projectile")
+interval = 1.5
+projectile_speed = 720.0
+projectile_damage = 10.0
+projectile_lifetime = 4.0
+
+[node name="Muzzle" type="ColorRect" parent="HostileProjectileEmitter"]
+offset_left = -4.0
+offset_top = -3.0
+offset_right = 8.0
+offset_bottom = 3.0
+color = Color(1, 0.35, 0.2, 1)

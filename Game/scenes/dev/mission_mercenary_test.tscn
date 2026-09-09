@@ -1,0 +1,93 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/mission_mercenary.tscn" id="3_mercenary"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_weapon_pickup.tscn" id="4_weapon_pickup"]
+[ext_resource type="Resource" path="res://resources/weapons/shotgun.tres" id="5_shotgun"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_left_arm_pickup.tscn" id="6_left_arm_pickup"]
+[ext_resource type="Resource" path="res://resources/equipment/shield_left_arm.tres" id="7_shield"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_right_arm_pickup.tscn" id="8_right_arm_pickup"]
+[ext_resource type="Resource" path="res://resources/equipment/hook_right_arm.tres" id="9_hook"]
+[ext_resource type="PackedScene" path="res://scenes/equipment/world_leg_pickup.tscn" id="10_leg_pickup"]
+[ext_resource type="Resource" path="res://resources/equipment/knee_dash_legs.tres" id="11_legs"]
+
+[sub_resource type="RectangleShape2D" id="floor_shape"]
+size = Vector2(2560, 96)
+
+[sub_resource type="RectangleShape2D" id="wall_shape"]
+size = Vector2(48, 720)
+
+[node name="MissionMercenaryTest" type="Node2D"]
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(1280, 672)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("floor_shape")
+
+[node name="FloorVisual" type="ColorRect" parent="Floor"]
+offset_left = -1280.0
+offset_top = -48.0
+offset_right = 1280.0
+offset_bottom = 48.0
+color = Color(0.08, 0.13, 0.16, 1)
+
+[node name="LeftWall" type="StaticBody2D" parent="."]
+position = Vector2(-24, 336)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
+shape = SubResource("wall_shape")
+
+[node name="RightWall" type="StaticBody2D" parent="."]
+position = Vector2(2584, 336)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
+shape = SubResource("wall_shape")
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(240, 624)
+
+[node name="RangedMercenary" parent="." instance=ExtResource("3_mercenary")]
+position = Vector2(920, 624)
+starts_active = true
+max_health = 80
+ranged_attack_enabled = true
+attack_interval = 1.5
+projectile_speed = 720.0
+projectile_damage = 10.0
+projectile_lifetime = 4.0
+base_visual_color = Color(0.35, 0.55, 0.72, 1)
+
+[node name="HeavyMercenary" parent="." instance=ExtResource("3_mercenary")]
+position = Vector2(1320, 624)
+starts_active = true
+max_health = 150
+ranged_attack_enabled = false
+base_visual_color = Color(0.72, 0.5, 0.3, 1)
+
+[node name="ShotgunPickup" parent="." instance=ExtResource("4_weapon_pickup")]
+position = Vector2(420, 624)
+weapon_definition = ExtResource("5_shotgun")
+
+[node name="ShieldLeftArmPickup" parent="." instance=ExtResource("6_left_arm_pickup")]
+position = Vector2(560, 624)
+left_arm_definition = ExtResource("7_shield")
+
+[node name="HookRightArmPickup" parent="." instance=ExtResource("8_right_arm_pickup")]
+position = Vector2(700, 624)
+right_arm_definition = ExtResource("9_hook")
+
+[node name="KneeDashLegsPickup" parent="." instance=ExtResource("10_leg_pickup")]
+position = Vector2(840, 624)
+leg_definition = ExtResource("11_legs")
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 480.0
+offset_right = 620.0
+offset_bottom = 580.0
+theme_override_font_sizes/font_size = 22
+text = "MISSION MERCENARY TEST\nEquip the four items and test every combat contract.\nThe blue mercenary fires; the orange heavy mercenary does not."
+
+[node name="HUD" parent="." instance=ExtResource("2_hud")]

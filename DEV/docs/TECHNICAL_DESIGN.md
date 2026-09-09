@@ -77,7 +77,7 @@ Player (CharacterBody2D)
 `-- Camera2D
 ```
 
-Each placeholder module is a separate scene instance and can later be replaced without changing player movement code. Legs and jetpack remain outside `AimPivot`; arms and weapon follow it.
+Each player visual module is a separate scene instance and can later be replaced without changing player movement code. `Standard Legs` retains its placeholder scene, while the equipped Knee-Dash definition now presents as `CYBERLANCERS` through a 64x64 nearest-filtered sprite scene. Legs and jetpack remain outside `AimPivot`; arms and weapon follow it.
 
 The current jetpack model authorizes flight only from a grounded jump, requires a held jump input while airborne, clears authorization on landing, and smoothly approaches a controlled negative rise velocity. The HUD and state reporting use the actual jetpack-active result rather than raw input.
 
@@ -153,6 +153,8 @@ Task 064 composes exactly three inactive MissionMercenary instances under Main/W
 Task 065 adds a scene-owned `MissionExtractionZone` at `Vector2(2440, 520)`. The centered `Vector2(160, 208)` Area2D rectangle covers world Y 416 through 624; its field, outline, beacon, and label use matching local geometry without extending below the arena floor. The Area2D uses collision layer 0 and Player mask 2, remains hidden and non-solid until the exact three-enemy encounter completes, and enables monitoring with deferred collision-safe changes. Main validates the exact Player and forwards the zone signal to MissionController; Task 067's existing-body fallback now waits through two successive `SceneTree.physics_frame` signals because the signal precedes `_physics_process` and Area2D overlap state updates during the physics step. MissionController guards one-shot availability and completion, clearing availability before changing the objective from `REACH THE EXTRACTION` to `MISSION COMPLETE` without emitting `mission_completed` again.
 
 Task 068 applies two runtime safety fixes observed during Windows validation. Main now keeps helicopter destruction completion and HUD hiding synchronous but defers typed WorldLootCase construction, signal wiring, scene insertion, placement, and launch through one private helper, avoiding collision-bearing `add_child` during physics query flushing while preserving the exact drop payload and one-case latch. Player now declares `CROUCH_VISUAL_OFFSET` as `float` with value `32.0`, keeping the explicitly typed crouch ternary compatible without changing visual or collision behavior. Windows runtime validation remains pending.
+
+Task 069 integrates the supplied Cyberlancers player visual. `knee_dash_legs.tres` now displays `CYBERLANCERS` and references `cyberlancers_legs.tscn`, which renders the native 64x64 runtime PNG with nearest-neighbor filtering, integer floor-aligned positions, parent-driven horizontal mirroring, and the existing `set_crouching(crouching: bool)` API. Standard Legs, Knee-Dash identifiers and gameplay, pickup architecture, and all movement/combat behavior remain unchanged. DEV source-art references are not used by runtime scenes; dedicated ground-pickup artwork remains deferred. Windows runtime validation remains pending.
 
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 

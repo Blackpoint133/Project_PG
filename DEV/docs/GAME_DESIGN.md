@@ -47,7 +47,7 @@ Weapon ownership uses exactly two physical weapon slots. Slot 1 starts with the 
    - shotgun;
    - shield left arm;
    - hook right arm;
-   - knee-dash legs.
+   - Cyberlancers legs.
 9. Each item is independently collectible and occupies only its matching equipment slot.
 10. Equipping a replacement drops the previously equipped item onto the ground so it can be equipped again.
 11. The next level section lets the player test the new equipment.
@@ -79,7 +79,7 @@ The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F n
 
 ## Equipment Abilities
 
-### Knee-Dash Legs
+### Cyberlancers Legs
 
 - Activated with C.
 - Launch toward the mouse cursor, including left, right, and diagonal directions.
@@ -88,7 +88,7 @@ The radio foundation presents `OBJECTIVE: FIND THE RADIO` before activation. F n
 - Knock contacted enemies backward.
 - A successful contact applies four delayed Bleeding ticks of 4 damage at one-second intervals, for 16 total delayed damage. Reapplying Bleeding refreshes four future ticks without stacking.
 
-The current foundation provides physical Standard Legs and Knee-Dash Legs equipment, including the C interaction boundary, directional dash, contact damage, capped knockback, and cooldown metadata. Final dash presentation and additional effects remain deferred.
+The current foundation provides physical Standard Legs and CYBERLANCERS equipment. CYBERLANCERS uses the supplied 64x64 pixel-art player visual while preserving the internal Knee-Dash identity, C interaction boundary, directional dash, contact damage, capped knockback, Bleeding, and cooldown metadata. Dedicated folded or ground-pickup artwork remains deferred.
 
 ### Left-Arm Equipment
 

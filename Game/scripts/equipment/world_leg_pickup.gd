@@ -9,6 +9,7 @@ const FLOOR_FRICTION: float = 1200.0
 @export var leg_definition: LegDefinition
 
 @onready var world_visual_slot: Node2D = $WorldVisualSlot
+@onready var icon_visual: Sprite2D = $IconVisual
 @onready var leg_label: Label = $LegLabel
 
 var _interaction_cooldown: float = 0.0
@@ -41,9 +42,18 @@ func _update_display() -> void:
 func _rebuild_world_visual() -> void:
 	for child: Node in world_visual_slot.get_children():
 		child.free()
-	if _leg_instance == null or _leg_instance.definition == null or _leg_instance.definition.held_visual_scene == null:
+	icon_visual.texture = null
+	icon_visual.visible = false
+	if _leg_instance == null or _leg_instance.definition == null:
 		return
-	var visual_node: Node = _leg_instance.definition.held_visual_scene.instantiate()
+	var definition: LegDefinition = _leg_instance.definition
+	if definition.icon_texture != null:
+		icon_visual.texture = definition.icon_texture
+		icon_visual.visible = true
+		return
+	if definition.held_visual_scene == null:
+		return
+	var visual_node: Node = definition.held_visual_scene.instantiate()
 	var visual_transform: Node2D = visual_node as Node2D
 	if visual_transform == null:
 		visual_node.free()

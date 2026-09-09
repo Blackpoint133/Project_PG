@@ -5,6 +5,8 @@ extends CanvasLayer
 @onready var weapon_label: Label = $WeaponLabel
 @onready var weapon_slots_label: Label = $WeaponSlotsLabel
 @onready var leg_status_label: Label = $LegStatusLabel
+@onready var leg_icon_frame: Panel = $LegIconFrame
+@onready var leg_icon: TextureRect = $LegIconFrame/LegIcon
 @onready var left_arm_status_label: Label = $LeftArmStatusLabel
 @onready var shield_energy_bar: ProgressBar = $ShieldEnergyBar
 @onready var right_arm_status_label: Label = $RightArmStatusLabel
@@ -152,6 +154,15 @@ func _render_leg_status(player: Player) -> void:
 	elif ability_definition != null:
 		ability_name = "%s %.1fs" % [ability_definition.display_name, _leg_cooldown_remaining] if _leg_cooldown_remaining > 0.0 else "%s READY" % ability_definition.display_name
 	leg_status_label.text = "LEGS: %s\nC: %s" % [leg_name, ability_name]
+	_render_leg_icon(definition)
+
+func _render_leg_icon(definition: LegDefinition) -> void:
+	if definition != null and definition.icon_texture != null:
+		leg_icon.texture = definition.icon_texture
+		leg_icon_frame.visible = true
+		return
+	leg_icon.texture = null
+	leg_icon_frame.visible = false
 
 func _render_left_arm_status() -> void:
 	var ability_name: String = "NONE"

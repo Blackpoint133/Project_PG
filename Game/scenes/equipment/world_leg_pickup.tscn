@@ -16,6 +16,10 @@ shape = SubResource("pickup_shape")
 
 [node name="WorldVisualSlot" type="Node2D" parent="."]
 
+[node name="IconVisual" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -16)
+
 [node name="LegLabel" type="Label" parent="."]
 offset_left = -100.0
 offset_top = -70.0

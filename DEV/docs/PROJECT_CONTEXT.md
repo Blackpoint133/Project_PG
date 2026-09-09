@@ -120,6 +120,8 @@ Task 063 adds the reusable `MissionMercenary` foundation and an isolated `missio
 
 Task 064 integrates exactly three inactive post-loot MissionMercenary nodes in Main. After `EQUIPMENT COLLECTED`, Main preserves that objective for a deterministic one-second transition, activates the exact group, and MissionController reports `DEFEAT THE ENEMIES (0/3)`, `(1/3)`, `(2/3)`, then `REACH THE EXTRACTION` after unique defeats. Extraction and final mission completion remain deferred. Implementation commit `ed3b95abd3cc624c6d5465966621a5a7e788e6dc` is published; Windows runtime validation remains pending.
 
+Task 065 adds the reusable MissionExtractionZone at the far-right arena position. After the third exact mercenary defeat, Main activates the hidden non-solid zone and MissionController keeps `REACH THE EXTRACTION` available. The exact Main Player entering the zone changes the objective once to `MISSION COMPLETE`; extraction does not use F interaction or emit the historical helicopter `mission_completed` signal again. Implementation commit `844ed35e434bcd61f6c4a7fd1895d9055640b275` is published; Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

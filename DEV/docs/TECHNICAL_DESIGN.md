@@ -150,6 +150,8 @@ Task 063 adds `MissionMercenary` as a focused `TargetDummy` subclass for isolate
 
 Task 064 composes exactly three inactive MissionMercenary instances under Main/World and starts them after the four reward collection transition. Main owns the one-shot 1.0-second `MercenaryEncounterStartTimer`, exact node signal connections, and activation routing. MissionController keeps the existing `COMPLETED` mission state while guarding the encounter phase with typed enemy IDs and unique defeat progress. The objective advances from `DEFEAT THE ENEMIES (0/3)` through `(2/3)` and then directly to `REACH THE EXTRACTION`; extraction is deferred.
 
+Task 065 adds a scene-owned `MissionExtractionZone` at `Vector2(2440, 520)`. The Area2D uses collision layer 0 and Player mask 2, remains hidden and non-solid until the exact three-enemy encounter completes, and enables monitoring with deferred collision-safe changes. Main validates the exact Player and forwards the zone signal to MissionController; an already-overlapping Player is checked after deferred activation. MissionController guards one-shot availability and completion, changing the objective from `REACH THE EXTRACTION` to `MISSION COMPLETE` without emitting `mission_completed` again.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

@@ -181,6 +181,12 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - The objective then becomes `DEFEAT THE ENEMIES (0/3)`. Unique defeats update `(1/3)` and `(2/3)`; the third changes the objective directly to `REACH THE EXTRACTION`.
 - Encounter progress is owned by MissionController and counts only the three exact Main-scene mercenary nodes. Extraction and final mission completion remain deferred.
 
+### Mission Extraction
+
+- After the third exact mercenary defeat, a physical non-solid extraction field activates at the far-right end of the arena while the objective remains `REACH THE EXTRACTION`.
+- Entering the field with the Main Player completes the first mission flow once and changes the objective to `MISSION COMPLETE`.
+- The extraction zone is not an interaction prompt and does not block movement. Final artwork, level transitions, menus, rewards, and restart behavior remain deferred.
+
 Living enemies physically block the Player during ordinary movement, jumping, falling, jetpack movement, and Knee Dash. Defeated enemies may become non-solid when their gameplay collision is disabled.
 
 ## Prototype UI

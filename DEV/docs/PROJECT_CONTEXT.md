@@ -118,6 +118,8 @@ Task 062 corrects the Task 061 reward progress contract. Opening now shows `COLL
 
 Task 063 adds the reusable `MissionMercenary` foundation and an isolated `mission_mercenary_test.tscn`. The mercenary inherits TargetDummy's generic damage, solidity, Hook, Knee Dash, knockback, and Bleeding contracts, while adding one-shot activation/defeat lifecycle and optional existing hostile ranged firing. A ranged 80-health variant and non-ranged 150-health heavy variant are available for F6 testing. Main and the mission objective remain unchanged; Task 064 will integrate and track the post-loot encounter. Implementation commit `7a3e5e403d379a3767255e9dfe227d09e44b4098` is published; Windows runtime validation remains pending.
 
+Task 064 integrates exactly three inactive post-loot MissionMercenary nodes in Main. After `EQUIPMENT COLLECTED`, Main preserves that objective for a deterministic one-second transition, activates the exact group, and MissionController reports `DEFEAT THE ENEMIES (0/3)`, `(1/3)`, `(2/3)`, then `REACH THE EXTRACTION` after unique defeats. Extraction and final mission completion remain deferred. Implementation commit `ed3b95abd3cc624c6d5465966621a5a7e788e6dc` is published; Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

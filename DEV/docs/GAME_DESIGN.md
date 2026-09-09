@@ -173,7 +173,13 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - `MissionMercenary` is a reusable placeholder enemy for the post-loot combat section and inherits the existing `TargetDummy` combat contracts.
 - Inactive mercenaries are hidden, non-solid, non-damaging, and non-firing. Explicit activation makes them living enemies on the existing enemy collision layer.
 - Ranged and heavy configurations share rifle, shotgun, Hook pull and stun, Knee Dash, knockback, and Bleeding behavior. The ranged configuration fires existing hostile projectiles; the heavy configuration is non-ranged.
-- Defeat disables enemy collision and firing, leaves a gray passable placeholder, and reports defeat once. Mission encounter activation, defeat tracking, and the `DEFEAT THE ENEMIES` objective remain deferred to Task 064.
+- Defeat disables enemy collision and firing, leaves a gray passable placeholder, and reports defeat once. Main integrates three exact post-loot mercenaries after the reward objective completes.
+
+### Post-Loot Mercenary Encounter
+
+- After `EQUIPMENT COLLECTED`, the existing mission objective remains visible for one second before three exact MissionMercenary instances activate.
+- The objective then becomes `DEFEAT THE ENEMIES (0/3)`. Unique defeats update `(1/3)` and `(2/3)`; the third changes the objective directly to `REACH THE EXTRACTION`.
+- Encounter progress is owned by MissionController and counts only the three exact Main-scene mercenary nodes. Extraction and final mission completion remain deferred.
 
 Living enemies physically block the Player during ordinary movement, jumping, falling, jetpack movement, and Knee Dash. Defeated enemies may become non-solid when their gameplay collision is disabled.
 

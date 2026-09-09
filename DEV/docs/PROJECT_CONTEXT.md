@@ -130,6 +130,8 @@ Task 068 fixes two Windows-observed runtime diagnostics. Main now defers typed l
 
 Task 069 integrates the corrected Cyberlancers player sprite. The Knee-Dash leg definition now displays `CYBERLANCERS` and references the native 64x64 nearest-filtered `cyberlancers_legs.tscn` visual while retaining internal Knee-Dash identifiers, ability behavior, exact-instance ownership, and the existing crouch contract. Standard Legs remain unchanged. The original Cyberlancers source-art publication is `5d1b546aae449c6ebd69dafda58db46b069aaa9d`; the corrected 64x64 runtime sprite publication is `199083ef6ab990df9de2fa24550094b36d26878c`. Implementation commit `71d5c589efde398f3b14722780173c32c6cb94d3` is published. Dedicated ground-pickup artwork remains the next visual task; Windows runtime validation remains pending.
 
+Task 070 corrects a shared presentation type mismatch found after the Cyberlancers integration. Standard Legs use `ColorRect` visuals while Cyberlancers uses `Sprite2D` visuals; both now satisfy the shared `CanvasItem` reference contract in `placeholder_legs.gd`. The existing visibility-based crouch API and all gameplay behavior remain unchanged. Implementation commit `869216329d78ce21daf2e0f1ef97f345f6ab9443` is published; Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept

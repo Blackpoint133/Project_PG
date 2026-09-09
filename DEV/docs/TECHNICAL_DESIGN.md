@@ -156,6 +156,8 @@ Task 068 applies two runtime safety fixes observed during Windows validation. Ma
 
 Task 069 integrates the supplied Cyberlancers player visual. `knee_dash_legs.tres` now displays `CYBERLANCERS` and references `cyberlancers_legs.tscn`, which renders the native 64x64 runtime PNG with nearest-neighbor filtering, integer floor-aligned positions, parent-driven horizontal mirroring, and the existing `set_crouching(crouching: bool)` API. Standard Legs, Knee-Dash identifiers and gameplay, pickup architecture, and all movement/combat behavior remain unchanged. DEV source-art references are not used by runtime scenes; dedicated ground-pickup artwork remains deferred. Windows runtime validation remains pending.
 
+Task 070 corrects the shared leg presentation boundary: `placeholder_legs.gd` types both visual references as `CanvasItem`, allowing Standard Legs `ColorRect` nodes and Cyberlancers `Sprite2D` nodes to use the same visibility-only crouch API. Node paths and `set_crouching(crouching: bool)` behavior remain unchanged; no gameplay or presentation tuning changed.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

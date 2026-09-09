@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/arena.tscn" id="2_arena"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/missions/mission_controller.gd" id="5_mission_controller"]
 [ext_resource type="PackedScene" path="res://scenes/interactables/mission_radio.tscn" id="6_mission_radio"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/mission_helicopter.tscn" id="7_mission_helicopter_scene"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/mission_mercenary.tscn" id="8_mission_mercenary_scene"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -24,7 +25,41 @@ position = Vector2(360, 624)
 [node name="MissionHelicopter" parent="World" instance=ExtResource("7_mission_helicopter_scene")]
 position = Vector2(1440, 180)
 
+[node name="UpperRangedMercenary" parent="World" instance=ExtResource("8_mission_mercenary_scene")]
+position = Vector2(1300, 228)
+max_health = 80
+starts_active = false
+ranged_attack_enabled = true
+attack_interval = 1.5
+projectile_speed = 720.0
+projectile_damage = 10.0
+projectile_lifetime = 4.0
+base_visual_color = Color(0.35, 0.55, 0.72, 1)
+
+[node name="MidRangedMercenary" parent="World" instance=ExtResource("8_mission_mercenary_scene")]
+position = Vector2(1800, 388)
+max_health = 80
+starts_active = false
+ranged_attack_enabled = true
+attack_interval = 1.5
+projectile_speed = 720.0
+projectile_damage = 10.0
+projectile_lifetime = 4.0
+base_visual_color = Color(0.28, 0.48, 0.68, 1)
+
+[node name="HeavyMercenary" parent="World" instance=ExtResource("8_mission_mercenary_scene")]
+position = Vector2(2240, 624)
+max_health = 150
+starts_active = false
+ranged_attack_enabled = false
+base_visual_color = Color(0.72, 0.5, 0.3, 1)
+
 [node name="MissionController" type="Node" parent="."]
 script = ExtResource("5_mission_controller")
+
+[node name="MercenaryEncounterStartTimer" type="Timer" parent="."]
+wait_time = 1.0
+one_shot = true
+autostart = false
 
 [node name="HUD" parent="." instance=ExtResource("4_hud")]

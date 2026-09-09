@@ -9,6 +9,9 @@ signal loot_case_ready(mission_id: String)
 signal loot_case_opened(mission_id: String)
 signal reward_collected(reward_id: StringName, collected_count: int, required_count: int)
 signal reward_collection_completed(mission_id: String)
+signal mercenary_encounter_started(mission_id: String)
+signal mercenary_defeated(enemy_id: StringName, defeated_count: int, required_count: int)
+signal mercenary_encounter_completed(mission_id: String)
 
 enum MissionState {
 	AVAILABLE,
@@ -28,6 +31,12 @@ const SHIELD_LEFT_ARM_REWARD_ID: StringName = &"shield_left_arm"
 const HOOK_RIGHT_ARM_REWARD_ID: StringName = &"hook_right_arm"
 const KNEE_DASH_LEGS_REWARD_ID: StringName = &"knee_dash_legs"
 const REQUIRED_REWARD_COUNT: int = 4
+const UPPER_RANGED_MERCENARY_ID: StringName = &"upper_ranged"
+const MID_RANGED_MERCENARY_ID: StringName = &"mid_ranged"
+const HEAVY_MERCENARY_ID: StringName = &"heavy"
+const REQUIRED_MERCENARY_COUNT: int = 3
+const DEFEAT_ENEMIES_OBJECTIVE: String = "DEFEAT THE ENEMIES"
+const REACH_EXTRACTION_OBJECTIVE: String = "REACH THE EXTRACTION"
 
 var _state: int = MissionState.AVAILABLE
 var _active_mission_id: String = ""
@@ -39,6 +48,12 @@ var _shield_left_arm_reward_collected: bool = false
 var _hook_right_arm_reward_collected: bool = false
 var _knee_dash_legs_reward_collected: bool = false
 var _collected_reward_count: int = 0
+var _mercenary_encounter_started: bool = false
+var _mercenary_encounter_completed: bool = false
+var _upper_ranged_mercenary_defeated: bool = false
+var _mid_ranged_mercenary_defeated: bool = false
+var _heavy_mercenary_defeated: bool = false
+var _defeated_mercenary_count: int = 0
 
 func _ready() -> void:
 	mission_state_changed.emit(_state, _active_mission_id)
@@ -117,6 +132,45 @@ func get_collected_reward_count() -> int:
 func has_collected_reward(reward_id: StringName) -> bool:
 	return _has_collected_reward(reward_id)
 
+func start_mercenary_encounter(mission_id: String) -> bool:
+	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or mission_id != DESTROY_HELICOPTER_ID:
+		return false
+	if not _loot_case_opened or _collected_reward_count != REQUIRED_REWARD_COUNT:
+		return false
+	if _mercenary_encounter_started or _mercenary_encounter_completed:
+		return false
+	_mercenary_encounter_started = true
+	_objective_text = _format_mercenary_progress(0)
+	objective_changed.emit(_objective_text)
+	mercenary_encounter_started.emit(_active_mission_id)
+	return true
+
+func register_mercenary_defeated(mission_id: String, enemy_id: StringName) -> bool:
+	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or mission_id != DESTROY_HELICOPTER_ID:
+		return false
+	if not _mercenary_encounter_started or _mercenary_encounter_completed:
+		return false
+	if not _is_valid_mercenary_id(enemy_id) or _has_defeated_mercenary(enemy_id):
+		return false
+	_set_mercenary_defeated(enemy_id)
+	_defeated_mercenary_count += 1
+	mercenary_defeated.emit(enemy_id, _defeated_mercenary_count, REQUIRED_MERCENARY_COUNT)
+	if _defeated_mercenary_count == REQUIRED_MERCENARY_COUNT:
+		_mercenary_encounter_completed = true
+		_objective_text = REACH_EXTRACTION_OBJECTIVE
+		objective_changed.emit(_objective_text)
+		mercenary_encounter_completed.emit(_active_mission_id)
+	else:
+		_objective_text = _format_mercenary_progress(_defeated_mercenary_count)
+		objective_changed.emit(_objective_text)
+	return true
+
+func is_mercenary_encounter_started() -> bool:
+	return _mercenary_encounter_started
+
+func is_mercenary_encounter_completed() -> bool:
+	return _mercenary_encounter_completed
+
 func _is_valid_reward_id(reward_id: StringName) -> bool:
 	return reward_id == SHOTGUN_REWARD_ID or reward_id == SHIELD_LEFT_ARM_REWARD_ID or reward_id == HOOK_RIGHT_ARM_REWARD_ID or reward_id == KNEE_DASH_LEGS_REWARD_ID
 
@@ -145,3 +199,28 @@ func _set_reward_collected(reward_id: StringName) -> void:
 
 func _format_reward_progress(collected_count: int) -> String:
 	return "%s (%d/%d)" % [COLLECT_EQUIPMENT_OBJECTIVE, collected_count, REQUIRED_REWARD_COUNT]
+
+func _format_mercenary_progress(defeated_count: int) -> String:
+	return "%s (%d/%d)" % [DEFEAT_ENEMIES_OBJECTIVE, defeated_count, REQUIRED_MERCENARY_COUNT]
+
+func _is_valid_mercenary_id(enemy_id: StringName) -> bool:
+	return enemy_id == UPPER_RANGED_MERCENARY_ID or enemy_id == MID_RANGED_MERCENARY_ID or enemy_id == HEAVY_MERCENARY_ID
+
+func _has_defeated_mercenary(enemy_id: StringName) -> bool:
+	match enemy_id:
+		UPPER_RANGED_MERCENARY_ID:
+			return _upper_ranged_mercenary_defeated
+		MID_RANGED_MERCENARY_ID:
+			return _mid_ranged_mercenary_defeated
+		HEAVY_MERCENARY_ID:
+			return _heavy_mercenary_defeated
+	return false
+
+func _set_mercenary_defeated(enemy_id: StringName) -> void:
+	match enemy_id:
+		UPPER_RANGED_MERCENARY_ID:
+			_upper_ranged_mercenary_defeated = true
+		MID_RANGED_MERCENARY_ID:
+			_mid_ranged_mercenary_defeated = true
+		HEAVY_MERCENARY_ID:
+			_heavy_mercenary_defeated = true

@@ -16,6 +16,10 @@ const REWARD_SPAWN_OFFSET: Vector2 = Vector2(0, -48)
 @onready var mission_radio: MissionRadio = $World/MissionRadio
 @onready var mission_helicopter: MissionHelicopter = $World/MissionHelicopter
 @onready var player: Player = $World/Player
+@onready var upper_ranged_mercenary: MissionMercenary = $World/UpperRangedMercenary
+@onready var mid_ranged_mercenary: MissionMercenary = $World/MidRangedMercenary
+@onready var heavy_mercenary: MissionMercenary = $World/HeavyMercenary
+@onready var mercenary_encounter_start_timer: Timer = $MercenaryEncounterStartTimer
 @onready var hud: GameHud = $HUD
 
 var _loot_case: WorldLootCase = null
@@ -25,13 +29,20 @@ var _shotgun_reward: WorldWeaponPickup = null
 var _shield_reward: WorldLeftArmPickup = null
 var _hook_reward: WorldRightArmPickup = null
 var _legs_reward: WorldLegPickup = null
+var _mercenary_encounter_start_pending: bool = false
+var _mercenary_encounter_started: bool = false
 
 func _ready() -> void:
 	mission_radio.mission_activation_requested.connect(_on_mission_activation_requested)
 	mission_controller.mission_activated.connect(_on_mission_activated)
 	mission_controller.objective_changed.connect(_on_objective_changed)
+	mission_controller.reward_collection_completed.connect(_on_reward_collection_completed)
 	mission_helicopter.health_changed.connect(_on_helicopter_health_changed)
 	mission_helicopter.destroyed.connect(_on_helicopter_destroyed)
+	mercenary_encounter_start_timer.timeout.connect(_on_mercenary_encounter_start_timer_timeout)
+	upper_ranged_mercenary.defeated.connect(_on_upper_ranged_mercenary_defeated)
+	mid_ranged_mercenary.defeated.connect(_on_mid_ranged_mercenary_defeated)
+	heavy_mercenary.defeated.connect(_on_heavy_mercenary_defeated)
 	hud.set_mission_objective(mission_controller.get_objective_text())
 	hud.hide_helicopter_health()
 
@@ -139,3 +150,34 @@ func _forward_reward_collection(actor: Node, reward_id: StringName) -> void:
 	if actor != player:
 		return
 	mission_controller.register_reward_collected(MissionController.DESTROY_HELICOPTER_ID, reward_id)
+
+func _on_reward_collection_completed(mission_id: String) -> void:
+	if mission_id != MissionController.DESTROY_HELICOPTER_ID or _mercenary_encounter_start_pending or _mercenary_encounter_started:
+		return
+	_mercenary_encounter_start_pending = true
+	mercenary_encounter_start_timer.start()
+
+func _on_mercenary_encounter_start_timer_timeout() -> void:
+	_mercenary_encounter_start_pending = false
+	if _mercenary_encounter_started:
+		return
+	if not mission_controller.start_mercenary_encounter(MissionController.DESTROY_HELICOPTER_ID):
+		return
+	_mercenary_encounter_started = true
+	upper_ranged_mercenary.activate()
+	mid_ranged_mercenary.activate()
+	heavy_mercenary.activate()
+
+func _on_upper_ranged_mercenary_defeated(enemy: MissionMercenary) -> void:
+	_forward_mercenary_defeat(enemy, upper_ranged_mercenary, MissionController.UPPER_RANGED_MERCENARY_ID)
+
+func _on_mid_ranged_mercenary_defeated(enemy: MissionMercenary) -> void:
+	_forward_mercenary_defeat(enemy, mid_ranged_mercenary, MissionController.MID_RANGED_MERCENARY_ID)
+
+func _on_heavy_mercenary_defeated(enemy: MissionMercenary) -> void:
+	_forward_mercenary_defeat(enemy, heavy_mercenary, MissionController.HEAVY_MERCENARY_ID)
+
+func _forward_mercenary_defeat(enemy: MissionMercenary, expected_enemy: MissionMercenary, enemy_id: StringName) -> void:
+	if enemy != expected_enemy:
+		return
+	mission_controller.register_mercenary_defeated(MissionController.DESTROY_HELICOPTER_ID, enemy_id)

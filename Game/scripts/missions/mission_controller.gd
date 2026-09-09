@@ -192,6 +192,7 @@ func complete_extraction(mission_id: String) -> bool:
 		return false
 	if not _mercenary_encounter_completed or not _extraction_is_available or _extraction_is_completed:
 		return false
+	_extraction_is_available = false
 	_extraction_is_completed = true
 	_objective_text = MISSION_COMPLETE_OBJECTIVE
 	objective_changed.emit(_objective_text)

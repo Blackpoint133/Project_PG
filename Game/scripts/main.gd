@@ -199,3 +199,4 @@ func _on_extraction_requested(actor: Node) -> void:
 		return
 	if mission_controller.complete_extraction(MissionController.DESTROY_HELICOPTER_ID):
 		mission_extraction_zone.complete()
+		_extraction_available = false

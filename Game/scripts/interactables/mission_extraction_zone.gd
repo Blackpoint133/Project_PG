@@ -28,7 +28,7 @@ func activate() -> bool:
 	beacon.color = Color(0.25, 0.9, 1.0, 1.0)
 	zone_label.text = "EXTRACTION"
 	set_deferred("monitoring", true)
-	call_deferred("_check_existing_bodies")
+	call_deferred("_check_existing_bodies_after_physics")
 	return true
 
 func complete() -> bool:
@@ -49,7 +49,8 @@ func is_active() -> bool:
 func is_completed() -> bool:
 	return _is_completed
 
-func _check_existing_bodies() -> void:
+func _check_existing_bodies_after_physics() -> void:
+	await get_tree().physics_frame
 	if not _is_active or _is_completed or not monitoring:
 		return
 	for body: Node2D in get_overlapping_bodies():

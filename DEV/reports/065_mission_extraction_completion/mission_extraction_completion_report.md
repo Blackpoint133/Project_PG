@@ -35,7 +35,7 @@ MissionController keeps the existing helicopter `MissionState.COMPLETED` boundar
 
 The zone uses collision layer 0 and collision mask 2, detecting the Player body without becoming solid or interactable. It has no interactable layer and cannot be selected by InteractionController. Monitoring is enabled and disabled with deferred property changes. A deferred overlap check calls the same request boundary after activation, so a Player already inside the zone is handled without requiring re-entry.
 
-The zone is authored at `Vector2(2440, 520)` with a `Vector2(160, 208)` rectangle offset down by 104 pixels, covering the intended area through ground level Y 624. Its cyan field, outline, beacon, and `EXTRACTION` label remain hidden before activation; successful completion changes the presentation to restrained green `COMPLETE` while leaving the zone visible.
+The zone is authored at `Vector2(2440, 520)` with a centered `Vector2(160, 208)` rectangle, producing world bounds Y 416 through 624. Its cyan field and outline use local bounds -104 through 104, the beacon sits at the local bottom edge, and the `EXTRACTION` label remains above the field. Successful completion changes the presentation to restrained green `COMPLETE` while leaving the zone visible.
 
 ## Mission guards and signals
 

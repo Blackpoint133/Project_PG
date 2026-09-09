@@ -12,6 +12,8 @@ signal reward_collection_completed(mission_id: String)
 signal mercenary_encounter_started(mission_id: String)
 signal mercenary_defeated(enemy_id: StringName, defeated_count: int, required_count: int)
 signal mercenary_encounter_completed(mission_id: String)
+signal extraction_available(mission_id: String)
+signal extraction_completed(mission_id: String)
 
 enum MissionState {
 	AVAILABLE,
@@ -37,6 +39,7 @@ const HEAVY_MERCENARY_ID: StringName = &"heavy"
 const REQUIRED_MERCENARY_COUNT: int = 3
 const DEFEAT_ENEMIES_OBJECTIVE: String = "DEFEAT THE ENEMIES"
 const REACH_EXTRACTION_OBJECTIVE: String = "REACH THE EXTRACTION"
+const MISSION_COMPLETE_OBJECTIVE: String = "MISSION COMPLETE"
 
 var _state: int = MissionState.AVAILABLE
 var _active_mission_id: String = ""
@@ -54,6 +57,8 @@ var _upper_ranged_mercenary_defeated: bool = false
 var _mid_ranged_mercenary_defeated: bool = false
 var _heavy_mercenary_defeated: bool = false
 var _defeated_mercenary_count: int = 0
+var _extraction_is_available: bool = false
+var _extraction_is_completed: bool = false
 
 func _ready() -> void:
 	mission_state_changed.emit(_state, _active_mission_id)
@@ -170,6 +175,34 @@ func is_mercenary_encounter_started() -> bool:
 
 func is_mercenary_encounter_completed() -> bool:
 	return _mercenary_encounter_completed
+
+func make_extraction_available(mission_id: String) -> bool:
+	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or mission_id != DESTROY_HELICOPTER_ID:
+		return false
+	if not _mercenary_encounter_started or not _mercenary_encounter_completed or _defeated_mercenary_count != REQUIRED_MERCENARY_COUNT:
+		return false
+	if _extraction_is_available or _extraction_is_completed:
+		return false
+	_extraction_is_available = true
+	extraction_available.emit(_active_mission_id)
+	return true
+
+func complete_extraction(mission_id: String) -> bool:
+	if _state != MissionState.COMPLETED or mission_id != _active_mission_id or mission_id != DESTROY_HELICOPTER_ID:
+		return false
+	if not _mercenary_encounter_completed or not _extraction_is_available or _extraction_is_completed:
+		return false
+	_extraction_is_completed = true
+	_objective_text = MISSION_COMPLETE_OBJECTIVE
+	objective_changed.emit(_objective_text)
+	extraction_completed.emit(_active_mission_id)
+	return true
+
+func is_extraction_available() -> bool:
+	return _extraction_is_available
+
+func is_extraction_completed() -> bool:
+	return _extraction_is_completed
 
 func _is_valid_reward_id(reward_id: StringName) -> bool:
 	return reward_id == SHOTGUN_REWARD_ID or reward_id == SHIELD_LEFT_ARM_REWARD_ID or reward_id == HOOK_RIGHT_ARM_REWARD_ID or reward_id == KNEE_DASH_LEGS_REWARD_ID

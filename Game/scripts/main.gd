@@ -19,6 +19,7 @@ const REWARD_SPAWN_OFFSET: Vector2 = Vector2(0, -48)
 @onready var upper_ranged_mercenary: MissionMercenary = $World/UpperRangedMercenary
 @onready var mid_ranged_mercenary: MissionMercenary = $World/MidRangedMercenary
 @onready var heavy_mercenary: MissionMercenary = $World/HeavyMercenary
+@onready var mission_extraction_zone: MissionExtractionZone = $World/MissionExtractionZone
 @onready var mercenary_encounter_start_timer: Timer = $MercenaryEncounterStartTimer
 @onready var hud: GameHud = $HUD
 
@@ -31,18 +32,21 @@ var _hook_reward: WorldRightArmPickup = null
 var _legs_reward: WorldLegPickup = null
 var _mercenary_encounter_start_pending: bool = false
 var _mercenary_encounter_started: bool = false
+var _extraction_available: bool = false
 
 func _ready() -> void:
 	mission_radio.mission_activation_requested.connect(_on_mission_activation_requested)
 	mission_controller.mission_activated.connect(_on_mission_activated)
 	mission_controller.objective_changed.connect(_on_objective_changed)
 	mission_controller.reward_collection_completed.connect(_on_reward_collection_completed)
+	mission_controller.mercenary_encounter_completed.connect(_on_mercenary_encounter_completed)
 	mission_helicopter.health_changed.connect(_on_helicopter_health_changed)
 	mission_helicopter.destroyed.connect(_on_helicopter_destroyed)
 	mercenary_encounter_start_timer.timeout.connect(_on_mercenary_encounter_start_timer_timeout)
 	upper_ranged_mercenary.defeated.connect(_on_upper_ranged_mercenary_defeated)
 	mid_ranged_mercenary.defeated.connect(_on_mid_ranged_mercenary_defeated)
 	heavy_mercenary.defeated.connect(_on_heavy_mercenary_defeated)
+	mission_extraction_zone.extraction_requested.connect(_on_extraction_requested)
 	hud.set_mission_objective(mission_controller.get_objective_text())
 	hud.hide_helicopter_health()
 
@@ -181,3 +185,17 @@ func _forward_mercenary_defeat(enemy: MissionMercenary, expected_enemy: MissionM
 	if enemy != expected_enemy:
 		return
 	mission_controller.register_mercenary_defeated(MissionController.DESTROY_HELICOPTER_ID, enemy_id)
+
+func _on_mercenary_encounter_completed(mission_id: String) -> void:
+	if mission_id != MissionController.DESTROY_HELICOPTER_ID or _extraction_available:
+		return
+	if not mission_controller.make_extraction_available(MissionController.DESTROY_HELICOPTER_ID):
+		return
+	if mission_extraction_zone.activate():
+		_extraction_available = true
+
+func _on_extraction_requested(actor: Node) -> void:
+	if not _extraction_available or actor != player:
+		return
+	if mission_controller.complete_extraction(MissionController.DESTROY_HELICOPTER_ID):
+		mission_extraction_zone.complete()

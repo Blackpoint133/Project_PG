@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/arena.tscn" id="2_arena"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/interactables/mission_radio.tscn" id="6_mission_radio"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/mission_helicopter.tscn" id="7_mission_helicopter_scene"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/mission_mercenary.tscn" id="8_mission_mercenary_scene"]
+[ext_resource type="PackedScene" path="res://scenes/interactables/mission_extraction_zone.tscn" id="9_mission_extraction_zone"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -53,6 +54,9 @@ max_health = 150
 starts_active = false
 ranged_attack_enabled = false
 base_visual_color = Color(0.72, 0.5, 0.3, 1)
+
+[node name="MissionExtractionZone" parent="World" instance=ExtResource("9_mission_extraction_zone")]
+position = Vector2(2440, 520)
 
 [node name="MissionController" type="Node" parent="."]
 script = ExtResource("5_mission_controller")

@@ -168,6 +168,13 @@ The current foundation provides physical Standard Legs and Knee-Dash Legs equipm
 - Heavy mercenary, used to test the hook, knee knockback, and shotgun.
 - Mission helicopter.
 
+### Mission Mercenary Foundation
+
+- `MissionMercenary` is a reusable placeholder enemy for the post-loot combat section and inherits the existing `TargetDummy` combat contracts.
+- Inactive mercenaries are hidden, non-solid, non-damaging, and non-firing. Explicit activation makes them living enemies on the existing enemy collision layer.
+- Ranged and heavy configurations share rifle, shotgun, Hook pull and stun, Knee Dash, knockback, and Bleeding behavior. The ranged configuration fires existing hostile projectiles; the heavy configuration is non-ranged.
+- Defeat disables enemy collision and firing, leaves a gray passable placeholder, and reports defeat once. Mission encounter activation, defeat tracking, and the `DEFEAT THE ENEMIES` objective remain deferred to Task 064.
+
 Living enemies physically block the Player during ordinary movement, jumping, falling, jetpack movement, and Knee Dash. Defeated enemies may become non-solid when their gameplay collision is disabled.
 
 ## Prototype UI

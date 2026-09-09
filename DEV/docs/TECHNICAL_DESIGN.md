@@ -146,6 +146,8 @@ Task 061 adds one-shot `pickup_completed` signals to the four existing pickup cl
 
 Task 062 corrects the reward progress boundary without changing pickup or equipment behavior. Main supplies `destroy_helicopter` and the exact typed reward ID to the guarded registration method; invalid, duplicate, early, and post-completion requests remain no-ops.
 
+Task 063 adds `MissionMercenary` as a focused `TargetDummy` subclass for isolated combat testing. It owns only activation, typed ranged-projectile configuration, defeat reporting, and presentation. Inactive instances are hidden with collision and physics disabled; activation enables enemy layer 3 / integer layer 4 and an existing `HostileProjectileEmitter` when configured. Defeat stops firing, clears living-enemy collision, preserves the inherited generic rifle, shotgun, Hook, Knee Dash, knockback, and Bleeding contracts, and emits a typed one-shot signal. Main and mission objective state remain untouched; Task 064 will compose and activate an exact post-loot group.
+
 Weapon and ability components should communicate through signals such as `fired`, `reloaded`, `ability_started`, `ability_ended`, and `ability_state_changed`. The player emits input intents; components never reach into unrelated sibling components.
 
 The current combat foundation adds:

@@ -116,6 +116,8 @@ Task 061 tracks successful collection of the four exact loot-case pickup nodes. 
 
 Task 062 corrects the Task 061 reward progress contract. Opening now shows `COLLECT THE EQUIPMENT (0/4)`, the first three unique exact rewards show `(1/4)` through `(3/4)`, and the fourth changes directly to `EQUIPMENT COLLECTED`. MissionController uses typed `StringName` reward IDs and requires the matching `destroy_helicopter` mission id; unrelated, duplicate, failed, early, and post-completion requests remain rejected. Implementation commit `cfb6d4b02fc6f60008b4d400122c419d93e5efad` is published; Windows runtime validation remains pending.
 
+Task 063 adds the reusable `MissionMercenary` foundation and an isolated `mission_mercenary_test.tscn`. The mercenary inherits TargetDummy's generic damage, solidity, Hook, Knee Dash, knockback, and Bleeding contracts, while adding one-shot activation/defeat lifecycle and optional existing hostile ranged firing. A ranged 80-health variant and non-ranged 150-health heavy variant are available for F6 testing. Main and the mission objective remain unchanged; Task 064 will integrate and track the post-loot encounter. Implementation commit `7a3e5e403d379a3767255e9dfe227d09e44b4098` is published; Windows runtime validation remains pending.
+
 Task 030 fixed the slot-switch reload regression. Automatic reload requests made by slot selection or active-slot replacement now run only for an instance with zero loaded ammunition; manual partial-magazine reload remains unchanged. Windows runtime validation is pending.
 
 ## Game concept
